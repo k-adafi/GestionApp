@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import java.lang.String?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="708.0" prefWidth="1372.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="jirehstudentsapp.DashboardController">
+   <children>
+      <AnchorPane fx:id="main_form" prefHeight="705.0" prefWidth="1450.0">
+         <children>
+            <BorderPane layoutX="-7.0" prefHeight="700.0" prefWidth="1358.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="-7.0" AnchorPane.rightAnchor="-1.0" AnchorPane.topAnchor="0.0">
+               <top>
+                  <AnchorPane prefHeight="60.0" prefWidth="1350.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane layoutX="94.0" layoutY="-56.0" prefHeight="60.0" prefWidth="1358.0" styleClass="top-formD" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="close" layoutX="1326.0" layoutY="1.0" mnemonicParsing="false" onAction="#close" prefHeight="19.0" prefWidth="48.0" styleClass="closeD" stylesheets="@DashboardDesign.css" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="1.0">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="CLOSE" size="1.2em" text="" />
+                                 </graphic></Button>
+                              <Button fx:id="minimize" layoutX="1298.0" layoutY="2.0" mnemonicParsing="false" onAction="#minimize" prefHeight="21.0" prefWidth="31.0" styleClass="closeD" stylesheets="@DashboardDesign.css">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="MINUS" size="1.2em" />
+                                 </graphic></Button>
+                              <Label layoutX="243.0" layoutY="19.0" text="&quot;Veille à l'épanouissement des étudiants !&quot;" textFill="#329302">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <FontAwesomeIconView glyphName="USER" layoutX="1097.0" layoutY="44.0" size="2.2em" />
+                              <Label fx:id="NomUtilisateur" layoutX="1133.0" layoutY="21.0" text="Admin name" textFill="#329302">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Line endX="109.0" endY="-24.99999237060547" layoutX="112.0" layoutY="25.0" startX="109.0" startY="35.0" />
+                              <Line endX="-92.0" endY="36.0" layoutX="315.0" layoutY="24.0" startX="-92.0" startY="-21.99999237060547" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </top>
+               <left>
+                  <AnchorPane prefHeight="556.0" prefWidth="220.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane layoutY="-1.0" prefHeight="632.0" prefWidth="221.0" styleClass="right-formD" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
+                           <children>
+                              <Line endX="102.0" layoutX="113.0" layoutY="199.0" startX="-100.0" />
+                              <Button fx:id="acceuilBtn" layoutX="19.0" layoutY="215.0" mnemonicParsing="false" onAction="#SwitchForm" prefHeight="35.0" prefWidth="189.0" styleClass="BtnD" stylesheets="@DashboardDesign.css" text="Acceuil">
+                                 <graphic>
+                                    <FontAwesomeIconView fill="#1b1a1a" glyphName="HOME" size="2.2em" />
+                                 </graphic></Button>
+                              <Button fx:id="clientBtn" layoutX="19.0" layoutY="269.0" mnemonicParsing="false" onAction="#SwitchForm" prefHeight="35.0" prefWidth="189.0" styleClass="BtnD" stylesheets="@DashboardDesign.css" text="Nos clients">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="USERS" size="2em" />
+                                 </graphic></Button>
+                              <Button fx:id="serviceBtn" layoutX="19.0" layoutY="323.0" mnemonicParsing="false" onAction="#SwitchForm" prefHeight="35.0" prefWidth="189.0" styleClass="BtnD" stylesheets="@DashboardDesign.css" text="Nos services">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="MONEY" size="2.2em" />
+                                 </graphic></Button>
+                              <Button fx:id="factureBtn" layoutX="20.0" layoutY="491.0" mnemonicParsing="false" onAction="#SwitchForm" prefHeight="35.0" prefWidth="189.0" styleClass="BtnD" stylesheets="@DashboardDesign.css" text="Factures">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="FILE" size="2em" />
+                                 </graphic></Button>
+                              <Button fx:id="signOutBtn" layoutX="21.0" layoutY="593.0" mnemonicParsing="false" onAction="#logout" prefHeight="35.0" styleClass="BtnD" stylesheets="@DashboardDesign.css" textFill="WHITE">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="SIGN_OUT" size="2.5em" text="" />
+                                 </graphic></Button>
+                              <Button fx:id="historiqueBtn" layoutX="21.0" layoutY="548.0" mnemonicParsing="false" onAction="#SwitchForm" prefHeight="35.0" prefWidth="189.0" styleClass="BtnD" stylesheets="@DashboardDesign.css" text="Historique">
+                                 <graphic>
+                                    <FontAwesomeIconView glyphName="HISTORY" size="2.2em" />
+                                 </graphic></Button>
+                              <AnchorPane layoutX="6.0" layoutY="-61.0" prefHeight="191.0" prefWidth="214.0" styleClass="left-hautD" stylesheets="@DashboardDesign.css">
+                                 <children>
+                                    <ImageView fitHeight="172.0" fitWidth="188.0" layoutX="19.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Image/1704805960156.jpg" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </AnchorPane>
+                              <Label layoutX="58.0" layoutY="165.0" text="APPLICATION" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="46.0" layoutY="136.0" text="JIREH STUDENTS " textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="85.0" layoutY="604.0" text="Déconnexion" textFill="WHITE">
+                                 <font>
+                                    <Font name="Berlin Sans FB Bold" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Button fx:id="suivieBtn" layoutX="20.0" layoutY="435.0" mnemonicParsing="false" onAction="#SwitchForm" prefHeight="35.0" prefWidth="189.0" styleClass="BtnD" stylesheets="@DashboardDesign.css" text="Suivie des clients">
+                                 <graphic>
+                                    <FontAwesomeIconView size="2.2em" />
+                                 </graphic></Button>
+                              <Button fx:id="makeserviceBtn" layoutX="19.0" layoutY="379.0" mnemonicParsing="false" onAction="#SwitchForm" prefHeight="35.0" prefWidth="189.0" styleClass="BtnD" stylesheets="@DashboardDesign.css" text="Faire un service">
+                                 <graphic>
+                                    <FontAwesomeIconView />
+                                 </graphic></Button>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </left>
+               <center>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="centre-formD" stylesheets="@DashboardDesign.css" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane fx:id="acceuilForm" layoutX="2.0" layoutY="2.0" prefHeight="646.0" prefWidth="1160.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" visible="false">
+                           <children>
+                              <AnchorPane layoutX="3.0" layoutY="3.0" prefHeight="181.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css">
+                                 <children>
+                                    <AnchorPane layoutX="281.0" layoutY="10.0" prefHeight="123.0" prefWidth="244.0" styleClass="total" stylesheets="@DashboardDesign.css">
+                                       <children>
+                                          <Label layoutX="77.0" layoutY="92.0" text="Total des clients">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="acceuilTotaleClient" layoutX="9.0" layoutY="5.0" prefHeight="27.0" prefWidth="223.0" text="0" textAlignment="RIGHT" wrapText="true">
+                                             <font>
+                                                <Font name="Berlin Sans FB Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane layoutX="607.0" layoutY="10.0" prefHeight="123.0" prefWidth="244.0" styleClass="total" stylesheets="@DashboardDesign.css">
+                                       <children>
+                                          <Label layoutX="72.0" layoutY="95.0" text="Total des services">
+                                             <font>
+                                                <Font size="14.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="acceuilTotaleService" layoutX="8.0" layoutY="8.0" prefHeight="27.0" prefWidth="224.0" text="0" textAlignment="RIGHT">
+                                             <font>
+                                                <Font name="Berlin Sans FB Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <Button fx:id="acceuilListeClientBtn" layoutX="323.0" layoutY="140.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Voir les listes" textFill="WHITE" />
+                                    <Button fx:id="acceuilListeServiceBtn" layoutX="649.0" layoutY="140.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Voir les listes" textFill="WHITE" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="2.0" layoutY="193.0" prefHeight="450.0" prefWidth="1156.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css">
+                                 <children>
+                                    <TextField layoutX="356.0" layoutY="5.0" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@DashboardDesign.css" />
+                                    <Button layoutX="664.0" layoutY="4.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Recherche" textFill="WHITE" />
+                                    <TableView layoutX="2.0" layoutY="39.0" prefHeight="408.0" prefWidth="1152.0">
+                                       <columns>
+                                          <TableColumn prefWidth="34.99996757507324" text="ID " />
+                                          <TableColumn prefWidth="76.99994659423828" text="Nom" />
+                                          <TableColumn prefWidth="106.0" text="Prénom" />
+                                          <TableColumn prefWidth="57.0" text="Genre" />
+                                          <TableColumn prefWidth="91.0" text="Date de N" />
+                                          <TableColumn prefWidth="123.0" text="N° CNI" />
+                                          <TableColumn prefWidth="89.99996948242188" text="Etablissement" />
+                                          <TableColumn prefWidth="94.0" text="M &amp; P" />
+                                          <TableColumn prefWidth="52.0" text="Niveau" />
+                                          <TableColumn prefWidth="79.00006103515625" text="N° codage" />
+                                          <TableColumn prefWidth="93.9998779296875" text="P/P/T" />
+                                          <TableColumn prefWidth="88.0" text="Tél" />
+                                          <TableColumn prefWidth="161.0" text="Adresse" />
+                                       </columns>
+                                    </TableView>
+                                    <FontAwesomeIconView glyphName="SEARCH" layoutX="364.0" layoutY="27.0" size="1.5em" />
+                                    <Label layoutX="9.0" layoutY="7.0" text="Nos clients" textFill="#329302">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane fx:id="serviceForm" layoutX="3.0" layoutY="187.0" prefHeight="433.0" prefWidth="1124.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" visible="false">
+                                 <children>
+                                    <TextField layoutX="353.0" layoutY="6.0" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@DashboardDesign.css" />
+                                    <Button layoutX="661.0" layoutY="5.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Recherche" textFill="WHITE" />
+                                    <TableView layoutX="5.0" layoutY="43.0" prefHeight="385.0" prefWidth="1113.0">
+                                       <columns>
+                                          <TableColumn prefWidth="103.0" text="ID du services" />
+                                          <TableColumn prefWidth="124.0" text="Nom du services" />
+                                          <TableColumn prefWidth="145.0" text="Types du services" />
+                                          <TableColumn prefWidth="164.0" text="Prix du services" />
+                                          <TableColumn prefWidth="205.0" text="Durée services" />
+                                          <TableColumn prefWidth="196.0" text="Date debut" />
+                                          <TableColumn prefWidth="175.0" text="Date fin" />
+                                       </columns>
+                                    </TableView>
+                                    <FontAwesomeIconView glyphName="SEARCH" layoutX="359.0" layoutY="28.0" size="1.5em" />
+                                    <Label layoutX="10.0" layoutY="9.0" text="Nos services" textFill="#329302">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="clientForm" layoutX="2.4" layoutY="2.4" prefHeight="646.0" prefWidth="1159.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="2.0">
+                           <children>
+                              <AnchorPane layoutX="102.0" layoutY="56.0" prefHeight="620.2" prefWidth="1124.1999999999998" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <AnchorPane layoutX="2.0" prefHeight="352.0" prefWidth="1153.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css">
+                                       <children>
+                                          <TableView layoutX="2.0" layoutY="40.0" prefHeight="310.0" prefWidth="1149.0">
+                                            <columns>
+                                              <TableColumn fx:id="clientIDCol" prefWidth="34.99996757507324" text="ID " />
+                                              <TableColumn fx:id="clientNomCol" prefWidth="76.99994659423828" text="Nom" />
+                                                <TableColumn fx:id="clientPrenomCol" prefWidth="105.00006866455078" text="Prénom" />
+                                                <TableColumn fx:id="clientGenreCol" prefWidth="58.0" text="Genre" />
+                                                <TableColumn fx:id="clientDateNCol" prefWidth="91.0" text="Date de N" />
+                                                <TableColumn fx:id="clientCINCol" prefWidth="123.0" text="N° CNI" />
+                                                <TableColumn fx:id="clientEtablissementCol" prefWidth="89.99996948242188" text="Etablissement" />
+                                                <TableColumn fx:id="clientMentionCol" prefWidth="94.0" text="M &amp; P" />
+                                                <TableColumn fx:id="clientNiveauCol" prefWidth="52.0" text="Niveau" />
+                                                <TableColumn fx:id="clientCodageCol" prefWidth="79.00006103515625" text="N° codage" />
+                                                <TableColumn fx:id="clientPassantCol" prefWidth="93.9998779296875" text="P/P/T" />
+                                                <TableColumn fx:id="clientTelCol" prefWidth="88.0" text="Tél" />
+                                                <TableColumn fx:id="clientAdressCol" prefWidth="130.0" text="Adresse" />
+                                            </columns>
+                                          </TableView>
+                                          <TextField fx:id="clientRechercheText" layoutX="363.0" layoutY="5.0" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@DashboardDesign.css" />
+                                          <Button fx:id="clientRechercheBtn" layoutX="671.0" layoutY="4.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Recherche" textFill="WHITE" />
+                                          <Label layoutX="8.0" layoutY="7.0" text="Nos clients" textFill="#329302">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                          <FontAwesomeIconView glyphName="SEARCH" layoutX="370.0" layoutY="27.0" size="1.5em" />
+                                       </children>
+                                    </AnchorPane>
+                                    <Label layoutX="55.0" layoutY="365.0" text="ID: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientID" layoutX="82.0" layoutY="360.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="39.0" layoutY="406.0" text="Nom: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientNom" layoutX="82.0" layoutY="401.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="25.0" layoutY="448.0" text="Prénom:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientPrenom" layoutX="82.0" layoutY="443.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="34.0" layoutY="489.0" text="Genre:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="clientGenre" layoutX="82.0" layoutY="484.0" prefHeight="28.0" prefWidth="226.0" promptText="Masculin" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="10.0" layoutY="530.0" text="Date de N:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="357.0" layoutY="365.0" text="N° CNI:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientCIN" layoutX="408.0" layoutY="360.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="318.0" layoutY="407.0" text="Etablissement:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="359.0" layoutY="448.0" text="M &amp; P:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientMention" layoutX="408.0" layoutY="444.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="356.0" layoutY="490.0" text="Niveau:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="332.0" layoutY="531.0" text="N° codage:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientCodage" layoutX="408.0" layoutY="526.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="659.0" layoutY="366.0" text="P/R/T:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="674.0" layoutY="407.0" text="Tél:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientTel" layoutX="703.0" layoutY="403.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <ComboBox fx:id="clientPassant" layoutX="703.0" layoutY="362.0" prefHeight="27.0" prefWidth="226.0" promptText="Passant" styleClass="textfield" />
+                                    <ComboBox fx:id="clientNiveau" layoutX="408.0" layoutY="486.0" prefHeight="27.0" prefWidth="226.0" promptText="L1" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <ComboBox fx:id="clientEtablissement" layoutX="408.0" layoutY="403.0" prefHeight="27.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="645.0" layoutY="447.0" text="Adresse:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientAdress" layoutX="703.0" layoutY="443.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <AnchorPane layoutX="950.0" layoutY="361.0" prefHeight="176.0" prefWidth="187.0" stylesheets="@DashboardDesign.css">
+                                       <children>
+                                          <ImageView fx:id="clientImageView" fitHeight="150.0" fitWidth="186.0" pickOnBounds="true" preserveRatio="true" />
+                                          <Button fx:id="clientPhotoBtn" layoutX="35.0" layoutY="140.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Photo" textFill="WHITE" />
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="centre-formDE" />
+                                          <String fx:value="textfield" />
+                                       </styleClass>
+                                    </AnchorPane>
+                                    <Button fx:id="clientAjouterBtn" layoutX="515.0" layoutY="572.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Ajouter" textFill="WHITE" />
+                                    <Button fx:id="clientModifierBtn" layoutX="372.0" layoutY="572.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Modifier" textFill="WHITE" />
+                                    <Button fx:id="clientEffacerBtn" layoutX="229.0" layoutY="572.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Effacer" textFill="WHITE" />
+                                    <Button fx:id="clientActualiserBtn" layoutX="83.0" layoutY="573.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Actualiser" textFill="WHITE" />
+                                    <DatePicker fx:id="clientDateN" layoutX="82.0" layoutY="524.0" prefHeight="27.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="serviceForm" layoutX="1.0" layoutY="1.0" prefHeight="643.0" prefWidth="1144.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" visible="false">
+                           <children>
+                              <AnchorPane layoutX="4.0" layoutY="4.0" prefHeight="616.0" prefWidth="1144.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="3.0">
+                                 <children>
+                                    <AnchorPane layoutX="365.0" layoutY="2.0" prefHeight="631.0" prefWidth="771.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css">
+                                       <children>
+                                          <TextField fx:id="serviceRechercheText" layoutX="10.0" layoutY="6.0" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@DashboardDesign.css" />
+                                          <Button fx:id="serviceRechercheBtn" layoutX="318.0" layoutY="5.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Recherche" textFill="WHITE" />
+                                          <TableView fx:id="serviceTableView" layoutX="2.0" layoutY="43.0" prefHeight="585.0" prefWidth="767.0">
+                                            <columns>
+                                              <TableColumn fx:id="serviceIDCol" prefWidth="103.0" text="ID du services" />
+                                              <TableColumn fx:id="serviceNomCol" prefWidth="106.0" text="Nom du services" />
+                                                <TableColumn fx:id="serviceTypeCol" prefWidth="106.0" text="Types du services" />
+                                                <TableColumn fx:id="servicePrixCol" prefWidth="106.0" text="Prix du services" />
+                                                <TableColumn fx:id="serviceDureeCol" prefWidth="106.0" text="Durée services" />
+                                                <TableColumn fx:id="serviceDateDebutCol" prefWidth="106.0" text="Date debut" />
+                                                <TableColumn fx:id="serviceDateFinCol" prefWidth="106.0" text="Date fin" />
+                                            </columns>
+                                          </TableView>
+                                          <Label layoutX="562.0" layoutY="13.0" text="Nos services" />
+                                          <FontAwesomeIconView glyphName="SEARCH" layoutX="16.0" layoutY="28.0" size="1.5em" />
+                                       </children>
+                                    </AnchorPane>
+                                    <Label layoutX="31.0" layoutY="19.0" text="ID du services: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="serviceID" layoutX="125.0" layoutY="14.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="15.0" layoutY="60.0" text="Nom du services: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="serviceNom" layoutX="125.0" layoutY="55.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="13.0" layoutY="102.0" text="Types du services:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="serviceType" layoutX="125.0" layoutY="97.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="26.0" layoutY="143.0" text="Prix du services:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Button fx:id="serviceAjouterBtn" layoutX="233.0" layoutY="348.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Ajouter" textFill="WHITE" />
+                                    <Button fx:id="serviceModifierBtn" layoutX="233.0" layoutY="407.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Modifier" textFill="WHITE" />
+                                    <Button fx:id="serviceEffacerBtn" layoutX="233.0" layoutY="466.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Effacer" textFill="WHITE" />
+                                    <Button fx:id="serviceActualiserBtn" layoutX="233.0" layoutY="527.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Actualiser" textFill="WHITE" />
+                                    <TextField fx:id="servicePrix" layoutX="126.0" layoutY="138.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="12.0" layoutY="185.0" text="Durée du services:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="serviceDuree" layoutX="126.0" layoutY="180.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="48.0" layoutY="229.0" text="Date debut:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="serviceDateDebut" layoutX="126.0" layoutY="224.0" prefHeight="27.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="67.0" layoutY="274.0" text="Date fin:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="serviceDateFin" layoutX="126.0" layoutY="269.0" prefHeight="27.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="suivieForm" layoutX="2.0" prefHeight="647.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" visible="false">
+                           <children>
+                              <AnchorPane layoutX="3.0" layoutY="3.0" prefHeight="643.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="2.0">
+                                 <children>
+                                    <AnchorPane layoutX="365.0" layoutY="2.0" prefHeight="639.0" prefWidth="786.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css">
+                                       <children>
+                                          <TextField fx:id="serviceRechercheText1" layoutX="10.0" layoutY="6.0" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@DashboardDesign.css" />
+                                          <Button fx:id="serviceRechercheBtn1" layoutX="318.0" layoutY="5.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Recherche" textFill="WHITE" />
+                                          <TableView fx:id="serviceTableView1" layoutX="2.0" layoutY="43.0" prefHeight="594.0" prefWidth="782.0">
+                                             <columns>
+                                                <TableColumn fx:id="serviceIDCol1" prefWidth="103.0" text="ID du services" />
+                                                <TableColumn fx:id="serviceNomCol1" prefWidth="106.0" text="Nom du services" />
+                                                <TableColumn fx:id="serviceTypeCol1" prefWidth="106.0" text="Types du services" />
+                                                <TableColumn fx:id="servicePrixCol1" prefWidth="106.0" text="Totale solde" />
+                                                <TableColumn fx:id="serviceDureeCol1" prefWidth="106.0" text="Déjà payer" />
+                                                <TableColumn fx:id="serviceDateDebutCol1" prefWidth="106.0" text="Date debut" />
+                                                <TableColumn fx:id="serviceDateFinCol1" prefWidth="106.0" text="Reste à payer " />
+                                             </columns>
+                                          </TableView>
+                                          <Label layoutX="562.0" layoutY="13.0" />
+                                          <FontAwesomeIconView glyphName="SEARCH" layoutX="16.0" layoutY="28.0" size="1.5em" />
+                                          <Label layoutX="518.0" layoutY="8.0" text="Suivie des clients" textFill="#329302">
+                                             <font>
+                                                <Font name="System Bold" size="18.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <Label layoutX="66.0" layoutY="19.0" text="ID client:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="serviceID1" layoutX="125.0" layoutY="14.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="83.0" layoutY="65.0" text="Nom: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="22.0" layoutY="155.0" text="Totale solde(Ar):">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Button fx:id="serviceAjouterBtn1" layoutX="202.0" layoutY="322.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Ajouter" textFill="WHITE" />
+                                    <Button fx:id="serviceActualiserBtn1" layoutX="40.0" layoutY="322.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Actualiser" textFill="WHITE" />
+                                    <TextField fx:id="servicePrix1" layoutX="126.0" layoutY="150.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="31.0" layoutY="197.0" text="Déjà payer(Ar):">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="serviceDuree1" layoutX="126.0" layoutY="192.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="16.0" layoutY="242.0" text="Reste à payer(Ar):">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="serviceDuree11" layoutX="126.0" layoutY="237.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="67.0" layoutY="110.0" text="Prénom: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="123.0" layoutY="60.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="124.0" layoutY="104.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="factureForm" prefHeight="640.0" prefWidth="1142.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" visible="false">
+                           <children>
+                              <AnchorPane layoutX="4.0" layoutY="4.0" prefHeight="634.0" prefWidth="1136.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="3.0">
+                                 <children>
+                                    <Label layoutX="98.0" layoutY="106.0" text="N° du facture: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="factureID" layoutX="190.0" layoutY="101.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="45.0" layoutY="143.0">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="clientNom" layoutX="190.0" layoutY="188.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="122.0" layoutY="282.0" text="Quantité:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="111.0" layoutY="329.0" text="Prix unitaire:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="servicePrix" layoutX="191.0" layoutY="324.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <AnchorPane layoutX="531.0" layoutY="31.0" prefHeight="494.0" prefWidth="489.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css">
+                                       <children>
+                                          <ImageView fx:id="factureImage" fitHeight="490.0" fitWidth="487.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true" />
+                                          <ImageView fitHeight="78.0" fitWidth="78.0" layoutX="208.0" layoutY="11.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../Image/1704805960156.jpg" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </AnchorPane>
+                                    <Button fx:id="facturePrint" layoutX="682.0" layoutY="559.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="189.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Imprimer" textFill="WHITE" />
+                                    <Label layoutX="97.0" layoutY="193.0" text="Nom du client:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <DatePicker fx:id="factureDate" layoutX="190.0" layoutY="144.0" prefHeight="27.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="91.0" layoutY="148.0" text="Date de l'achat:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="servicequantite" layoutX="191.0" layoutY="278.0" prefHeight="27.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <TextField fx:id="serviceNom" layoutX="190.0" layoutY="233.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="109.0" layoutY="238.0" text="Désignation:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="121.0" layoutY="376.0" text="Monttants:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="factureMonttant" layoutX="192.0" layoutY="371.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="278.0" layoutY="434.0" text="Sgnature:" />
+                                    <Label layoutX="144.0" layoutY="492.0" text="Le client" />
+                                    <Label layoutX="378.0" layoutY="491.0" text="La responsable" />
+                                    <Label layoutX="260.0" layoutY="17.0" text="La facture" textFill="#329302">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="historiqueForm" prefHeight="640.0" prefWidth="1142.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" visible="false">
+                           <children>
+                              <AnchorPane layoutX="4.0" layoutY="4.0" prefHeight="637.0" prefWidth="1138.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="3.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="3.0">
+                                 <children>
+                                    <Label layoutX="45.0" layoutY="143.0">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="418.0" layoutY="15.0">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="349.0" layoutY="7.0" text="Liste de tous les activités récents dans l'application" textFill="#329302">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView fx:id="historiqueTableview" layoutX="3.0" layoutY="39.0" prefHeight="501.0" prefWidth="1132.0">
+                                      <columns>
+                                        <TableColumn fx:id="historiqueDateCol" prefWidth="218.00003051757812" text="Date &amp; l'heure" />
+                                        <TableColumn fx:id="historiqueActiviteCol" minWidth="0.0" prefWidth="866.0" text="Activitées" />
+                                      </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="makeServiceForm" layoutX="4.0" layoutY="4.0" prefHeight="633.0" prefWidth="1150.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" visible="false">
+                           <children>
+                              <AnchorPane layoutX="102.0" layoutY="56.0" prefHeight="620.2" prefWidth="1124.1999999999998" styleClass="centre-formDE" stylesheets="@DashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <AnchorPane layoutX="505.0" layoutY="5.0" prefHeight="621.0" prefWidth="637.0" styleClass="centre-formDE" stylesheets="@DashboardDesign.css">
+                                       <children>
+                                          <TableView layoutX="4.0" layoutY="5.0" prefHeight="289.0" prefWidth="630.0">
+                                             <columns>
+                                                <TableColumn prefWidth="126.0" text="ID client" />
+                                                <TableColumn prefWidth="199.0" text="Nom client" />
+                                                <TableColumn prefWidth="304.0" text="Prénom client" />
+                                             </columns>
+                                          </TableView>
+                                          <TableView layoutX="4.0" layoutY="298.0" prefHeight="318.0" prefWidth="629.0">
+                                             <columns>
+                                                <TableColumn prefWidth="126.0" text="ID service" />
+                                                <TableColumn prefWidth="247.0" text="Nom du service" />
+                                                <TableColumn prefWidth="253.0" text="Prix du service" />
+                                             </columns>
+                                          </TableView>
+                                       </children>
+                                    </AnchorPane>
+                                    <Label layoutX="80.0" layoutY="94.0" text="ID client: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField layoutX="140.0" layoutY="89.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="98.0" layoutY="142.0" text="Nom: ">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="84.0" layoutY="189.0" text="Prénom:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="71.0" layoutY="284.0" text="ID service:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField layoutX="138.0" layoutY="279.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="34.0" layoutY="333.0" text="Nom du service:">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="15.0" layoutY="374.0" text="Prix du service (Ar):">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Button layoutX="376.0" layoutY="276.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Recherche" textFill="WHITE" />
+                                    <Button fx:id="makeserviceAjouterBtn" layoutX="110.0" layoutY="461.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Ajouter" textFill="WHITE" />
+                                    <Button layoutX="377.0" layoutY="86.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Recherche" textFill="WHITE" />
+                                    <Label layoutX="140.0" layoutY="137.0" prefHeight="29.0" prefWidth="226.0" styleClass="textfield-label" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="140.0" layoutY="183.0" prefHeight="29.0" prefWidth="226.0" styleClass="textfield-label" stylesheets="@DashboardDesign.css" />
+                                    <Label layoutX="137.0" layoutY="327.0" prefHeight="29.0" prefWidth="226.0" styleClass="textfield-label" stylesheets="@DashboardDesign.css">
+                                       <font>
+                                          <Font name="Berlin Sans FB Bold" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Button fx:id="makeserviceAnulerBtn" layoutX="280.0" layoutY="461.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Anuler" textFill="WHITE" />
+                                    <Line endX="256.0" layoutX="239.0" layoutY="237.0" startX="-222.0" />
+                                    <Button fx:id="makeservicePayerBtn" layoutX="196.0" layoutY="547.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="login-btn" stylesheets="@loginDesign.css" text="Payer un service" textFill="WHITE" />
+                                    <Label layoutX="102.0" layoutY="14.0" text="Nous vous soutenons sur vos projets!" textFill="#329302">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="137.0" layoutY="369.0" prefHeight="29.0" prefWidth="226.0" styleClass="textfield-label" stylesheets="@DashboardDesign.css" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>
