@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jirehstudentsapp;
+package Controller;
 
 import java.net.URL;
 import java.sql.Connection;
@@ -26,6 +26,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import jirehstudentsapp.database;
+import jirehstudentsapp.getData;
 
 /**
  *
@@ -84,11 +86,13 @@ public class FXMLDocumentController implements Initializable {
                alert = new Alert(Alert.AlertType.ERROR);
                alert.setTitle("ERROR MESSAGE");
                alert.setHeaderText(null);
-               alert.setContentText("S'il vous plaît, vous devez d'abord complétez les formulaires.");
+               alert.setContentText("S'il vous plaît, vous devez d'abord complétez ces formulaires.");
                alert.showAndWait();
                
            }else{
                if(result.next()){
+                   getData.username = username.getText();
+                   
                    alert = new Alert(Alert.AlertType.INFORMATION);
                    alert.setTitle("MESSAGE D'INFORMATION");
                    alert.setHeaderText(null);
@@ -96,7 +100,7 @@ public class FXMLDocumentController implements Initializable {
                    alert.showAndWait();
                    
                    loginBtn.getScene().getWindow().hide();
-                   Parent root = FXMLLoader.load(getClass().getResource("Dashboard.fxml"));
+                   Parent root = FXMLLoader.load(getClass().getResource("/Interface/Dashboard.fxml"));
                    Stage stage = new Stage();
                    Scene scene = new Scene(root);
         
@@ -124,7 +128,7 @@ public class FXMLDocumentController implements Initializable {
                    alert = new Alert(Alert.AlertType.ERROR);
                    alert.setTitle("ERROR MESSAGE");
                    alert.setHeaderText(null);
-                   alert.setContentText("Nom d'utilisateur/Mot de passe incorecte");
+                   alert.setContentText("Une de ces informations est incorecte");
                    alert.showAndWait();
                 }
            }
@@ -149,12 +153,31 @@ public class FXMLDocumentController implements Initializable {
     public void OpenSign(){
         try {
 	  OpenSign.getScene().getWindow().hide();
-          Parent root = FXMLLoader.load(getClass().getResource("Inscription.fxml"));
+          Parent root = FXMLLoader.load(getClass().getResource("/Interface/Inscription.fxml"));
           Stage stage = new Stage();
           Scene scene = new Scene(root);
           
+          root.setOnMousePressed((MouseEvent event) ->{
+                x = event.getSceneX();
+                y = event.getSceneY();
+          });
+
+          root.setOnMouseDragged((MouseEvent event) ->{
+                stage.setX(event.getScreenX() - x);
+                stage.setY(event.getScreenY() - y);
+
+                stage.setOpacity(.8);
+          });
+
+          root.setOnMouseReleased((MouseEvent event) ->{
+                stage.setOpacity(1);
+          });
+
+          stage.initStyle(StageStyle.TRANSPARENT);
+
           stage.setScene(scene);
           stage.show();
+          
           
 	} catch(Exception e){e.printStackTrace();}
     }
@@ -163,7 +186,7 @@ public class FXMLDocumentController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         connect = database.ConnectDb();
-        // TODO
+        // TODO connection BBD
     }    
     
 }

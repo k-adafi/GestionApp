@@ -1,0 +1,82 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 19 mars 2024, 21:31:32
+    Author     : KADAFI Ben
+*/
+
+.left-haut{
+    -fx-background-color:white;
+    -fx-border-color: #000;
+    -fx-border-width: .4px 0px .4px .4px;
+}
+
+
+.left-form {
+    -fx-background-color: linear-gradient(to bottom right, #e7e7e7, #329302);
+    -fx-border-color: #000;
+    -fx-border-width: .4px 0px .4px .4px;
+}
+
+.right-form {
+    -fx-background-color: #3f66e4;
+    -fx-border-color: #000;
+    -fx-border-width: .4px .4px .4px 0px;
+}
+
+.close { 
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+}
+
+.close:hover {
+    -fx-background-color: #ff3547;
+}
+
+.text-field {
+    -fx-background-color: linear-gradient(to bottom right, #fff, #fff);
+    -fx-border-color: linear-gradient(to bottom right, #329302, #329302);
+    -fx-border-radius: 4px;
+    -fx-border-width: .8px;
+    -fx-font-size: 14px;
+    -fx-font-family: "Berlin Sans FB";
+}
+
+.text-field:focused {
+    -fx-border-width: 2px;
+    -fx-background-color: #fff;
+}
+
+.login-btn {
+    -fx-background-color: linear-gradient(to bottom, #329302, #329302);
+    -fx-font-size: 14px;
+    -fx-font-family: "Berlin Sans FB";
+    -fx-cursor: hand;
+}
+
+.login-btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #abe749, #329302);
+}
+
+.inscBtn{
+    -fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);
+    -fx-font-size: 14px;
+    -fx-font-family: "Berlin Sans FB";
+    -fx-cursor: hand;
+}
+
+.inscBtn:hover{
+    -fx-background-color: linear-gradient(to bottom, #d0d0d0, #abe749);
+}
+
+
+
+.MotDPssOu { 
+    -fx-background-color: transparent;
+    -fx-cursor: hand;
+    -fx-font-size: 14px;
+    -fx-font-family: "Berlin Sans FB";
+}

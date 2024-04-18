@@ -3,11 +3,31 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package jirehstudentsapp;
+package Controller;
 
+import java.io.File;
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,16 +39,26 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
+import jirehstudentsapp.clientData;
+import jirehstudentsapp.database;
+import jirehstudentsapp.getData;
+import static jirehstudentsapp.getData.username;
+import jirehstudentsapp.serviceData;
 
 /**
  *
@@ -47,7 +77,9 @@ public class DashboardController implements Initializable{
 
     @FXML
     private Label NomUtilisateur;
-
+    
+    
+    //Bouton de navigation fenetre
     @FXML
     private Button acceuilBtn;
 
@@ -71,7 +103,9 @@ public class DashboardController implements Initializable{
 
     @FXML
     private Button makeserviceBtn;
-
+    
+    
+    //Acceuil
     @FXML
     private AnchorPane acceuilForm;
 
@@ -87,56 +121,55 @@ public class DashboardController implements Initializable{
     @FXML
     private Button acceuilListeServiceBtn;
 
-    @FXML
-    private AnchorPane serviceForm;
-
+    
+    //Client
     @FXML
     private AnchorPane clientForm;
 
     @FXML
-    private TableColumn<?, ?> clientIDCol;
+    private TableView<clientData> clientTableView;
 
     @FXML
-    private TableColumn<?, ?> clientNomCol;
+    private TableColumn<clientData, String> clientIDCol;
 
     @FXML
-    private TableColumn<?, ?> clientPrenomCol;
+    private TableColumn<clientData, String> clientNomCol;
 
     @FXML
-    private TableColumn<?, ?> clientGenreCol;
+    private TableColumn<clientData, String> clientPrenomCol;
 
     @FXML
-    private TableColumn<?, ?> clientDateNCol;
+    private TableColumn<clientData, String> clientGenreCol;
 
     @FXML
-    private TableColumn<?, ?> clientCINCol;
+    private TableColumn<clientData, String> clientDateNCol;
 
     @FXML
-    private TableColumn<?, ?> clientEtablissementCol;
+    private TableColumn<clientData, String> clientCINCol;
 
     @FXML
-    private TableColumn<?, ?> clientMentionCol;
+    private TableColumn<clientData, String> clientEtablissementCol;
 
     @FXML
-    private TableColumn<?, ?> clientNiveauCol;
+    private TableColumn<clientData, String> clientMentionCol;
 
     @FXML
-    private TableColumn<?, ?> clientCodageCol;
+    private TableColumn<clientData, String> clientNiveauCol;
 
     @FXML
-    private TableColumn<?, ?> clientPassantCol;
+    private TableColumn<clientData, String> clientCodageCol;
 
     @FXML
-    private TableColumn<?, ?> clientTelCol;
+    private TableColumn<clientData, String> clientPassantCol;
 
     @FXML
-    private TableColumn<?, ?> clientAdressCol;
+    private TableColumn<clientData, String> clientTelCol;
+
+    @FXML
+    private TableColumn<clientData, String> clientAdressCol;
 
     @FXML
     private TextField clientRechercheText;
-
-    @FXML
-    private Button clientRechercheBtn;
 
     @FXML
     private TextField clientID;
@@ -148,10 +181,10 @@ public class DashboardController implements Initializable{
     private TextField clientPrenom;
 
     @FXML
-    private ComboBox<?> clientGenre;
+    private ComboBox<String> clientGenre;
 
     @FXML
-    private TextField clientCIN;
+    private TextField clientCNI;
 
     @FXML
     private TextField clientMention;
@@ -163,13 +196,13 @@ public class DashboardController implements Initializable{
     private TextField clientTel;
 
     @FXML
-    private ComboBox<?> clientPassant;
+    private ComboBox<String> clientPassant;
 
     @FXML
-    private ComboBox<?> clientNiveau;
+    private ComboBox<String> clientNiveau;
 
     @FXML
-    private ComboBox<?> clientEtablissement;
+    private ComboBox<String> clientEtablissement;
 
     @FXML
     private TextField clientAdress;
@@ -196,62 +229,56 @@ public class DashboardController implements Initializable{
     private DatePicker clientDateN;
 
     @FXML
-    private TextField serviceRechercheText;
+    private AnchorPane suivieForm;
+    
+    
+    //Service
+    @FXML
+    private AnchorPane serviceForm;
+    
+    @FXML
+    private TableView<serviceData> serviceTableView;
 
     @FXML
-    private Button serviceRechercheBtn;
+    private TableColumn<serviceData, Integer> serviceIDCol;
 
     @FXML
-    private TableView<?> serviceTableView;
+    private TableColumn<serviceData, String> serviceNomCol;
 
     @FXML
-    private TableColumn<?, ?> serviceIDCol;
+    private TableColumn<serviceData, String> serviceTypeCol;
 
     @FXML
-    private TableColumn<?, ?> serviceNomCol;
+    private TableColumn<serviceData, Double> servicePrixCol;
+    
+    @FXML
+    private TableColumn<serviceData, String> serviceDureeCol;
 
     @FXML
-    private TableColumn<?, ?> serviceTypeCol;
+    private TableColumn<serviceData, Date> serviceDateDebutCol;
 
     @FXML
-    private TableColumn<?, ?> servicePrixCol;
+    private TableColumn<serviceData, Date> serviceDateFinCol;
 
     @FXML
-    private TableColumn<?, ?> serviceDureeCol;
+    private TextField serviceTextFieldRecherche;
 
-    @FXML
-    private TableColumn<?, ?> serviceDateDebutCol;
-
-    @FXML
-    private TableColumn<?, ?> serviceDateFinCol;
 
     @FXML
     private TextField serviceID;
 
     @FXML
     private TextField serviceNom;
-
+    
     @FXML
     private TextField serviceType;
 
     @FXML
-    private Button serviceAjouterBtn;
-
-    @FXML
-    private Button serviceModifierBtn;
-
-    @FXML
-    private Button serviceEffacerBtn;
-
-    @FXML
-    private Button serviceActualiserBtn;
-
-    @FXML
     private TextField servicePrix;
-
+    
     @FXML
     private TextField serviceDuree;
-
+    
     @FXML
     private DatePicker serviceDateDebut;
 
@@ -259,61 +286,31 @@ public class DashboardController implements Initializable{
     private DatePicker serviceDateFin;
 
     @FXML
-    private AnchorPane suivieForm;
+    private Button serviceAjouterBtn;
 
     @FXML
-    private TextField serviceRechercheText1;
+    private Button serviceEffacerBtn;
+    
+    @FXML
+    private Button serviceModifierBtn;
 
     @FXML
-    private Button serviceRechercheBtn1;
+    private Button serviceActualiserBtn;
+    
 
-    @FXML
-    private TableView<?> serviceTableView1;
-
-    @FXML
-    private TableColumn<?, ?> serviceIDCol1;
-
-    @FXML
-    private TableColumn<?, ?> serviceNomCol1;
-
-    @FXML
-    private TableColumn<?, ?> serviceTypeCol1;
-
-    @FXML
-    private TableColumn<?, ?> servicePrixCol1;
-
-    @FXML
-    private TableColumn<?, ?> serviceDureeCol1;
-
-    @FXML
-    private TableColumn<?, ?> serviceDateDebutCol1;
-
-    @FXML
-    private TableColumn<?, ?> serviceDateFinCol1;
-
-    @FXML
-    private TextField serviceID1;
-
-    @FXML
-    private Button serviceAjouterBtn1;
-
-    @FXML
-    private Button serviceActualiserBtn1;
-
-    @FXML
-    private TextField servicePrix1;
-
-    @FXML
-    private TextField serviceDuree1;
-
-    @FXML
-    private TextField serviceDuree11;
-
+    
+    //Facture
     @FXML
     private AnchorPane factureForm;
 
     @FXML
     private TextField factureID;
+
+    @FXML
+    private TextField clientNomF;
+
+    @FXML
+    private TextField servicePrixF;
 
     @FXML
     private ImageView factureImage;
@@ -325,11 +322,16 @@ public class DashboardController implements Initializable{
     private DatePicker factureDate;
 
     @FXML
-    private ComboBox<?> servicequantite;
+    private ComboBox<?> factureservicequantite;
+
+    @FXML
+    private TextField srviceNom;
 
     @FXML
     private TextField factureMonttant;
-
+    
+    
+    //Historique
     @FXML
     private AnchorPane historiqueForm;
 
@@ -342,6 +344,8 @@ public class DashboardController implements Initializable{
     @FXML
     private TableColumn<?, ?> historiqueActiviteCol;
 
+    
+    //Faire un service
     @FXML
     private AnchorPane makeServiceForm;
 
@@ -353,6 +357,790 @@ public class DashboardController implements Initializable{
 
     @FXML
     private Button makeservicePayerBtn;
+    
+    
+    
+    
+    
+     
+    
+    private PreparedStatement prepare;
+    private Statement statement;
+    private ResultSet result;
+    
+    private Connection connect;
+    
+    private Image imageClient;
+        
+    //Ajout nouveau client (efa mandeha)
+    public void addClientAdd(){  
+       
+        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateN = sdf.format(javaDate);
+        
+        String sql = "INSERT INTO client"
+                + "(clientID, clientNom, clientPrenom, clientGenre, clientDateN, clientCNI, clientEtablissement,"
+                + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientPhoto)"
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        
+        connect = database.ConnectDb();
+        
+        try{     
+            Alert alert;
+            
+            if(clientID.getText().isEmpty()
+                    || clientNom.getText().isEmpty()
+                    || clientPrenom.getText().isEmpty()
+                    || clientGenre.getSelectionModel().getSelectedItem() == null
+                    || dateN == null
+                    || clientCNI.getText().isEmpty()
+                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
+                    || clientMention.getText().isEmpty()
+                    || clientNiveau.getSelectionModel().getSelectedItem() == null
+                    || clientCodage.getText().isEmpty()
+                    || clientPassant.getSelectionModel().getSelectedItem() == null
+                    || clientTel.getText().isEmpty()
+                    || clientAdress.getText().isEmpty()
+                    || getData.path == null || getData.path == "")
+            { 
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
+                alert.showAndWait();
+            }
+            else
+            {
+                String check = "SELECT clientID FROM client WHERE clientID = '"
+                        +clientID.getText()+"'";
+                
+                statement = connect.createStatement();
+                result = statement.executeQuery(check);
+                
+                if(result.next()){
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Cette ClientID:" + clientID.getText() + "existe déjà!");
+                    alert.showAndWait();
+                }
+                else
+                {
+                    prepare = connect.prepareStatement(sql);
+                    prepare.setString(1, clientID.getText());
+                    prepare.setString(2, clientNom.getText());
+                    prepare.setString(3, clientPrenom.getText());
+                    prepare.setString(4, (String)clientGenre.getSelectionModel().getSelectedItem());
+                    prepare.setString(5, String.valueOf(dateN));
+                    prepare.setString(6, clientCNI.getText());
+                    prepare.setString(7, (String)clientEtablissement.getSelectionModel().getSelectedItem());
+                    prepare.setString(8, clientMention.getText());
+                    prepare.setString(9, (String)clientNiveau.getSelectionModel().getSelectedItem());
+                    prepare.setString(10, clientCodage.getText());
+                    prepare.setString(11, (String)clientPassant.getSelectionModel().getSelectedItem());
+                    prepare.setString(12, clientTel.getText());   
+                    prepare.setString(13, clientAdress.getText());  
+
+                    //Pour la photo du client
+                    String uri = getData.path;
+                    uri = uri.replace("\\", "\\\\");  
+                    prepare.setString(14, uri);
+                    prepare.executeUpdate();
+                       
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ajout de client réussi avec succès!");
+                    alert.showAndWait();
+                    
+                    addClientShowListData();
+                    addClientReset();
+                }
+            
+            }
+            
+        }catch(Exception e){e.printStackTrace();}
+    }
+    
+    
+    
+    //Mise à jour de client (EFA MANDEHA)
+    public void addClientUpdate(){
+        
+        String uri = getData.path;
+        uri = uri.replace("\\", "\\\\");
+        
+      //  Date clientDateN = new Date(); 
+      //  java.sql.Date sqlDate = new java.sql.Date(clientDateN.getTime());
+        
+        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateN = sdf.format(javaDate);
+        
+        String sql = "UPDATE client SET clientNom = '"
+                +clientNom.getText()+"', clientPrenom = '"
+                +clientPrenom.getText()+"', clientGenre = '"
+                +clientGenre.getSelectionModel().getSelectedItem()+"', clientDateN = '"
+                +dateN+"', clientCNI = '"
+                +clientCNI.getText()+"',  clientEtablissement = '"
+                +clientEtablissement.getSelectionModel().getSelectedItem()+"', clientMention = '"
+                +clientMention.getText()+"', clientNiveau ='"
+                +clientNiveau.getSelectionModel().getSelectedItem()+"', clientCodage = '"
+                +clientCodage.getText()+"', clientPassant = '"
+                +clientPassant.getSelectionModel().getSelectedItem()+"', clientTel = '"
+                +clientTel.getText()+"', clientAdresse = '"
+                +clientAdress.getText()+"', clientPhoto = '"
+                +uri+"' WHERE clientID = '"
+                +clientID.getText()+"'";
+        
+        connect = database.ConnectDb();
+        
+        try{
+            Alert alert;
+            if(clientID.getText().isEmpty()
+                    || clientNom.getText().isEmpty()
+                    || clientPrenom.getText().isEmpty()
+                    || clientGenre.getSelectionModel().getSelectedItem() == null
+                    || dateN == null
+                    || clientCNI.getText().isEmpty()
+                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
+                    || clientMention.getText().isEmpty()
+                    || clientNiveau.getSelectionModel().getSelectedItem() == null
+                    || clientCodage.getText().isEmpty()
+                    || clientPassant.getSelectionModel().getSelectedItem() == null
+                    || clientTel.getText().isEmpty()
+                    || clientAdress.getText().isEmpty()
+                    || getData.path == null || getData.path == "")
+            {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
+                alert.showAndWait();
+            }else{
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sur de vouloir modifier cette client "+clientID.getText()+" ?" );
+                Optional<ButtonType> option = alert.showAndWait();
+                
+                if(option.get().equals(ButtonType.OK)){
+                    statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+                    
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Client a été modifier avec succès!");
+                    alert.showAndWait();
+                    
+                    addClientShowListData();
+                    addClientReset();
+                }
+            }    
+            
+        }catch(Exception e){e.printStackTrace();}
+    } 
+    
+    
+    //Supprimer un client (efa mandeha) 
+    public void addClientDelete() {
+        try {
+            if (clientID.getText().isEmpty() || clientDateN.getValue() == null || getData.path == null || getData.path.equals("")) {
+                Alert alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Tous les champs doivent être remplis!");
+                alert.showAndWait();
+                return;
+            }
+
+            String uri = getData.path.replace("\\", "\\\\");
+            java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateN = sdf.format(javaDate);
+
+            String sql = "DELETE FROM client WHERE clientID = '" + clientID.getText() + "'";
+
+            connect = database.ConnectDb();
+            if (connect == null) {
+                // Gérer l'échec de la connexion à la base de données
+                return;
+            }
+
+            Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
+            confirmationAlert.setTitle("Message de confirmation");
+            confirmationAlert.setHeaderText(null);
+            confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer ce client " + clientID.getText() + " ?");
+            Optional<ButtonType> option = confirmationAlert.showAndWait();
+
+            if (option.isPresent() && option.get() == ButtonType.OK) {
+                statement = connect.createStatement();
+                statement.executeUpdate(sql);
+
+                Alert successAlert = new Alert(AlertType.INFORMATION);
+                successAlert.setTitle("Message d'information");
+                successAlert.setHeaderText(null);
+                successAlert.setContentText("Client supprimé avec succès!");
+                successAlert.showAndWait();
+
+                addClientShowListData();
+                addClientReset();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Gérer l'exception
+        }
+    }
+
+    
+   
+   /* public void addClientDelete(){
+     
+        String uri = getData.path;
+        uri = uri.replace("\\", "\\\\");
+        
+        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateN = sdf.format(javaDate);
+        
+        String sql = "DELETE FROM client WHERE clientID = '"
+                +clientID.getText()+"'";
+        
+        connect = database.ConnectDb();
+        
+        try{
+            Alert alert;
+            if(clientID.getText().isEmpty()
+                    || clientNom.getText().isEmpty()
+                    || clientPrenom.getText().isEmpty()
+                    || clientGenre.getSelectionModel().getSelectedItem() == null
+                    || dateN == null
+                    || clientCNI.getText().isEmpty()
+                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
+                    || clientMention.getText().isEmpty()
+                    || clientNiveau.getSelectionModel().getSelectedItem() == null
+                    || clientCodage.getText().isEmpty()
+                    || clientPassant.getSelectionModel().getSelectedItem() == null
+                    || clientTel.getText().isEmpty()
+                    || clientAdress.getText().isEmpty()
+                    || getData.path == null || getData.path == "")
+            {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Tous les données, doivent être prise en compte!");
+                alert.showAndWait();
+            }else{
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sur de vouloir supprimer cette client "+clientID.getText()+" ?" );
+                Optional<ButtonType> option = alert.showAndWait();
+                
+                if(option.get().equals(ButtonType.OK)){
+                    statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+                    
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Client a été supprimer avec succès!");
+                    alert.showAndWait();
+                    
+                    addClientShowListData();
+                    addClientReset();
+                }
+            }
+            
+        }catch(Exception e){e.printStackTrace();}
+    }  */
+    
+    
+    
+    //Pour l'actualisation sur affiche client
+    public void addClientReset(){
+        clientID.setText("");
+        clientNom.setText("");
+        clientPrenom.setText("");
+        clientGenre.getSelectionModel().clearSelection();
+        clientDateN.setValue(null);
+        clientCNI.setText("");
+        clientEtablissement.getSelectionModel().clearSelection();
+        clientMention.setText("");
+        clientNiveau.getSelectionModel().clearSelection();
+        clientCodage.setText("");
+        clientPassant.getSelectionModel().clearSelection();
+        clientTel.setText("");
+        clientAdress.setText("");
+        clientImageView.setImage(null);
+        getData.path = "";
+    }
+     
+    //Insertion image client
+    public void addClientInsertImage(){
+         
+        FileChooser open = new FileChooser();
+        File file = open.showOpenDialog(main_form.getScene().getWindow());
+        
+        if(file != null){
+            
+            getData.path = file.getAbsolutePath();
+            
+            imageClient = new Image(file.toURI().toString(), 186, 150, false, true);
+            clientImageView.setImage(imageClient);
+        }
+    }
+    
+    //Pour combox genre client
+    private String[] genreList = {"Feminin", "Masculin", "Autres"};
+    public void addClientgenreList(){
+        List<String> listG = new ArrayList<>();
+        
+        for(String data: genreList){
+            listG.add(data);
+        }
+        
+        ObservableList listData = FXCollections.observableArrayList(listG);
+        clientGenre.setItems(listData);
+    }
+    
+    //Pour combox etablissement du client
+    private String[] etablissementList = {"FAC DEG", "FST", "FLSH", "FAC MEDCINE", "ISSED", "ENS", "ISPG", "CONFICIUS"};
+    public void addClientetablissementList(){
+        List<String> listE = new ArrayList<>();
+        
+        for(String data: etablissementList){
+            listE.add(data);
+        }
+        
+        ObservableList listData = FXCollections.observableArrayList(listE);
+        clientEtablissement.setItems(listData);
+    }
+    
+    //Pour combox niveau du client
+    private String[] niveauList = {"L1", "L2", "L3", "M1", "M2", "D1", "D2", "D3"};
+    public void addClientniveauList(){
+        List<String> listN = new ArrayList<>();
+        
+        for(String data: niveauList){
+            listN.add(data);
+        }
+        
+        ObservableList listData = FXCollections.observableArrayList(listN);
+        clientNiveau.setItems(listData);
+    }
+    
+    //Pour combox Passant ou redoublant de client
+    private String[] passantList = {"Passant(e)", "Rédoublant(e)", "Triplant(e)", "Quadriplant(e)"};
+    public void addClientpassantList(){
+         List<String> listP = new ArrayList<>();
+        
+        for(String data: passantList){
+            listP.add(data);
+        }
+        
+        ObservableList listData = FXCollections.observableArrayList(listP);
+        clientPassant.setItems(listData);
+    }
+    
+    //Pour la barre de recherche d'un client (efa mandeha)
+    public void addClientSearch(){
+        
+        FilteredList<clientData> filter = new FilteredList<>(addClientList, e-> true);
+        
+        clientRechercheText.textProperty().addListener((observable, oldValue, newValue) -> {
+            
+            filter.setPredicate(predicateClientData ->{
+                
+                if(newValue == null || newValue.isEmpty()){
+                    
+                    return true;
+                }
+                
+                String searchKey = newValue.toLowerCase();
+                
+                if(predicateClientData.getClientID().toString().contains(searchKey)){
+                    
+                    return true;
+                    
+                }else if(predicateClientData.getClientNom().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                    
+                }
+                else if(predicateClientData.getClientPrenom().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientGenre().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientDateN().toString().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientCNI().toString().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientEtablissement().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientMention().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientNiveau().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientCodage().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientPassant().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientTel().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else if(predicateClientData.getClientAdresse().toLowerCase().contains(searchKey)){
+                    
+                    return true;
+                }
+                else return false;
+            });
+              
+        });
+         
+        SortedList<clientData> sortList = new SortedList<>(filter);
+        
+        sortList.comparatorProperty().bind(clientTableView.comparatorProperty());
+        clientTableView.setItems(sortList);
+    }
+    
+    //Observation des données client sur la tableView.
+    public ObservableList<clientData> addClientListData(){
+        
+        ObservableList<clientData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM client";
+        
+        connect = database.ConnectDb();
+        
+        try{
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            clientData clientD;
+            
+            while (result.next()) {
+                clientD = new clientData
+                        (
+                            result.getInt("clientID"), 
+                            result.getString("clientNom"),
+                            result.getString("clientPrenom"), 
+                            result.getString("clientGenre"), 
+                            result.getDate("clientDateN"), 
+                            result.getString("clientCNI"),
+                            result.getString("clientEtablissement"), 
+                            result.getString("clientMention"), 
+                            result.getString("clientNiveau"), 
+                            result.getString("clientCodage"),
+                            result.getString("clientPassant"), 
+                            result.getString("clientTel"), 
+                            result.getString("clientAdresse"),
+                            result.getString("clientPhoto")
+                        );
+                listData.add(clientD);
+            }
+            
+        } catch(Exception e){e.printStackTrace();}
+        return listData;
+    }
+    
+    private ObservableList<clientData> addClientList;
+     
+    //Afficher les listes des clients sur Tables view
+    public void addClientShowListData(){
+        addClientList = addClientListData();
+        
+        clientIDCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));
+        clientNomCol.setCellValueFactory(new PropertyValueFactory<>("clientNom"));
+        clientPrenomCol.setCellValueFactory(new PropertyValueFactory<>("clientPrenom"));
+        clientGenreCol.setCellValueFactory(new PropertyValueFactory<>("clientGenre"));
+        clientDateNCol.setCellValueFactory(new PropertyValueFactory<>("clientDateN"));
+        clientCINCol.setCellValueFactory(new PropertyValueFactory<>("clientCNI"));
+        clientEtablissementCol.setCellValueFactory(new PropertyValueFactory<>("clientEtablissement"));
+        clientMentionCol.setCellValueFactory(new PropertyValueFactory<>("clientMention"));
+        clientNiveauCol.setCellValueFactory(new PropertyValueFactory<>("clientNiveau"));
+        clientCodageCol.setCellValueFactory(new PropertyValueFactory<>("clientCodage"));
+        clientPassantCol.setCellValueFactory(new PropertyValueFactory<>("clientPassant"));
+        clientTelCol.setCellValueFactory(new PropertyValueFactory<>("clientTel"));
+        clientAdressCol.setCellValueFactory(new PropertyValueFactory<>("clientAdresse"));
+        
+        clientTableView.setItems(addClientList);
+    }
+    
+    //Selection client via Table View (Mbola misy erreur)
+    
+    public void addClientSelect(){
+        clientData clientD = clientTableView.getSelectionModel().getSelectedItem();
+        int num = clientTableView.getSelectionModel().getSelectedIndex();
+
+        if((num -1) < -1){return;}
+
+        clientID.setText(String.valueOf(clientD.getClientID())); // Assurez-vous que clientID est un TextField ou un contrôle similaire
+        clientNom.setText(clientD.getClientNom());
+        clientPrenom.setText(clientD.getClientPrenom());
+
+        clientCNI.setText(clientD.getClientCNI()); 
+        clientMention.setText(clientD.getClientMention());
+        clientCodage.setText(clientD.getClientCodage());  
+        clientTel.setText(clientD.getClientTel());
+        clientAdress.setText(clientD.getClientAdresse());
+
+        //Pour image
+        getData.path = clientD.getClientPhoto();
+        String uri = "file:" + clientD.getClientPhoto();
+        imageClient = new Image(uri, 186, 150, false, true);
+        clientImageView.setImage(imageClient);
+        
+        // Assurez-vous que clientGenre est un ComboBox ou un autre contrôle approprié
+      //  clientGenre.getSelectionModel().select(clientD.getClientGenre());
+
+        // Convertir java.util.Date en LocalDate
+       // Instant instant = clientD.getClientDateN().toInstant();
+       // LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+       // clientDateN.setValue(localDate); // Assurez-vous que clientDateN est un DatePicker
+    } 
+
+
+    
+    
+  /*  public void addClientSelect(){
+        clientData clientD = clientTableView.getSelectionModel().getSelectedItem();
+        int num = clientTableView.getSelectionModel().getSelectedIndex();
+        
+        if((num -1)< -1){return;}
+        
+        clientID.setText(String.valueOf(clientD.getClientID()));
+        clientNom.setText(clientD.getClientNom());
+        clientPrenom.setText(clientD.getClientPrenom());
+      
+        
+        clientCNI.setText(clientD.getClientCNI()); 
+        clientMention.setText(clientD.getClientMention());
+        clientCodage.setText(String.valueOf(clientD.getClientCodage()));  
+        clientTel.setText(clientD.getClientTel());
+        clientAdress.setText(clientD.getClientAdresse());
+        
+        //Pour image
+        getData.path = clientD.getClientPhoto();
+        String uri = "file:" + clientD.getClientPhoto();
+        imageClient = new Image(uri, 186, 150, false, true);
+        clientImageView.setImage(imageClient);
+    }  */
+    
+    //Sur le nom d'utilisateur
+    public void displayUsername(){
+        NomUtilisateur.setText(getData.username);
+    }
+    
+    
+    /**********************************************************************************
+     * *******************************************************************************
+     * **************************SEPARATION********************************************
+     * ********************************************************************************
+     * *******************************************************************************
+     *********************************************************************************/
+    
+ 
+    //Section pour le service
+    
+    //Ajout nouveau service
+    public void addServiceAdd(){  
+        
+     /* Date serviceDateDebut = new Date(); 
+        java.sql.Date sqlDate1 = new java.sql.Date(serviceDateDebut.getTime());
+          
+        Date serviceDateFin = new Date(); 
+        java.sql.Date sqlDate2 = new java.sql.Date(serviceDateFin.getTime());  */
+     
+        java.util.Date dateD = java.util.Date.from(serviceDateDebut.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date sqlDate1 = new Date(dateD.getTime());
+        
+        java.util.Date dateF = java.util.Date.from(serviceDateFin.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date sqlDate2 = new Date(dateF.getTime());
+        
+        String sql = "INSERT INTO service"
+                + "(serviceID, serviceNom, serviceType, servicePrix, serviceDuree, serviceDateDebut, serviceDateFin)"
+                + "VALUES(?,?,?,?,?,?,?)";
+        
+        connect = database.ConnectDb();
+        
+        try{     
+            Alert alert;
+            
+            if(serviceID.getText().isEmpty()
+                    || serviceNom.getText().isEmpty()
+                    || serviceType.getText().isEmpty()
+                    || servicePrix.getText().isEmpty()
+                    || serviceDuree.getText().isEmpty()
+                    || sqlDate1 == null
+                    || sqlDate2 == null)
+            { 
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
+                alert.showAndWait();
+            }
+            else
+            {
+                String check = "SELECT serviceID FROM service WHERE serviceID = '"
+                        +serviceID.getText()+"'";
+                
+                statement = connect.createStatement();
+                result = statement.executeQuery(check);
+                
+                if(result.next()){
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Cette serviceID:" + serviceID.getText() + "existe déjà!");
+                    alert.showAndWait();
+                }
+                else
+                {
+                    prepare = connect.prepareStatement(sql);
+                    prepare.setString(1, serviceID.getText());
+                    prepare.setString(2, serviceNom.getText());
+                    prepare.setString(3, serviceType.getText());
+                    prepare.setString(4, servicePrix.getText());
+                    prepare.setString(5, serviceDuree.getText());
+                    prepare.setString(6, String.valueOf(sqlDate1));
+                    prepare.setString(7, String.valueOf(sqlDate2));
+                       
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ajout de service réussi avec succès!");
+                    alert.showAndWait();
+                    
+                    addServiceShowListData();
+                    addServiceReset();
+                }
+            
+            }
+            
+        }catch(Exception e){e.printStackTrace();}
+    }
+    
+    //Pour l'actualisation de l'affichage 
+    public void addServiceReset(){
+        serviceID.setText("");
+        serviceNom.setText("");
+        serviceType.setText("");
+        servicePrix.setText("");
+        serviceDuree.setText("");
+        serviceDateDebut.setValue(null);
+        serviceDateFin.setValue(null);
+    }
+    
+    //Observation des données service sur la tableView.
+    public ObservableList<serviceData> addServiceListData(){
+        
+        ObservableList<serviceData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM service";
+        
+        connect = database.ConnectDb();
+        
+        try{
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            serviceData serviceD;
+            
+            while (result.next()) {
+                serviceD = new serviceData
+                        (
+                            result.getInt("serviceID"), 
+                            result.getString("serviceNom"),
+                            result.getString("serviceType"), 
+                            result.getDouble("servicePrix"),
+                            result.getString("serviceDuree"),
+                            result.getDate("serviceDateDebut"),
+                            result.getDate("serviceDateFin")
+                                
+                        );
+                listData.add(serviceD);
+            }
+            
+        } catch(Exception e){e.printStackTrace();}
+        return listData;
+    }
+    
+    private ObservableList<serviceData> addServiceList;
+     
+    //Afficher les listes des services sur Tables view
+    public void addServiceShowListData(){
+        
+        addServiceList = addServiceListData();
+        
+        serviceIDCol.setCellValueFactory(new PropertyValueFactory<>("serviceID"));
+        serviceNomCol.setCellValueFactory(new PropertyValueFactory<>("serviceNom"));
+        serviceTypeCol.setCellValueFactory(new PropertyValueFactory<>("serviceType"));
+        servicePrixCol.setCellValueFactory(new PropertyValueFactory<>("servicePrix"));
+        serviceDureeCol.setCellValueFactory(new PropertyValueFactory<>("serviceDuree"));
+        serviceDateDebutCol.setCellValueFactory(new PropertyValueFactory<>("serviceDateDebut"));
+        serviceDateFinCol.setCellValueFactory(new PropertyValueFactory<>("serviceDateFin"));
+        
+        serviceTableView.setItems(addServiceList);
+    }
+    
+    //Selection service via Table View
+    public void addServiceSelect(){
+        serviceData serviceD = serviceTableView.getSelectionModel().getSelectedItem();
+        
+      /* String sql = "SELECT * from service where serviceID = ?";
+        try {
+            statement = connect.createStatement();
+            prepare.setString(1, serviceID.getText());
+            result = statement.executeQuery(sql);
+            
+            if(result.next()){
+                serviceNom.setText(result.getString("serviceNom"));
+                serviceType.setText(result.getString("serviceType"));
+                servicePrix.setText(result.getString("servicePrix"));
+                serviceDuree.setText(result.getString("serviceDuree"));
+                Date sqlDate1 = result.getDate("serviceDateDebut");
+                serviceDateDebut.setValue(sqlDate1.toLocalDate);
+            }
+            
+        } catch(Exception e){e.printStackTrace();}  */
+        
+        int num = serviceTableView.getSelectionModel().getSelectedIndex();
+        
+        java.util.Date dateD = java.util.Date.from(serviceDateDebut.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date sqlDate1 = new Date(dateD.getTime());
+        
+        java.util.Date dateF = java.util.Date.from(serviceDateFin.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Date sqlDate2 = new Date(dateF.getTime());
+        
+        if((num -1)< -1){return;}
+        
+        serviceID.setText(String.valueOf(serviceD.getServiceID()));
+        serviceNom.setText(serviceD.getServiceNom());
+        serviceType.setText(serviceD.getServiceType()); 
+        servicePrix.setText(String.valueOf(serviceD.getServicePrix()));
+        serviceDuree.setText(serviceD.getServiceDuree()); 
+    }
+    
+    
     
     //Relier les fenêtres
     public void SwitchForm(ActionEvent event){
@@ -390,6 +1178,15 @@ public class DashboardController implements Initializable{
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+            
+            //Pour les combox dans clients
+            addClientgenreList();
+            addClientetablissementList();
+            addClientniveauList();
+            addClientpassantList();
+            
+            //Barre de recherche
+            addClientSearch();
             
         }else if(event.getSource() == serviceBtn){
             acceuilForm.setVisible(false);
@@ -476,13 +1273,12 @@ public class DashboardController implements Initializable{
             factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");  
         }
-    
     }
     
-    //Pour la boutton de déconnexion
     private double x = 0;
     private double y = 0;
     
+    //Pour la boutton de déconnexion
     public void logout(){
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Message de confirmation");
@@ -494,7 +1290,7 @@ public class DashboardController implements Initializable{
 	   if(option.get().equals(ButtonType.OK)){
             
                 signOutBtn.getScene().getWindow().hide();
-                Parent root = FXMLLoader.load(getClass().getResource("FXMLDocument.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/Interface/FXMLDocument.fxml"));
                 Stage stage = new Stage();
                 Scene scene = new Scene(root);
         
@@ -519,17 +1315,15 @@ public class DashboardController implements Initializable{
                 stage.setScene(scene);
                 stage.show(); 
             }
-          
 	} catch(Exception e){e.printStackTrace();}
     }
 
-    
     //Pour la fermeture du fenetre
     public void close(){
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Message de confirmation");
         alert.setHeaderText(null);
-        alert.setContentText("Etes-vous sur de vouloir quitter le programme?");
+        alert.setContentText("Etes-vous sur de vouloir quitter le programme? \n Vous n'êtes pas encore déconnecter");
         Optional<ButtonType> option = alert.showAndWait();
         
         if(option.get().equals(ButtonType.OK)){
@@ -540,13 +1334,23 @@ public class DashboardController implements Initializable{
     //Pour la réduction d'une fenetre
     public void minimize(){
         Stage stage = (Stage)main_form.getScene().getWindow();
-        stage.setIconified(true);
-        
+        stage.setIconified(true); 
     }
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-     
+        
+        //Pour voir listes client dans TableView
+        addClientShowListData();
+        
+        //Pour voir liste service dans TableView
+        addServiceShowListData();
+        
+        //Pour les combox dans clients
+        addClientgenreList();
+        addClientetablissementList();
+        addClientniveauList();
+        addClientpassantList();
     }
     
 }
