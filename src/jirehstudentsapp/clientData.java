@@ -14,6 +14,7 @@ import java.util.Date;
  */
 public class clientData {
     
+    //Pour les clients
     private Integer clientID;
     private String clientNom;
     private String clientPrenom;
@@ -29,7 +30,8 @@ public class clientData {
     private String clientAdresse;
     private String clientPhoto;
     
-    
+ 
+    //Pour les clients
     public clientData(Integer clientID, String clientNom,String clientPrenom, String clientGenre, Date clientDateN,
         String clientCNI, String clientEtablissement, String clientMention, String clientNiveau, String clientCodage,
         String clientPassant,String clientTel, String clientAdresse, String clientPhoto)
@@ -49,11 +51,20 @@ public class clientData {
         this.clientAdresse = clientAdresse;
         this.clientPhoto = clientPhoto;
     }  
+    
+    
+    public clientData(Integer clientID, String clientNom,String clientPrenom){
+        this.clientID = clientID;
+        this.clientNom = clientNom;
+        this.clientPrenom = clientPrenom;    
+    }
+    
 
     public clientData(int aInt, String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    //Pour les clients
     public Integer getClientID(){
         return clientID;
     }
@@ -109,4 +120,5 @@ public class clientData {
     public String getClientPhoto(){
         return clientPhoto;
     }
+    
 }

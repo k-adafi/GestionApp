@@ -23,8 +23,8 @@ public class serviceData {
     private Date serviceDateFin;
 
         
-    public serviceData(Integer serviceID, String serviceNom, String serviceType, Double servicePrix, String serviceDuree,
-           Date serviceDateDebut, Date serviceDateFin)
+    public serviceData(Integer serviceID, String serviceNom, String serviceType, Double servicePrix, 
+            String serviceDuree, Date serviceDateDebut, Date serviceDateFin)
     {
         this.serviceID = serviceID;
         this.serviceNom = serviceNom;
@@ -36,9 +36,17 @@ public class serviceData {
     }
     
     
+    public serviceData(Integer serviceID, String serviceNom, Double servicePrix)
+    {
+        this.serviceID = serviceID;
+        this.serviceNom = serviceNom;
+        this.servicePrix = servicePrix;
+    }
+    
+    
     public serviceData(int aInt, String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    }  
     
     public Integer getServiceID(){
         return serviceID;

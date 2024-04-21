@@ -119,7 +119,8 @@ public class InscriptionController implements Initializable {
                     prepare = connect.prepareStatement(sql);
                     prepare.setString(1, username.getText());
                     prepare.setString(2, email.getText());
-                    prepare.setString(3, password.getText()); 
+                    prepare.setString(3, password.getText());
+                    prepare.executeUpdate();
                        
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
