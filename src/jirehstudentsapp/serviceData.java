@@ -21,10 +21,11 @@ public class serviceData {
     private String serviceDuree;
     private Date serviceDateDebut;
     private Date serviceDateFin;
+    private String serviceImage;
 
         
     public serviceData(Integer serviceID, String serviceNom, String serviceType, Double servicePrix, 
-            String serviceDuree, Date serviceDateDebut, Date serviceDateFin)
+            String serviceDuree, Date serviceDateDebut, Date serviceDateFin, String serviceImage)
     {
         this.serviceID = serviceID;
         this.serviceNom = serviceNom;
@@ -33,6 +34,16 @@ public class serviceData {
         this.serviceDuree = serviceDuree;
         this.serviceDateDebut = serviceDateDebut;
         this.serviceDateFin = serviceDateFin;
+        this.serviceImage = serviceImage;
+    }
+    
+    
+    public serviceData(Integer serviceID, String serviceNom, Double servicePrix, String serviceImage)
+    {
+        this.serviceID = serviceID;
+        this.serviceNom = serviceNom;
+        this.servicePrix = servicePrix;
+        this.serviceImage = serviceImage;
     }
     
     
@@ -42,7 +53,6 @@ public class serviceData {
         this.serviceNom = serviceNom;
         this.servicePrix = servicePrix;
     }
-    
     
     public serviceData(int aInt, String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -74,6 +84,10 @@ public class serviceData {
     
     public Date getServiceDateFin(){
         return serviceDateFin;
+    }
+    
+    public String getServiceImage(){
+        return serviceImage;
     }
    
 }

@@ -29,12 +29,13 @@ public class clientData {
     private String clientTel;
     private String clientAdresse;
     private String clientPhoto;
+    private Date DateInscrp;
     
  
     //Pour les clients
     public clientData(Integer clientID, String clientNom,String clientPrenom, String clientGenre, Date clientDateN,
         String clientCNI, String clientEtablissement, String clientMention, String clientNiveau, String clientCodage,
-        String clientPassant,String clientTel, String clientAdresse, String clientPhoto)
+        String clientPassant,String clientTel, String clientAdresse, String clientPhoto, Date DateInscrp)
     {
         this.clientID = clientID;
         this.clientNom = clientNom;
@@ -50,6 +51,7 @@ public class clientData {
         this.clientTel = clientTel;
         this.clientAdresse = clientAdresse;
         this.clientPhoto = clientPhoto;
+        this.DateInscrp = DateInscrp;
     }  
     
     
@@ -119,6 +121,10 @@ public class clientData {
     
     public String getClientPhoto(){
         return clientPhoto;
+    }
+    
+    public Date getDateInscrp(){
+        return DateInscrp;
     }
     
 }

@@ -177,3 +177,47 @@ and open the template in the editor.
 }
 
 
+.labelfiled{
+    -fx-background-color: transparent;
+    -fx-border-color: linear-gradient(to bottom right, #329302, #329302);
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-border-width: 1px;
+    -fx-padding: 0px 0px 0px 10px;
+}
+
+.cardServe{
+    -fx-background-color: #abe749;
+}
+
+.cardAnchrole{
+    -fx-background-color: white;
+    -fx-border-color: #329302;
+    -fx-border-radius: 5px;
+}
+
+.cardShadow{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 5,0,0,0);
+}
+
+
+.cardImage{
+    -fx-border-radius: 10px;
+}
+
+
+.labelfiledCard{
+    -fx-background-color: transparent;
+    -fx-border-color: linear-gradient(to bottom right, #329302, #329302);
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-border-width: 1px;
+    -fx-padding: 0px 5px 0px 5px;
+}
+
+
+
+.labelfiledNomServiceCard{
+    -fx-font-size: 14px;
+    -fx-padding: 0px 0px 0px 5px;
+}
