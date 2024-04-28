@@ -62,12 +62,14 @@ import jirehstudentsapp.database;
 import jirehstudentsapp.getData;
 import static jirehstudentsapp.getData.username;
 import jirehstudentsapp.serviceData;
+import Controller.CardServiceController;
 
 /**
  *
  * @author KADAFI Ben
  */
 public class DashboardController implements Initializable {
+
 
     @FXML
     private AnchorPane main_form;
@@ -167,7 +169,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private TableColumn<clientData, String> clientAdressCol;
-    
+
     @FXML
     private TableColumn<clientData, String> clientDateCol;
 
@@ -401,10 +403,9 @@ public class DashboardController implements Initializable {
 
     @FXML
     private TextField factureMonttant;
-    
-    
+
     //Menu faire service affichage
-     @FXML
+    @FXML
     private TableView<?> menu_tableView;
 
     @FXML
@@ -427,7 +428,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private Button menuImprimerBtn;
-    
+
     @FXML
     private Button menuAjouterDannsCompteBtn;
 
@@ -436,8 +437,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private GridPane menu_gridPane;
-    
-    
+
     @FXML
     private TableView<clientData> menu_tableViewClient;
 
@@ -454,17 +454,16 @@ public class DashboardController implements Initializable {
     private Button menuClientActualiserBtn;
 
     @FXML
-    private Label menuClientNom;
+    public Label menuClientNom;
 
     @FXML
-    private Label menuClientPrenom;
+    public Label menuClientPrenom;
 
     @FXML
     private TextField menuClientRechercheText1;
 
     @FXML
-    private Label menuClientID;
-
+    public Label menuClientID;
 
     //Historique
     @FXML
@@ -491,8 +490,8 @@ public class DashboardController implements Initializable {
 
     //Ajout nouveau client (efa mandeha)
     public void addClientAdd() {
-        
-        Date DateInscrp = new Date(); 
+
+        Date DateInscrp = new Date();
         java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
 
         java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
@@ -575,7 +574,6 @@ public class DashboardController implements Initializable {
                     prepare.setString(2, clientNom.getText());
                     prepare.setString(3, clientPrenom.getText());
                     prepare.executeUpdate();  */
-                    
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
@@ -599,9 +597,9 @@ public class DashboardController implements Initializable {
         String uri = getData.path;
         uri = uri.replace("\\", "\\\\");
 
-        Date DateInscrp = new Date(); 
+        Date DateInscrp = new Date();
         java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
-        
+
         java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         String dateN = sdf.format(javaDate);
@@ -692,12 +690,12 @@ public class DashboardController implements Initializable {
                 alert.showAndWait();
                 return;
             }
-            
-            Date DateInscrp = new Date(); 
+
+            Date DateInscrp = new Date();
             java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
 
             String uri = getData.path.replace("\\", "\\\\");
-            
+
             java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String dateN = sdf.format(javaDate);
@@ -887,11 +885,11 @@ public class DashboardController implements Initializable {
                 } else if (predicateClientData.getClientAdresse().toLowerCase().contains(searchKey)) {
 
                     return true;
-                    
-                }else if (predicateClientData.getDateInscrp().toString().contains(searchKey)) {
 
-                   return true; 
-                }else {
+                } else if (predicateClientData.getDateInscrp().toString().contains(searchKey)) {
+
+                    return true;
+                } else {
                     return false;
                 }
             });
@@ -1005,7 +1003,7 @@ public class DashboardController implements Initializable {
      * *********************************SEPARATION*************************************
      * ********************************************************************************
      * ********************************************************************************
-     *********************************************************************************
+     * ********************************************************************************
      */
     //Section pour le service  
     //Insertion image service
@@ -1382,7 +1380,7 @@ public class DashboardController implements Initializable {
      * *********************************SEPARATION*************************************
      * ********************************************************************************
      * ********************************************************************************
-     *********************************************************************************
+     * ********************************************************************************
      */
     //Section faire un service
     //Observation des données faire service client sur la tableView.
@@ -1586,10 +1584,16 @@ public class DashboardController implements Initializable {
         sortList.comparatorProperty().bind(faireServiceServiceTableView.comparatorProperty());
         faireServiceServiceTableView.setItems(sortList);
     }
-    
-    
-    //section Menu Service
 
+    /**
+     * ********************************************************************************
+     * ********************************************************************************
+     * *********************************SEPARATION*************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     */
+    //section Menu Service
     //Liste service sur la menu card
     private ObservableList<serviceData> cardListData = FXCollections.observableArrayList();
 
@@ -1628,7 +1632,8 @@ public class DashboardController implements Initializable {
 
         int row = 0;
         int column = 0;
-        
+
+        menu_gridPane.getChildren().clear();
         menu_gridPane.getRowConstraints().clear();
         menu_gridPane.getColumnConstraints().clear();
 
@@ -1642,14 +1647,14 @@ public class DashboardController implements Initializable {
                 CardServiceController cardC = load.getController();
                 cardC.setData(cardListData.get(q));
 
-                if (column == 3) {
+                if (column == 2) {
                     column = 0;
                     row += 1;
                 }
-                
+
                 menu_gridPane.add(pane, column++, row);
-                
-                GridPane.setMargin(pane, new Insets(10));
+
+                GridPane.setMargin(pane, new Insets(8));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1657,8 +1662,7 @@ public class DashboardController implements Initializable {
 
         }
     }
-    
-    
+
     //Observation de la liste des clients dans menu tableview client
     public ObservableList<clientData> menuClientListData() {
 
@@ -1686,8 +1690,7 @@ public class DashboardController implements Initializable {
         }
         return listData;
     }
-    
-    
+
     private ObservableList<clientData> menuClientList;
 
     //Afficher les listes des clients sur menu Tables view
@@ -1700,28 +1703,45 @@ public class DashboardController implements Initializable {
 
         menu_tableViewClient.setItems(menuClientList);
     }
-    
+
     //Selection client via Table View 
     public void menuClientSelect() {
         clientData clientD = menu_tableViewClient.getSelectionModel().getSelectedItem();
         int num = menu_tableViewClient.getSelectionModel().getSelectedIndex();
 
+            if (num < 0 || num >= menu_tableViewClient.getItems().size()) {
+                return;
+            }
+
+        menuClientID.setText(String.valueOf(clientD.getClientID())); 
+        menuClientNom.setText(clientD.getClientNom());
+        menuClientPrenom.setText(clientD.getClientPrenom());
+        
+        
+      //  CardServiceController cardClass = new CardServiceController();
+       // cardClass.setDataClient(labelID, labelNom);
+        
+       /* clientData clientD = menu_tableViewClient.getSelectionModel().getSelectedItem();
+        int num = menu_tableViewClient.getSelectionModel().getSelectedIndex();
+
         if ((num - 1) < -1) {
             return;
-        }
+        } 
 
         menuClientID.setText(String.valueOf(clientD.getClientID())); // Assurez-vous que clientID est un TextField ou un contrôle similaire
         menuClientNom.setText(clientD.getClientNom());
-        menuClientPrenom.setText(clientD.getClientPrenom());
+        menuClientPrenom.setText(clientD.getClientPrenom());  */
+        
     }
 
     //Pour l'actualisation de l'affichage du faire service service (Efa mandeha) 
     public void menuClientReset() {
+        menuClientRechercheText1.setText("");
         menuClientID.setText("");
         menuClientNom.setText("");
         menuClientPrenom.setText("");
     }
-    
+
     //Pour la barre de recherche sur menu service dans client (efa mandeha)
     public void menuClientSearch() {
 
@@ -1760,9 +1780,47 @@ public class DashboardController implements Initializable {
         sortList.comparatorProperty().bind(menu_tableViewClient.comparatorProperty());
         menu_tableViewClient.setItems(sortList);
     }
+
     
     
-    
+    private int sID;
+    private void suivieID() {
+
+        String sql = "SELECT MAX(suivieID) FROM suivieclient";
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                sID = result.getInt("MAX(suivieID)");
+            }
+
+            String checksID = "SELECT MAX(suivieID) FROM facture";
+            prepare = connect.prepareStatement(checksID);
+            result = prepare.executeQuery();
+
+            int checkID = 0;
+            if (result.next()) {
+                checkID = result.getInt("MAX(suivieID)");
+            }
+
+            if (sID == 0) {
+                sID += 1;
+            } else if (sID == checkID) {
+                sID += 1;
+            }
+            
+            getData.sID = sID;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     //Relier les fenêtres
     public void SwitchForm(ActionEvent event) {
 
@@ -1892,13 +1950,14 @@ public class DashboardController implements Initializable {
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            
+
             //Pour menu affiche produit
             menuDisplayCard();
-            
+
             //Sur les méthodes concernant les clients dans facture menu service
             menuClientShowListData();
             menuClientSearch();
+            
             menuClientSelect();
 
         } else if (event.getSource() == historiqueBtn) {
@@ -1995,10 +2054,10 @@ public class DashboardController implements Initializable {
 
         //Pour voir liste service dans TableView
         addServiceShowListData();
-        
+
         //Pour menu affiche produit
         menuDisplayCard();
-        
+
         //Pour menu des clients
         menuClientShowListData();
 
@@ -2015,6 +2074,15 @@ public class DashboardController implements Initializable {
         faireServiceServiceShowListData();
         
         
+        //Pour la quantité selection au niveau des menu 
+        suivieID();
+
     }
+
+    void menuClientSelect(Label menuClientID, Label menuClientNom) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
 
 }

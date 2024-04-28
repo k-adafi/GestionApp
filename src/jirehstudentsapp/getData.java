@@ -16,5 +16,7 @@ public class getData {
     public static String path;
     
     public static String pathService;
+    
+    public static Integer sID;
        
 }

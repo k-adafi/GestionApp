@@ -22,17 +22,9 @@
                         <Font size="14.0" />
                      </font>
                   </Label>
-                  <Label fx:id="menuServicePrix" prefHeight="31.0" prefWidth="63.0" styleClass="labelfiledCard" stylesheets="@../Design/DashboardDesign.css" text="0.0 ">
+                  <Label fx:id="menuServicePrix" prefHeight="31.0" prefWidth="84.0" styleClass="labelfiledCard" stylesheets="@../Design/DashboardDesign.css" text="0.0 ">
                      <HBox.margin>
                         <Insets left="5.0" />
-                     </HBox.margin>
-                  </Label>
-                  <Label fx:id="menuServiceNom1" alignment="CENTER" layoutX="10.0" layoutY="17.0" prefHeight="31.0" prefWidth="24.0" text="Ar">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets right="3.0" />
                      </HBox.margin>
                   </Label>
                </children>

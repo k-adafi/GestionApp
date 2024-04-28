@@ -61,6 +61,10 @@ public class clientData {
         this.clientPrenom = clientPrenom;    
     }
     
+    public clientData(Integer clientID, String clientNom){
+        this.clientID = clientID;
+        this.clientNom = clientNom;    
+    }
 
     public clientData(int aInt, String string) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

@@ -299,19 +299,20 @@
                            <children>
                               <AnchorPane layoutX="3.0" layoutY="3.0" prefHeight="643.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="2.0">
                                  <children>
-                                    <AnchorPane layoutX="365.0" layoutY="2.0" prefHeight="639.0" prefWidth="786.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
+                                    <AnchorPane layoutX="353.0" layoutY="2.0" prefHeight="639.0" prefWidth="799.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
                                        <children>
                                           <TextField fx:id="serviceRechercheText1" layoutX="10.0" layoutY="6.0" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@../Design/DashboardDesign.css" />
                                           <Button fx:id="serviceRechercheBtn1" layoutX="318.0" layoutY="5.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Recherche" textFill="WHITE" />
-                                          <TableView fx:id="serviceTableView1" layoutX="2.0" layoutY="43.0" prefHeight="594.0" prefWidth="782.0" stylesheets="@../Design/DashboardDesign.css">
+                                          <TableView fx:id="serviceTableView1" layoutX="2.0" layoutY="43.0" prefHeight="594.0" prefWidth="795.0" stylesheets="@../Design/DashboardDesign.css">
                                              <columns>
-                                                <TableColumn fx:id="serviceIDCol1" prefWidth="103.0" text="ID du services" />
-                                                <TableColumn fx:id="serviceNomCol1" prefWidth="106.0" text="Nom du services" />
-                                                <TableColumn fx:id="serviceTypeCol1" prefWidth="106.0" text="Types du services" />
-                                                <TableColumn fx:id="servicePrixCol1" prefWidth="106.0" text="Totale solde" />
-                                                <TableColumn fx:id="serviceDureeCol1" prefWidth="106.0" text="Déjà payer" />
-                                                <TableColumn fx:id="serviceDateDebutCol1" prefWidth="106.0" text="Date debut" />
-                                                <TableColumn fx:id="serviceDateFinCol1" prefWidth="146.0" text="Reste à payer " />
+                                                <TableColumn fx:id="serviceIDCol1" prefWidth="93.0" text="Date" />
+                                                <TableColumn fx:id="serviceNomCol1" prefWidth="67.0" text="Client ID" />
+                                                <TableColumn fx:id="serviceTypeCol1" prefWidth="119.0" text="Client Nom" />
+                                                <TableColumn fx:id="servicePrixCol1" prefWidth="85.0" text="Service ID" />
+                                                <TableColumn fx:id="serviceDureeCol1" prefWidth="134.0" text="Service Nom" />
+                                                <TableColumn fx:id="serviceDateDebutCol1" prefWidth="121.0" text="Totale Solde (Ar)" />
+                                                <TableColumn fx:id="serviceDateFinCol1" prefWidth="106.0" text="Déjà payer (Ar)" />
+                                                <TableColumn fx:id="serviceDateFinCol11" prefWidth="69.0" text="Nom utilisateur" />
                                              </columns>
                                           </TableView>
                                           <Label layoutX="562.0" layoutY="13.0" />
@@ -323,44 +324,52 @@
                                           </Label>
                                        </children>
                                     </AnchorPane>
-                                    <Label layoutX="66.0" layoutY="19.0" text="ID client:">
+                                    <Label layoutX="56.0" layoutY="218.0" text="ID client:">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="serviceID1" layoutX="125.0" layoutY="14.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
-                                    <Label layoutX="83.0" layoutY="65.0" text="Nom: ">
+                                    <Label layoutX="73.0" layoutY="264.0" text="Nom: ">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="22.0" layoutY="155.0" text="Totale solde(Ar):">
+                                    <Label layoutX="12.0" layoutY="354.0" text="Totale solde(Ar):">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="serviceAjouterBtn1" layoutX="202.0" layoutY="322.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajouter" textFill="WHITE" />
-                                    <Button fx:id="serviceActualiserBtn1" layoutX="40.0" layoutY="322.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE" />
-                                    <TextField fx:id="servicePrix1" layoutX="126.0" layoutY="150.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
-                                    <Label layoutX="31.0" layoutY="197.0" text="Déjà payer(Ar):">
+                                    <Button fx:id="serviceActualiserBtn1" layoutX="222.0" layoutY="505.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE" />
+                                    <Label layoutX="21.0" layoutY="396.0" text="Déjà payer(Ar):">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="serviceDuree1" layoutX="126.0" layoutY="192.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
-                                    <Label layoutX="16.0" layoutY="242.0" text="Reste à payer(Ar):">
+                                    <Label layoutX="6.0" layoutY="441.0" text="Reste à payer(Ar):">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <TextField fx:id="serviceDuree11" layoutX="126.0" layoutY="237.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
-                                    <Label layoutX="67.0" layoutY="110.0" text="Prénom: ">
+                                    <Label layoutX="57.0" layoutY="309.0" text="Prénom: ">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <Label layoutX="123.0" layoutY="60.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
-                                    <Label layoutX="124.0" layoutY="104.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="113.0" layoutY="259.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="114.0" layoutY="304.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="113.0" layoutY="348.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="113.0" layoutY="391.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="113.0" layoutY="215.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="113.0" layoutY="436.0" prefHeight="30.0" prefWidth="230.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <AnchorPane layoutX="150.0" layoutY="15.0" prefHeight="151.0" prefWidth="187.0" stylesheets="@../Design/DashboardDesign.css">
+                                       <children>
+                                          <ImageView fx:id="clientImageView1" fitHeight="150.0" fitWidth="186.0" layoutX="2.0" pickOnBounds="true" preserveRatio="true" />
+                                       </children>
+                                       <styleClass>
+                                          <String fx:value="centre-formDE" />
+                                          <String fx:value="textfield" />
+                                       </styleClass>
+                                    </AnchorPane>
                                  </children>
                               </AnchorPane>
                            </children>
@@ -376,20 +385,20 @@
                                     </Label>
                                     <AnchorPane layoutX="514.0" layoutY="5.0" prefHeight="631.0" prefWidth="634.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
                                        <children>
-                                          <TableView fx:id="menu_tableView" layoutX="323.0" layoutY="9.0" prefHeight="377.0" prefWidth="305.0">
+                                          <TableView fx:id="menu_tableView" layoutX="323.0" layoutY="6.0" prefHeight="385.0" prefWidth="305.0">
                                             <columns>
                                               <TableColumn fx:id="menuColServiceNom" prefWidth="91.0" text="Désignation" />
                                               <TableColumn fx:id="menuColServiceQuantite" prefWidth="98.0" text="Quantité " />
                                                 <TableColumn fx:id="menuColServicePrix" prefWidth="115.0" text="Prix(Ar)" />
                                             </columns>
                                           </TableView>
-                                          <Label layoutX="428.0" layoutY="402.0" prefHeight="17.0" prefWidth="44.0" text="Totale : " />
-                                          <Label fx:id="menuTotale" layoutX="479.0" layoutY="396.0" prefHeight="28.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0 Ar" />
+                                          <Label layoutX="428.0" layoutY="404.0" prefHeight="17.0" prefWidth="44.0" text="Totale : " />
+                                          <Label fx:id="menuTotale" layoutX="479.0" layoutY="398.0" prefHeight="28.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0 Ar" />
                                           <Button fx:id="menuEffacerBtn" layoutX="332.0" layoutY="585.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE" />
                                           <Button fx:id="menuPayerBtn" layoutX="501.0" layoutY="532.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Payer" textFill="WHITE" />
                                           <Button fx:id="menuImprimerBtn" layoutX="501.0" layoutY="585.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Imprimer" textFill="WHITE" />
                                           <Line endX="100.0" endY="-158.0" layoutX="217.0" layoutY="160.0" startX="100.0" startY="466.0" />
-                                          <TableView fx:id="menu_tableViewClient" layoutX="6.0" layoutY="8.0" onMouseClicked="#menuClientSelect" prefHeight="377.0" prefWidth="305.0">
+                                          <TableView fx:id="menu_tableViewClient" layoutX="6.0" layoutY="6.0" onMouseClicked="#menuClientSelect" prefHeight="385.0" prefWidth="305.0">
                                              <columns>
                                                 <TableColumn fx:id="menuColClientID" prefWidth="69.0" text="clientID" />
                                                 <TableColumn fx:id="menuColClientNom" prefWidth="98.0" text="Nom du clent" />
