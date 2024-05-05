@@ -12,11 +12,14 @@ package jirehstudentsapp;
  * @author KADAFI Ben
  */
 public class getData {
+    public static Integer sID;
+    
     public static String username;
     public static String path;
     
     public static String pathService;
     
-    public static Integer sID;
-       
+    public static String getMenuClientID;
+    
+    public static String getMenuClientNom;     
 }

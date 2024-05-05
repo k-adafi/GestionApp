@@ -55,7 +55,7 @@ public class clientData {
     }  
     
     
-    public clientData(Integer clientID, String clientNom,String clientPrenom){
+    public clientData(Integer clientID, String clientNom, String clientPrenom){
         this.clientID = clientID;
         this.clientNom = clientNom;
         this.clientPrenom = clientPrenom;    
