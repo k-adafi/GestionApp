@@ -127,7 +127,6 @@ public class CardServiceController implements Initializable {
         DashboardController dashForm =  new DashboardController();
         dashForm.suivieID();
         
-        
         Alert alert;
         try {
             qty = menuServiceSpinner.getValue();
@@ -196,6 +195,7 @@ public class CardServiceController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Succès ajout!");
                 alert.showAndWait();
+                
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -207,88 +207,10 @@ public class CardServiceController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
          
         //Comment faire pour charger deux fichier fxml dans un même controller et traitrer aficher leurs données sans provoque l'erreur "NullPointException"
-        
-      
+  
         //Pour la quantité des services.
         SetQuantity();
-      
-
+  
     }
 
 }
-
-
-    // private DashboardController dashboardController;
-    // Constructeur qui prend DashboardController comme paramètre
-    //   public CardServiceController() {
-    //     this.dashboardController = dashboardController;
-    // }
-
-    /* public void setDataClient(Label menuClientID, Label menuClientNom) {
-        // Utilisez l'instance existante de DashboardController pour appeler menuClientSelect
-        dashboardController.menuClientSelect(menuClientID, menuClientNom);
-    }*/
-
-
-    
-    
-
-   /* public void ajoutMenuServiceBtn() {
-
-        DashboardController dashForm = new DashboardController();
-        dashForm.suivieID();
-
-        Alert alert;
-
-        qty = menuServiceSpinner.getValue();
-
-        try {
-            if (qty == 0) {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez ajouter au moins un quantité!");
-                alert.showAndWait();
-            } else {
-
-                Date suivieDate = new Date();
-                java.sql.Date dateS = new java.sql.Date(suivieDate.getTime());
-
-                String InsertData = "INSERT INTO suivieclient "
-                        + "(suivieID, suivieDate, serviceNom, factureQte, servicePrix, NomUtilisateur)"
-                        + "VALUES(?,?,?,?,?,?)";
-
-                prepare = connect.prepareStatement(InsertData);
-                prepare.setString(1, String.valueOf(getData.sID));
-                prepare.setString(2, String.valueOf(dateS));
-
-                prepare.setString(3, menuServiceNom.getText());
-                prepare.setString(4, String.valueOf(qty));
-
-                totaleP = (qty * prix);
-                prepare.setString(5, String.valueOf(totaleP));
-
-                prepare.setString(6, getData.username);
-                prepare.executeUpdate();
-
-                serviceImage = serviceImage.replace("\\", "\\\\");
-
-                String updatekService = "UPDATE service SET serviceNom = '"
-                        + menuServiceNom.getText() + "',  servicePrix = '"
-                        + prix + "', serviceImage = '"
-                        + serviceImage + "' WHERE serviceID = '"
-                        + serviceID + "' ";
-
-                prepare = connect.prepareStatement(updatekService);
-                prepare.executeUpdate();
-
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Message d'information");
-                alert.setHeaderText(null);
-                alert.setContentText("Succès ajout!");
-                alert.showAndWait();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    } */

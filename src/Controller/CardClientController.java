@@ -208,31 +208,43 @@ public class CardClientController implements Initializable{
                 + menuClientNom.getText() + "' AND clientPrenom = '" 
                 + menuClientPrenom.getText() + "'";
 
-                
-        
         connect = database.ConnectDb();
        
         try {
             Alert alert;
             
-            alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Message de confirmation");
-            alert.setHeaderText(null);
-            alert.setContentText("Êtes-vous sur " + menuClientNom.getText() + " ?");
-            Optional<ButtonType> option = alert.showAndWait();
+            if (menuClientID.getText().isEmpty()
+                    || menuClientNom.getText().isEmpty()
+                    || menuClientPrenom.getText().isEmpty()){
             
-            if (option.get().equals(ButtonType.OK)) {
-                prepare = connect.prepareStatement(sqlselectClient);
-                result = prepare.executeQuery();
-                
-                getData.getMenuClientID = menuClientID.getText();
-   
-                getData.getMenuClientNom = menuClientNom.getText();
-                
-                menuServiceClientShowListData();
-                menuServiceClientSelect();
-            }
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez sélectionner un client!");
+                alert.showAndWait();
+            
+            }else{
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sur " + menuClientNom.getText() + " ?");
+                Optional<ButtonType> option = alert.showAndWait();
+            
+                if (option.get().equals(ButtonType.OK)) {
+                    prepare = connect.prepareStatement(sqlselectClient);
+                    result = prepare.executeQuery();
 
+                    getData.getMenuClientID = menuClientID.getText();
+
+                    getData.getMenuClientNom = menuClientNom.getText();
+
+                    menuServiceClientShowListData();
+                    menuServiceClientSelect();
+                    menuServiceClientReset();
+                }
+            
+            }
+       
         } catch (Exception e) {
             e.printStackTrace();
         }

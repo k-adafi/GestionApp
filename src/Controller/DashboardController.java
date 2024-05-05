@@ -64,6 +64,7 @@ import static jirehstudentsapp.getData.username;
 import jirehstudentsapp.serviceData;
 import Controller.CardServiceController;
 import javafx.animation.TranslateTransition;
+import jirehstudentsapp.suivieData;
 
 /**
  *
@@ -373,6 +374,77 @@ public class DashboardController implements Initializable {
 
     @FXML
     private Label faireServiceServicePrix;
+    
+    
+    
+    //Suivie client
+    @FXML
+    private TextField suivieRechercheText1;
+
+    @FXML
+    private TableView<suivieData> suivieTableView1;
+
+    @FXML
+    private TableColumn<suivieData, String> suivieClientDateCol;
+
+    @FXML
+    private TableColumn<suivieData, String> suivieClientIDCol;
+
+    @FXML
+    private TableColumn<suivieData, String> suivieClientNomCol;
+
+    @FXML
+    private TableColumn<suivieData, String> suivieServiceNomCol;
+
+    @FXML
+    private TableColumn<suivieData, String> suivieServiceQteCol;
+    
+    @FXML
+    private TableColumn<suivieData, Double> suivieServicePrixUnitCol;
+
+    @FXML
+    private TableColumn<suivieData, Double> suivieServiceToaleSoldeCol;
+
+    @FXML
+    private TableColumn<suivieData, Double> suivieServiceDejaPayerCol;
+
+    @FXML
+    private TableColumn<suivieData, Double> suivieServiceRestePayerCol;
+
+    @FXML
+    private TableColumn<suivieData, String> suivieServiceNomUtlisateurCol;
+
+    @FXML
+    private Button suivieActualiserBtn1;
+
+    @FXML
+    private Label suivieClientNom;
+
+    @FXML
+    private Label suivieServiceTotaleSolde;
+
+    @FXML
+    private Label suivieServiceDejaPayer;
+
+    @FXML
+    private Label suivieClientID;
+
+    @FXML
+    private Label suivieServiceRestePayer;
+
+    @FXML
+    private Label suivieServiceNom;
+
+    @FXML
+    private Label suivieServiceQte;
+    
+    @FXML
+    private Label suivieServicePrix;
+
+    @FXML
+    private Button suivieEffacerBtn;
+    
+    
 
     //Facture
     @FXML
@@ -1723,7 +1795,172 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
         }
 
-    }  
+    } 
+    
+    
+    /**
+     * ********************************************************************************
+     * ********************************************************************************
+     * *********************************SEPARATION*************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     */
+    
+    //Section suivie
+  
+    public ObservableList<suivieData> suivieListeData() {
+
+        ObservableList<suivieData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM  suivieclient";
+
+        connect = database.ConnectDb();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            suivieData suiData;
+
+            while (result.next()) {
+                suiData = new suivieData(
+                        result.getInt("suivieID"),
+                        result.getDate("suivieDate"),
+                        result.getInt("clientID"),
+                        result.getString("clientNom"),
+                        result.getString("serviceNom"),
+                        result.getInt("factureQte"),
+                        result.getDouble("servicePrix"),
+                        result.getDouble("suivieServiceToaleSolde"),
+                        result.getDouble("suivieServiceDejaPayer"),
+                        result.getDouble("suivieServiceRestePayer"),
+                        result.getString("NomUtilisateur")
+                );
+                listData.add(suiData);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return listData;
+    }
+    
+    private ObservableList<suivieData> suivieData = FXCollections.observableArrayList();
+    
+    //Afficher les listes des clients sur Tables view
+    public void suivieClientShowListData() {
+        suivieData = suivieListeData();
+
+        suivieClientDateCol.setCellValueFactory(new PropertyValueFactory<>("suivieDate"));
+        suivieClientIDCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));
+        suivieClientNomCol.setCellValueFactory(new PropertyValueFactory<>("clientNom"));
+        suivieServiceNomCol.setCellValueFactory(new PropertyValueFactory<>("serviceNom"));
+        suivieServiceQteCol.setCellValueFactory(new PropertyValueFactory<>("factureQte"));
+        suivieServicePrixUnitCol.setCellValueFactory(new PropertyValueFactory<>("servicePrix"));
+        suivieServiceToaleSoldeCol.setCellValueFactory(new PropertyValueFactory<>("suivieServiceToaleSolde"));
+        suivieServiceDejaPayerCol.setCellValueFactory(new PropertyValueFactory<>("suivieServiceDejaPayer"));
+        suivieServiceRestePayerCol.setCellValueFactory(new PropertyValueFactory<>("suivieServiceRestePayer"));
+        suivieServiceNomUtlisateurCol.setCellValueFactory(new PropertyValueFactory<>("NomUtilisateur"));
+
+        suivieTableView1.setItems(suivieData);
+    }
+    
+    
+    //Selection service via Table View
+    public void suivieClientSelect() {
+        suivieData suivieD = suivieTableView1.getSelectionModel().getSelectedItem();
+        int num = suivieTableView1.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        suivieClientID.setText(String.valueOf(suivieD.getClientID()));
+        suivieClientNom.setText(suivieD.getClientNom());
+        suivieServiceNom.setText(suivieD.getServiceNom());
+        suivieServiceQte.setText(String.valueOf(suivieD.getFactureQte()));
+        suivieServicePrix.setText(String.valueOf(suivieD.getServicePrix()));
+        suivieServiceTotaleSolde.setText(String.valueOf(suivieD.getServiceTotaleSolde()));
+        suivieServiceDejaPayer.setText(String.valueOf(suivieD.getServiceDejaPayer()));
+        suivieServiceRestePayer.setText(String.valueOf(suivieD.getServiceRestePayer()));
+    }
+    
+    
+
+    //Pour l'actualisation de l'affichage du faire service service (Efa mandeha) 
+    public void SuivieClientReset() {
+        suivieRechercheText1.setText("");
+        suivieClientID.setText("");
+        suivieClientNom.setText("");
+        suivieServiceNom.setText("");
+        suivieServiceQte.setText("");
+        suivieServicePrix.setText("");
+        suivieServiceTotaleSolde.setText("");
+        suivieServiceDejaPayer.setText("");
+        suivieServiceRestePayer.setText("");
+    }
+    
+    
+    //Pour la barre de recherche d'un service (efa mandeha)
+    public void suivieClientSearch() {
+
+        FilteredList<suivieData> filter = new FilteredList<>(suivieData, e -> true);
+
+        suivieRechercheText1.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            filter.setPredicate(predicateSuivieData -> {
+
+                if (newValue == null || newValue.isEmpty()) {
+
+                    return true;
+                }
+
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateSuivieData.getClientID().toString().contains(searchKey)) {
+
+                    return true;
+
+                } else if (predicateSuivieData.getClientNom().toLowerCase().contains(searchKey)) {
+
+                    return true;
+
+                } else if (predicateSuivieData.getServiceNom().toLowerCase().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateSuivieData.getFactureQte().toString().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateSuivieData.getServicePrix().toString().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateSuivieData.getServiceTotaleSolde().toString().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateSuivieData.getServiceDejaPayer().toString().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateSuivieData.getServiceRestePayer().toString().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateSuivieData.getNomUtilisateur().toLowerCase().contains(searchKey)) {
+
+                    return true;    
+                } else {
+                    return false;
+                }
+            });
+
+        });
+
+        SortedList<suivieData> sortList = new SortedList<>(filter);
+
+        sortList.comparatorProperty().bind(suivieTableView1.comparatorProperty());
+        suivieTableView1.setItems(sortList);
+    }
+
+    
+    
 
     //Relier les fenêtres
     public void SwitchForm(ActionEvent event) {
@@ -1829,6 +2066,12 @@ public class DashboardController implements Initializable {
             suivieForm.setVisible(true);
             factureForm.setVisible(false);
             historiqueForm.setVisible(false);
+            
+            //Pour la suivie des clients
+            suivieClientShowListData();
+            suivieClientSelect();
+            SuivieClientReset();
+            suivieClientSearch();
 
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
@@ -1979,5 +2222,8 @@ public class DashboardController implements Initializable {
         //Pour la liste des services au niveau de faire un service
         faireServiceServiceShowListData();
         
+        
+        //Pour la suivie des clients
+        suivieClientShowListData();
     }
 }
