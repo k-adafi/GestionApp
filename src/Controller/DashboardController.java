@@ -479,16 +479,16 @@ public class DashboardController implements Initializable {
 
     //Menu faire service affichage
     @FXML
-    private TableView<?> menu_tableView;
+    private TableView<suivieData> menu_tableView;
 
     @FXML
-    private TableColumn<?, ?> menuColServiceNom;
+    private TableColumn<suivieData, String> menuColServiceNom;
 
     @FXML
-    private TableColumn<?, ?> menuColServiceQuantite;
+    private TableColumn<suivieData, String> menuColServiceQuantite;
 
     @FXML
-    private TableColumn<?, ?> menuColServicePrix;
+    private TableColumn<suivieData, String> menuColServicePrix;
 
     @FXML
     private Label menuTotale;
@@ -642,26 +642,34 @@ public class DashboardController implements Initializable {
                     uri = uri.replace("\\", "\\\\");
                     prepare.setString(14, uri);
                     prepare.setString(15, String.valueOf(sqlDate));
-                    prepare.executeUpdate();
-
-                    //Pour la base de donner du faireServiceClient
-                    /*  String insertFaireServiceClient = "INSERT INTO  client "
-                            + "(clientID, clientNom, clientPrenom)"
-                            + "VALUES(?,?,?)";
                     
-                    prepare = connect.prepareStatement(insertFaireServiceClient);
-                    prepare.setString(1, clientID.getText());
-                    prepare.setString(2, clientNom.getText());
-                    prepare.setString(3, clientPrenom.getText());
-                    prepare.executeUpdate();  */
-                    alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
+                    alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Message de confirmation");
                     alert.setHeaderText(null);
-                    alert.setContentText("Ajout de client réussi avec succès!");
-                    alert.showAndWait();
+                    alert.setContentText("Êtes-vous sur de vouloir ajouter cette client?");
+                    Optional<ButtonType> option = alert.showAndWait();
+                    
+                    if (option.get().equals(ButtonType.CANCEL)) {
+                        alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Message d'erreur");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Echec d'ajout client!");
+                        alert.showAndWait();
+                    
+                    }else{
+                        prepare.executeUpdate();
+                        
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Message d'information");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Ajout de client réussi avec succès!");
+                        alert.showAndWait();
 
-                    addClientShowListData();
-                    addClientReset();
+                        addClientShowListData();
+                        addClientReset();
+                    
+                    }
+      
                 }
 
             }
@@ -735,23 +743,23 @@ public class DashboardController implements Initializable {
                 if (option.get().equals(ButtonType.OK)) {
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
-
-                    //Pour la base de donner du faireServiceClient
-                    /* String updateFaireserviceClient = "UPDATE client SET clientNom = '"
-                                    +clientNom.getText()+"', clientPrenom = '"
-                                    +clientPrenom.getText()+"'";
-                    
-                    prepare = connect.prepareStatement(updateFaireserviceClient);
-                    prepare.executeUpdate(); */
+     
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
                     alert.setContentText("Client a été modifier avec succès!");
                     alert.showAndWait();
 
-                    addClientShowListData();
-                    addClientReset();
+                }else{
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Echec de modification du client!");
+                    alert.showAndWait();
                 }
+                
+                addClientShowListData();
+                addClientReset();
             }
 
         } catch (Exception e) {
@@ -762,11 +770,12 @@ public class DashboardController implements Initializable {
     //Supprimer un client (efa mandeha) 
     public void addClientDelete() {
         try {
+            Alert alert;
             if (clientID.getText().isEmpty() || clientNom.getText().isEmpty() || getData.path == null || getData.path.equals("")) {
-                Alert alert = new Alert(AlertType.ERROR);
+                alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
-                alert.setContentText("Tous les champs doivent être remplis!");
+                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
                 alert.showAndWait();
                 return;
             }
@@ -788,30 +797,33 @@ public class DashboardController implements Initializable {
                 return;
             }
 
-            Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
-            confirmationAlert.setTitle("Message de confirmation");
-            confirmationAlert.setHeaderText(null);
-            confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer ce client " + clientID.getText() + " ?");
-            Optional<ButtonType> option = confirmationAlert.showAndWait();
+            alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Message de confirmation");
+            alert.setHeaderText(null);
+            alert.setContentText("Êtes-vous sûr de vouloir supprimer ce client " + clientID.getText() + " ?");
+            Optional<ButtonType> option = alert.showAndWait();
 
             if (option.isPresent() && option.get() == ButtonType.OK) {
                 statement = connect.createStatement();
                 statement.executeUpdate(sql);
 
-                //Pour la base de donner du faireServiceClient
-                /*   String deleteFaireserviceClient = "DELETE FROM client WHERE clientID = '" + clientID.getText() + "'";
+                alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Message d'information");
+                alert.setHeaderText(null);
+                alert.setContentText("Client supprimé avec succès!");
+                alert.showAndWait();
                 
-                prepare = connect.prepareStatement(deleteFaireserviceClient);
-                prepare.executeUpdate();  */
-                Alert successAlert = new Alert(AlertType.INFORMATION);
-                successAlert.setTitle("Message d'information");
-                successAlert.setHeaderText(null);
-                successAlert.setContentText("Client supprimé avec succès!");
-                successAlert.showAndWait();
-
-                addClientShowListData();
-                addClientReset();
+            }else{
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Echec de suppression!");
+                alert.showAndWait();
             }
+            
+            addClientShowListData();
+            addClientReset();
+            
         } catch (Exception e) {
             e.printStackTrace();
             // Gérer l'exception
@@ -1161,26 +1173,34 @@ public class DashboardController implements Initializable {
                     String uri = getData.pathService;
                     uri = uri.replace("\\", "\\\\");
                     prepare.setString(8, uri);
-                    prepare.executeUpdate();
-
-                    //Pour la base de donner du faireServiceClient
-                    /*    String insertFaireServiceService = "INSERT INTO  service "
-                            + "(serviceID, serviceNom, servicePrix)"
-                            + "VALUES(?,?,?)";
                     
-                    prepare = connect.prepareStatement(insertFaireServiceService);
-                    prepare.setString(1, serviceID.getText());
-                    prepare.setString(2, serviceNom.getText());
-                    prepare.setString(4, servicePrix.getText());
-                    prepare.executeUpdate();  */
-                    alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
+                    alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Message de confirmation");
                     alert.setHeaderText(null);
-                    alert.setContentText("Ajout de service réussi avec succès!");
-                    alert.showAndWait();
+                    alert.setContentText("Êtes-vous sur de vouloir ajouter cette service?");
+                    Optional<ButtonType> option = alert.showAndWait();
+                    
+                    if (option.get().equals(ButtonType.CANCEL)) {
+                        alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Message d'erreur");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Echec d'ajout du service!");
+                        alert.showAndWait();
+                    
+                    }else{
+                        prepare.executeUpdate();
 
-                    addServiceShowListData();
-                    addServiceReset();
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Message d'information");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Ajout de service réussi avec succès!");
+                        alert.showAndWait();
+
+                        addServiceShowListData();
+                        addServiceReset();
+
+                    }
+                       
                 }
 
             }
@@ -1242,22 +1262,22 @@ public class DashboardController implements Initializable {
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
 
-                    //Pour la base de donner du faireServiceClient
-                    /*   String updateFaireserviceService = "UPDATE service SET serviceNom = '"
-                                    +serviceNom.getText()+"', servicePrix = '"
-                                    +servicePrix.getText()+"'";
-                    
-                    prepare = connect.prepareStatement(updateFaireserviceService);
-                    prepare.executeUpdate(); */
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
                     alert.setContentText("Service a été modifier avec succès!");
                     alert.showAndWait();
+                 
+                }else{
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Echec de modification du service!");
+                    alert.showAndWait();        
+                }    
 
-                    addServiceShowListData();
-                    addServiceReset();
-                }
+                addServiceShowListData();
+                addServiceReset();
             }
 
         } catch (Exception e) {
@@ -1267,9 +1287,12 @@ public class DashboardController implements Initializable {
 
     //Supprimer un client (efa mandeha) 
     public void addServiceDelete() {
+        
         try {
+            Alert alert;
+            
             if (serviceID.getText().isEmpty() || serviceNom.getText().isEmpty()) {
-                Alert alert = new Alert(AlertType.ERROR);
+                alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
                 alert.setContentText("Tous les champs doivent être remplis!");
@@ -1297,20 +1320,24 @@ public class DashboardController implements Initializable {
                 statement = connect.createStatement();
                 statement.executeUpdate(sql);
 
-                //Pour la base de donner du faireServiceClient
-                /*   String deleteFaireserviceService = "DELETE FROM service WHERE serviceID = '" + serviceID.getText() + "'";
+                alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Message d'information");
+                alert.setHeaderText(null);
+                alert.setContentText("Service a été supprimé avec succès!");
+                alert.showAndWait();
                 
-                prepare = connect.prepareStatement(deleteFaireserviceService);
-                prepare.executeUpdate();  */
-                Alert successAlert = new Alert(AlertType.INFORMATION);
-                successAlert.setTitle("Message d'information");
-                successAlert.setHeaderText(null);
-                successAlert.setContentText("Service a été supprimé avec succès!");
-                successAlert.showAndWait();
-
-                addServiceShowListData();
-                addServiceReset();
-            }
+            }else{
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Echec de suppression du service!");
+                alert.showAndWait(); 
+            }    
+            
+            addServiceShowListData();
+            addServiceReset();
+                
+               
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1798,6 +1825,205 @@ public class DashboardController implements Initializable {
     } 
     
     
+    public ObservableList<suivieData> suivieOrderData() {
+        
+        suivieID();
+        ObservableList<suivieData> listData = FXCollections.observableArrayList();
+        
+        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + sID;
+
+        connect = database.ConnectDb();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            suivieData suiData;
+
+            while (result.next()) {
+                suiData = new suivieData(
+                        
+                        result.getInt("suivieID"),
+                        result.getDate("suivieDate"),
+                        result.getInt("clientID"),
+                        result.getString("clientNom"),
+                        result.getString("serviceNom"),
+                        result.getInt("factureQte"),
+                        result.getDouble("servicePrix"),
+                        result.getDouble("suivieServiceToaleSolde"),
+                        result.getDouble("suivieServiceDejaPayer"),
+                        result.getDouble("suivieServiceRestePayer"),
+                        result.getString("NomUtilisateur")
+                );
+                listData.add(suiData);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return listData;
+    }
+    
+    
+    
+    
+    private ObservableList<suivieData> menuOrderListData;
+    
+    //Afficher les listes des clients sur Tables view
+    public void menuShowOrderListData() {
+        menuOrderListData = suivieOrderData();
+        
+        menuColServiceNom.setCellValueFactory(new PropertyValueFactory<>("serviceNom"));
+        menuColServiceQuantite.setCellValueFactory(new PropertyValueFactory<>("factureQte"));
+        menuColServicePrix.setCellValueFactory(new PropertyValueFactory<>("servicePrix"));
+        
+
+        menu_tableView.setItems(menuOrderListData);
+    }
+    
+    private String getName;
+    public void menuSelectOrder(){
+        
+        suivieData suivieD = menu_tableView.getSelectionModel().getSelectedItem();
+        int num = menu_tableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+        
+        getName = suivieD.getServiceNom();
+    }
+    
+    
+    private double totalP;
+    
+    public void menuGetTotale(){
+        
+        suivieID();
+        
+        String total = "SELECT SUM(servicePrix) FROM suivieclient WHERE suivieID =" +sID;
+        
+        connect = database.ConnectDb();
+        
+        try {
+            
+            prepare = connect.prepareStatement(total);
+            result = prepare.executeQuery();
+            
+            if (result.next()) {
+                totalP = result.getDouble("SUM(servicePrix)");
+                
+            }
+           
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+    }
+    
+    public void menuDisplayTotale(){
+        
+        menuGetTotale();
+        
+        menuTotale.setText(totalP + " Ar");
+    
+    }
+    //Pour le bouton de payement
+    public void menuPayerBtn(){
+        
+        Alert alert;
+        if(totalP == 0){
+            
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord ajouter un service!");
+            alert.showAndWait();
+        
+        }else{
+            
+            Date factureDate = new Date();
+            java.sql.Date dateFac = new java.sql.Date(factureDate.getTime());
+            
+            menuGetTotale();
+            String inserPay = "INSERT INTO facture (suivieID, factureDate, factureTotale, NomUtilisateur)"
+                    + "VALUES(?,?,?,?)";
+            
+            connect = database.ConnectDb();
+            
+            try {
+                
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sûr de vouloir faire le payement?");
+                Optional<ButtonType> option = alert.showAndWait();
+                
+                if(option.get().equals(ButtonType.OK)){
+                    
+                    suivieID();
+                    menuGetTotale();
+                    
+                    prepare = connect.prepareStatement(inserPay);
+                    
+                    prepare.setString(1, String.valueOf(sID));
+                    prepare.setString(2, String.valueOf(dateFac));
+                    prepare.setString(3, String.valueOf(totalP));
+                    prepare.setString(4, getData.username);
+                     
+                    prepare.executeUpdate();
+                    
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Payement avec succès!");
+                    alert.showAndWait();
+                    
+                    menuShowOrderListData();
+                    menuRestart();
+                    
+                }else{
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Payement annuler!");
+                    alert.showAndWait();
+                }
+                
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+    }
+    
+    
+    public void menuRemoveBtn(){
+        
+        Alert alert;
+        if(getName == null){
+            
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Echec!");
+            alert.showAndWait();
+        
+        }else{
+            
+        }
+        
+    }
+
+    public void menuRestart(){
+        totalP = 0;
+        menuTotale.setText("0.0 Ar");
+    
+    }
+    
+    
     /**
      * ********************************************************************************
      * ********************************************************************************
@@ -1845,7 +2071,7 @@ public class DashboardController implements Initializable {
         return listData;
     }
     
-    private ObservableList<suivieData> suivieData = FXCollections.observableArrayList();
+    private ObservableList<suivieData> suivieData;
     
     //Afficher les listes des clients sur Tables view
     public void suivieClientShowListData() {
@@ -2089,6 +2315,10 @@ public class DashboardController implements Initializable {
             suivieForm.setVisible(false);
             factureForm.setVisible(true);
             historiqueForm.setVisible(false);
+            
+            suivieListeData();
+            menuShowOrderListData();
+            menuDisplayTotale();
 
             factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
@@ -2175,11 +2405,15 @@ public class DashboardController implements Initializable {
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Message de confirmation");
         alert.setHeaderText(null);
-        alert.setContentText("Etes-vous sur de vouloir quitter le programme? \n Vous n'êtes pas encore déconnecter");
+        alert.setContentText("Vous n'êtes pas encore déconnecter! \n Etes-vous quand même sur vouloir quitter le programme?");
         Optional<ButtonType> option = alert.showAndWait();
 
         if (option.get().equals(ButtonType.OK)) {
-            System.exit(0);
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord se déconnecter!");
+            alert.showAndWait();
         }
     }
 
@@ -2225,5 +2459,8 @@ public class DashboardController implements Initializable {
         
         //Pour la suivie des clients
         suivieClientShowListData();
+        suivieListeData();
+        menuShowOrderListData();
+        menuDisplayTotale();
     }
 }

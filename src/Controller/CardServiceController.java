@@ -27,11 +27,13 @@ import jirehstudentsapp.serviceData;
 import Controller.DashboardController;
 import java.util.Date;
 import java.util.Objects;
+import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.Event;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -178,24 +180,33 @@ public class CardServiceController implements Initializable {
                 prepare.setDouble(10, soldeRestePayer);
                 
                 prepare.setString(11, getData.username);
-                prepare.executeUpdate();
-
-                // Mettre à jour le service
-                String updateService = "UPDATE service SET serviceNom = ?, servicePrix = ?, serviceImage = ? WHERE serviceID = ?";
-
-                prepare = connect.prepareStatement(updateService);
-                prepare.setString(1, menuServiceNom.getText());
-                prepare.setDouble(2, prix);
-                prepare.setString(3, serviceImage.replace("\\", "\\\\"));
-                prepare.setInt(4, serviceID);
-                prepare.executeUpdate();
-
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Message d'information");
-                alert.setHeaderText(null);
-                alert.setContentText("Succès ajout!");
-                alert.showAndWait();
                 
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sur d'ajout cette service ?");
+                Optional<ButtonType> option = alert.showAndWait();
+                
+                if (option.get().equals(ButtonType.CANCEL)) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Echec d'ajout !");
+                    alert.showAndWait();
+                   
+                }else{
+                    prepare.executeUpdate();
+                     
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ajout avec succès !\nVous devez cliquer sur Actualiser avant d'ajouter un autre client sur un service");
+                    alert.showAndWait();
+                    
+                    dashForm.menuGetTotale();
+                }
+                
+     
             }
         } catch (Exception e) {
             e.printStackTrace();

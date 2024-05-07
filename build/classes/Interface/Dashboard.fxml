@@ -129,9 +129,9 @@
                      <children>
                         <AnchorPane fx:id="acceuilForm" layoutX="2.0" layoutY="2.0" prefHeight="646.0" prefWidth="1160.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false">
                            <children>
-                              <AnchorPane layoutX="3.0" layoutY="3.0" prefHeight="181.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
+                              <AnchorPane layoutX="3.0" layoutY="3.0" prefHeight="244.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
                                  <children>
-                                    <AnchorPane layoutX="281.0" layoutY="10.0" prefHeight="123.0" prefWidth="244.0" styleClass="total" stylesheets="@../Design/DashboardDesign.css">
+                                    <AnchorPane layoutX="281.0" layoutY="36.0" prefHeight="123.0" prefWidth="244.0" styleClass="total" stylesheets="@../Design/DashboardDesign.css">
                                        <children>
                                           <Label layoutX="77.0" layoutY="92.0" text="Total des clients">
                                              <font>
@@ -145,7 +145,7 @@
                                           </Label>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane layoutX="607.0" layoutY="10.0" prefHeight="123.0" prefWidth="244.0" styleClass="total" stylesheets="@../Design/DashboardDesign.css">
+                                    <AnchorPane layoutX="607.0" layoutY="36.0" prefHeight="123.0" prefWidth="244.0" styleClass="total" stylesheets="@../Design/DashboardDesign.css">
                                        <children>
                                           <Label layoutX="72.0" layoutY="95.0" text="Total des services">
                                              <font>
@@ -159,8 +159,8 @@
                                           </Label>
                                        </children>
                                     </AnchorPane>
-                                    <Button fx:id="acceuilListeClientBtn" layoutX="323.0" layoutY="140.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Voir les listes" textFill="WHITE" />
-                                    <Button fx:id="acceuilListeServiceBtn" layoutX="649.0" layoutY="140.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Voir les listes" textFill="WHITE" />
+                                    <Button fx:id="acceuilListeClientBtn" layoutX="323.0" layoutY="177.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Voir les listes" textFill="WHITE" />
+                                    <Button fx:id="acceuilListeServiceBtn" layoutX="649.0" layoutY="177.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="160.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Voir les listes" textFill="WHITE" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -295,7 +295,7 @@
                            </children>
                         </AnchorPane>
                         
-                        <AnchorPane fx:id="suivieForm" layoutX="2.0" prefHeight="647.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
+                        <AnchorPane fx:id="suivieForm" layoutX="2.0" prefHeight="647.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false">
                            <children>
                               <AnchorPane layoutX="3.0" layoutY="3.0" prefHeight="643.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="2.0">
                                  <children>
@@ -379,7 +379,7 @@
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="factureForm" prefHeight="650.0" prefWidth="1161.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false">
+                        <AnchorPane fx:id="factureForm" prefHeight="650.0" prefWidth="1161.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
                            <children>
                               <AnchorPane layoutX="8.0" layoutY="2.0" prefHeight="646.0" prefWidth="1153.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="7.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
                                  <children>
@@ -418,7 +418,7 @@
                                     <Label layoutX="945.0" layoutY="405.0" prefHeight="17.0" prefWidth="44.0" text="Totale : " />
                                     <Label fx:id="menuTotale" layoutX="996.0" layoutY="399.0" prefHeight="28.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0 Ar" />
                                     <Button fx:id="menuEffacerBtn" layoutX="849.0" layoutY="586.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE" />
-                                    <Button fx:id="menuPayerBtn" layoutX="1018.0" layoutY="533.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Payer" textFill="WHITE" />
+                                    <Button fx:id="menuPayerBtn" layoutX="1018.0" layoutY="533.0" mnemonicParsing="false" onAction="#menuPayerBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Payer" textFill="WHITE" />
                                     <Button fx:id="menuImprimerBtn" layoutX="1018.0" layoutY="586.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Imprimer" textFill="WHITE" />
                                     <Button fx:id="menuAjouterDannsCompteBtn" layoutX="849.0" layoutY="533.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajout au compte" textFill="WHITE" />
                                  </children>

@@ -158,6 +158,8 @@ public class CardClientController implements Initializable{
         menuClientID.setText("");
         menuClientNom.setText("");
         menuClientPrenom.setText("");
+        getData.getMenuClientID = null;
+        getData.getMenuClientNom = null;
     }
     
     
@@ -216,6 +218,8 @@ public class CardClientController implements Initializable{
             if (menuClientID.getText().isEmpty()
                     || menuClientNom.getText().isEmpty()
                     || menuClientPrenom.getText().isEmpty()){
+                
+                
             
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
@@ -235,12 +239,11 @@ public class CardClientController implements Initializable{
                     result = prepare.executeQuery();
 
                     getData.getMenuClientID = menuClientID.getText();
-
                     getData.getMenuClientNom = menuClientNom.getText();
 
                     menuServiceClientShowListData();
                     menuServiceClientSelect();
-                    menuServiceClientReset();
+          
                 }
             
             }
