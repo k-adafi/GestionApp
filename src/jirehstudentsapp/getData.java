@@ -19,7 +19,13 @@ public class getData {
     
     public static String pathService;
     
-    public static String getMenuClientID;
+    public static Integer getMenuClientID;
     
-    public static String getMenuClientNom;     
+    public static String getMenuClientNom;
+    
+    //public static Double soldePayer;
+    
+   // public static Double soldeRestePayer;
+    
+    public static Double soldeTotaleTotale;
 }

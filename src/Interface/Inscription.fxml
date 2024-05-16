@@ -9,6 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.InscriptionController">
@@ -48,17 +49,23 @@
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Label>
-                  <TextField fx:id="email" layoutX="42.0" layoutY="169.0" prefHeight="30.0" prefWidth="220.0" promptText="Email" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
-                  <PasswordField fx:id="password" layoutX="41.0" layoutY="216.0" prefHeight="30.0" prefWidth="220.0" promptText="Mot de passe" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
-                  <Button fx:id="addAdminBtn" layoutX="42.0" layoutY="270.0" mnemonicParsing="false" onAction="#addAdminAdd" prefHeight="40.0" prefWidth="220.0" styleClass="login-btn" stylesheets="@../Design/loginDesign.css" text="S'inscrire" textFill="WHITE" />
+                  <TextField fx:id="email" layoutX="42.0" layoutY="193.0" prefHeight="30.0" prefWidth="220.0" promptText="Email" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
+                  <PasswordField fx:id="password" layoutX="41.0" layoutY="240.0" prefHeight="30.0" prefWidth="220.0" promptText="Mot de passe" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
+                  <Button fx:id="addAdminBtn" layoutX="42.0" layoutY="294.0" mnemonicParsing="false" onAction="#addAdminAdd" prefHeight="40.0" prefWidth="220.0" styleClass="login-btn" stylesheets="@../Design/loginDesign.css" text="Inscription" textFill="WHITE" />
                   <Button fx:id="close" layoutX="256.0" mnemonicParsing="false" onAction="#close" prefHeight="24.0" prefWidth="48.0" styleClass="close" stylesheets="@../Design/loginDesign.css" textFill="#329302" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <graphic>
                         <FontAwesomeIconView glyphName="CLOSE" size="1.2em" />
                      </graphic></Button>
-                  <TextField fx:id="username" layoutX="40.0" layoutY="120.0" prefHeight="30.0" prefWidth="220.0" promptText="Nom de l'utilisateur" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
-                  <FontAwesomeIconView fill="#aeaeae" glyphName="USER" layoutX="237.0" layoutY="141.0" size="18" />
-                  <FontAwesomeIconView fill="#aeaeae" glyphName="LOCK" layoutX="240.0" layoutY="237.0" size="18" />
-                  <FontAwesomeIconView fill="#aeaeae" glyphName="USER" layoutX="239.0" layoutY="190.0" size="18" />
+                  <TextField fx:id="username" layoutX="40.0" layoutY="144.0" prefHeight="30.0" prefWidth="220.0" promptText="Nom de l'utilisateur" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
+                  <FontAwesomeIconView fill="#aeaeae" glyphName="USER" layoutX="237.0" layoutY="166.0" size="18" />
+                  <FontAwesomeIconView fill="#aeaeae" glyphName="LOCK" layoutX="240.0" layoutY="262.0" size="18" />
+                  <FontAwesomeIconView fill="#aeaeae" glyphName="USER" layoutX="239.0" layoutY="215.0" size="18" />
+                  <Label layoutX="52.0" layoutY="99.0" text="S'inscrire" textFill="#329302">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Line endX="-15.0" endY="31.0" layoutX="59.0" layoutY="89.0" startX="-15.0" startY="6.0" stroke="#329302" strokeWidth="5.0" />
                </children>
             </AnchorPane>
             <AnchorPane layoutX="-1.0" layoutY="-1.0" prefHeight="222.0" prefWidth="300.0" styleClass="left-haut" stylesheets="@../Design/loginDesign.css">

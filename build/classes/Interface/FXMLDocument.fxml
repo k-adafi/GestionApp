@@ -9,6 +9,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.FXMLDocumentController">
@@ -50,7 +51,7 @@
                   </AnchorPane>
                </children>
             </AnchorPane>
-            <AnchorPane layoutX="300.0" layoutY="1.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane fx:id="seconnecterForm" layoutX="300.0" layoutY="1.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label layoutX="198.0" layoutY="47.0" text="Tonga soa" textFill="#329302">
                      <font>
@@ -64,14 +65,53 @@
                   </Label>
                   <TextField fx:id="username" layoutX="42.0" layoutY="145.0" onAction="#loginAdmin" prefHeight="30.0" prefWidth="220.0" promptText="Nom de l'utilisateur" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
                   <PasswordField fx:id="password" layoutX="41.0" layoutY="195.0" onAction="#loginAdmin" prefHeight="30.0" prefWidth="220.0" promptText="Mot de passe" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
-                  <Button fx:id="loginBtn" layoutX="42.0" layoutY="249.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="40.0" prefWidth="220.0" styleClass="login-btn" stylesheets="@../Design/loginDesign.css" text="Se connecter" textFill="WHITE" />
+                  <Button fx:id="loginBtn" layoutX="42.0" layoutY="249.0" mnemonicParsing="false" onAction="#loginAdmin" prefHeight="40.0" prefWidth="220.0" styleClass="login-btn" stylesheets="@../Design/loginDesign.css" text="Connexion" textFill="WHITE" />
                   <Button fx:id="close" ellipsisString="" layoutX="252.0" mnemonicParsing="false" onAction="#close" prefHeight="24.0" prefWidth="48.0" styleClass="close" stylesheets="@../Design/loginDesign.css" textFill="#329302" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <graphic>
                         <FontAwesomeIconView glyphName="CLOSE" size="1.2em" text="" />
                      </graphic></Button>
-                  <Button layoutX="113.0" layoutY="307.0" mnemonicParsing="false" styleClass="MotDPssOu" stylesheets="@../Design/loginDesign.css" text="Mot de passe oublier ?" />
+                  <Button fx:id="MotdePasseBtn" layoutX="124.0" layoutY="307.0" mnemonicParsing="false" onAction="#switchFormConnect" styleClass="MotDPssOu" stylesheets="@../Design/loginDesign.css" text="Mot de passe oublier ?" />
                   <FontAwesomeIconView fill="#aeaeae" glyphName="USER" layoutX="239.0" layoutY="166.0" size="18" />
                   <FontAwesomeIconView fill="#aeaeae" glyphName="LOCK" layoutX="240.0" layoutY="217.0" size="18" />
+                  <Label layoutX="53.0" layoutY="99.0" text="Se connercter" textFill="#329302">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Line endX="-15.0" endY="31.0" layoutX="60.0" layoutY="89.0" startX="-15.0" startY="6.0" stroke="#329302" strokeWidth="5.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="motdepasseForm" layoutX="301.0" prefHeight="400.0" prefWidth="300.0" visible="false">
+               <children>
+                  <Label layoutX="198.0" layoutY="47.0" text="Tonga soa" textFill="#329302">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="25.0" layoutY="48.0" text="Bienvenue" textFill="#329302">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="username1" layoutX="42.0" layoutY="147.0" onAction="#ModifPassord" prefHeight="30.0" prefWidth="220.0" promptText="Nom de l'utilisateur" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
+                  <Button fx:id="loginBtn1" layoutX="42.0" layoutY="302.0" mnemonicParsing="false" onAction="#ModifPassord" prefHeight="40.0" prefWidth="220.0" styleClass="login-btn" stylesheets="@../Design/loginDesign.css" text="Valider" textFill="WHITE" />
+                  <Button fx:id="close1" ellipsisString="" layoutX="252.0" mnemonicParsing="false" onAction="#close" prefHeight="24.0" prefWidth="48.0" styleClass="close" stylesheets="@../Design/loginDesign.css" textFill="#329302" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="CLOSE" size="1.2em" text="" />
+                     </graphic>
+                  </Button>
+                  <FontAwesomeIconView fill="#aeaeae" glyphName="USER" layoutX="239.0" layoutY="166.0" size="18" />
+                  <Label layoutX="53.0" layoutY="96.0" text="Mot de passe oublier" textFill="#329302">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Line endX="-15.0" endY="31.0" layoutX="60.0" layoutY="86.0" startX="-15.0" startY="6.0" stroke="#329302" strokeWidth="5.0" />
+                  <PasswordField fx:id="password11" layoutX="40.0" layoutY="248.0" onAction="#ModifPassord" prefHeight="30.0" prefWidth="220.0" promptText="Nouveau mot de passe" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
+                  <FontAwesomeIconView fill="#aeaeae" glyphName="LOCK" layoutX="240.0" layoutY="269.0" size="18" />
+                  <Button fx:id="SeconnectPasseBtn" layoutX="179.0" layoutY="359.0" mnemonicParsing="false" onAction="#switchFormConnect" styleClass="MotDPssOu" stylesheets="@../Design/loginDesign.css" text="Se connecter" />
+                  <TextField fx:id="username11" layoutX="40.0" layoutY="196.0" onAction="#ModifPassord" prefHeight="30.0" prefWidth="220.0" promptText="Email" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
+                  <FontAwesomeIconView fill="#aeaeae" glyphName="USER" layoutX="237.0" layoutY="215.0" size="18" />
                </children>
             </AnchorPane>
          </children>

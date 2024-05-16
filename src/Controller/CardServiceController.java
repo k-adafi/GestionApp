@@ -9,6 +9,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -24,21 +25,12 @@ import javafx.scene.layout.AnchorPane;
 import jirehstudentsapp.clientData;
 import jirehstudentsapp.getData;
 import jirehstudentsapp.serviceData;
-import Controller.DashboardController;
 import java.util.Date;
-import java.util.Objects;
 import java.util.Optional;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
-import javafx.event.Event;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import jirehstudentsapp.database;
+
+
 
 /**
  * FXML Controller class
@@ -90,10 +82,13 @@ public class CardServiceController implements Initializable {
     private Connection connect;
 
     private double totaleP;
-    private double prix;
+    private Double prix;
+    
     private double soldeTotale;
+    private double soldeTotaleTotale;
+    
     private double soldedejaPayer;
-    private double soldeRestePayer;
+    private double soldeRestePayer ;
     private int qty;
     
     private Date serveDate; 
@@ -121,13 +116,130 @@ public class CardServiceController implements Initializable {
     public void SetQuantity() {
         spin = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0);
         menuServiceSpinner.setValueFactory(spin);
-    }  
+    }
+    
+    public void getTolaleSolde(){
+        
+        String totalSolde = "SELECT SUM(suivieServiceToaleSolde) FROM suivieclient WHERE clientID =" +getData.getMenuClientID;
+        
+        connect = database.ConnectDb();
+        
+        try {
+            
+            prepare = connect.prepareStatement(totalSolde);
+            result = prepare.executeQuery();
+            
+            if (result.next()) {
+                soldeTotale = result.getDouble("SUM(suivieServiceToaleSolde)");
+                
+            }
+           
+            getData.soldeTotaleTotale = soldeTotale;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    
+    public void ajoutMenuServiceBtn() {
+        DashboardController dashForm =  new DashboardController(); // Utiliser la même instance de DashboardController
+        dashForm.suivieID();
+
+        getTolaleSolde();
+
+        Alert alert;
+        try {
+            qty = menuServiceSpinner.getValue();
+
+            if (qty == 0) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez ajouter au moins une quantité !");
+                alert.showAndWait();
+
+            } else if (getData.getMenuClientID == null || getData.getMenuClientNom == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez sélectionner un client !");
+                alert.showAndWait();
+
+            } else {
+                // Récupérer la date actuelle
+                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+
+                // Insérer les données dans la table suivieclient
+                String insertDataQuery = "INSERT INTO suivieclient (suivieID, suivieDate, clientID, clientNom, serviceNom, factureQte, "
+                        + "servicePrix, suivieServiceToaleSolde, suivieServiceDejaPayer, suivieServiceRestePayer, NomUtilisateur)"
+                        + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+
+                connect = database.ConnectDb();
+
+                prepare = connect.prepareStatement(insertDataQuery);
+                prepare.setString(1, String.valueOf(getData.sID));
+                prepare.setDate(2, currentDate);
+                prepare.setString(3, String.valueOf(getData.getMenuClientID));
+                prepare.setString(4, getData.getMenuClientNom);
+                prepare.setString(5, menuServiceNom.getText());
+                prepare.setInt(6, qty);
+                
+                totaleP = (qty * prix);
+                prepare.setDouble(7, totaleP);
+                
+                soldeTotaleTotale = (totaleP + soldeTotale);
+                prepare.setDouble(8, soldeTotaleTotale);
+                
+                //soldedejaPayer = ( soldeTotaleTotale - soldeRestePayer);
+                
+                prepare.setDouble(9, 0.0);
+                
+               // soldeRestePayer = ( soldeTotaleTotale - soldedejaPayer);
+                
+                prepare.setDouble(10, 0.0);
+                
+                prepare.setString(11, getData.username);
+
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sûr d'ajouter ce service ?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.CANCEL)) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Échec de l'ajout !");
+                    alert.showAndWait();
+
+                } else {
+                    prepare.executeUpdate();
+                    getData.soldeTotaleTotale = soldeTotaleTotale;
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ajout réussi !\nVous devez cliquer sur Actualiser avant d'ajouter un autre client sur un service");
+                    alert.showAndWait();
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    
     
       
-    public void ajoutMenuServiceBtn() {
+   /* public void ajoutMenuServiceBtn() {
         
         DashboardController dashForm =  new DashboardController();
         dashForm.suivieID();
+        
+        getTolaleSolde();
         
         Alert alert;
         try {
@@ -162,7 +274,7 @@ public class CardServiceController implements Initializable {
                 prepare.setString(1, String.valueOf(getData.sID));
                 prepare.setDate(2, dateS);
                 
-                prepare.setString(3, getData.getMenuClientID);
+                prepare.setString(3, String.valueOf(getData.getMenuClientID));
                 prepare.setString(4, getData.getMenuClientNom);
                 prepare.setString(5, menuServiceNom.getText());
                 prepare.setInt(6, qty);
@@ -170,13 +282,13 @@ public class CardServiceController implements Initializable {
                 totaleP = (qty * prix);
                 prepare.setDouble(7, totaleP);
                 
-                soldeTotale += totaleP;
-                prepare.setDouble(8, soldeTotale);
+                soldeTotaleTotale = (totaleP + soldeTotale);
+                prepare.setDouble(8, soldeTotaleTotale);
                 
-                soldedejaPayer = ( soldeTotale - soldeRestePayer);
+                soldedejaPayer = ( soldeTotaleTotale - soldeRestePayer);
                 prepare.setDouble(9, soldedejaPayer);
                 
-                soldeRestePayer = ( soldeTotale - soldedejaPayer);
+                soldeRestePayer = ( soldeTotaleTotale - soldedejaPayer);
                 prepare.setDouble(10, soldeRestePayer);
                 
                 prepare.setString(11, getData.username);
@@ -196,6 +308,10 @@ public class CardServiceController implements Initializable {
                    
                 }else{
                     prepare.executeUpdate();
+                    
+                    getData.soldeTotaleTotale = soldeTotaleTotale;
+                  //  getData.soldePayer = soldedejaPayer;
+                  //  getData.soldeRestePayer = soldeRestePayer;
                      
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
@@ -211,7 +327,7 @@ public class CardServiceController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }  
+    }  */
 
     
     @Override

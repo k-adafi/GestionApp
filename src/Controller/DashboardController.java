@@ -11,15 +11,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.Month;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +34,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -56,15 +49,13 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
 import jirehstudentsapp.clientData;
 import jirehstudentsapp.database;
 import jirehstudentsapp.getData;
-import static jirehstudentsapp.getData.username;
 import jirehstudentsapp.serviceData;
-import Controller.CardServiceController;
-import javafx.animation.TranslateTransition;
 import jirehstudentsapp.suivieData;
+
+
 
 /**
  *
@@ -174,6 +165,9 @@ public class DashboardController implements Initializable {
 
     @FXML
     private TableColumn<clientData, String> clientDateCol;
+    
+    @FXML
+    private TableColumn<clientData, String> clientNomUtilisateurCol;
 
     @FXML
     private TextField clientRechercheText;
@@ -396,20 +390,20 @@ public class DashboardController implements Initializable {
     @FXML
     private TableColumn<suivieData, String> suivieServiceNomCol;
 
-    @FXML
+     @FXML
     private TableColumn<suivieData, String> suivieServiceQteCol;
-    
-    @FXML
-    private TableColumn<suivieData, Double> suivieServicePrixUnitCol;
 
     @FXML
-    private TableColumn<suivieData, Double> suivieServiceToaleSoldeCol;
+    private TableColumn<suivieData, String> suivieServicePrixUnitCol;
 
     @FXML
-    private TableColumn<suivieData, Double> suivieServiceDejaPayerCol;
+    private TableColumn<suivieData, String> suivieServiceToaleSoldeCol;
 
     @FXML
-    private TableColumn<suivieData, Double> suivieServiceRestePayerCol;
+    private TableColumn<suivieData, String> suivieServiceDejaPayerCol;
+
+    @FXML
+    private TableColumn<suivieData, String> suivieServiceRestePayerCol;
 
     @FXML
     private TableColumn<suivieData, String> suivieServiceNomUtlisateurCol;
@@ -513,7 +507,10 @@ public class DashboardController implements Initializable {
     
     @FXML
     private AnchorPane menu_paneClient;
+    
 
+    
+    //menu client
     @FXML
     private TableView<clientData> menu_tableViewClient;
 
@@ -528,18 +525,23 @@ public class DashboardController implements Initializable {
 
     @FXML
     private Button menuClientActualiserBtn;
-    
-    @FXML
-    public Label menuClientID;
 
     @FXML
-    public Label menuClientNom;
+    private Label menuClientNom;
 
     @FXML
-    public Label menuClientPrenom;
+    private Label menuClientPrenom;
 
     @FXML
     private TextField menuClientRechercheText1;
+
+    @FXML
+    private Label menuClientID;
+
+    @FXML
+    private Button menuClientConfirmerBtn;
+    
+    
     
 
     //Historique
@@ -580,8 +582,8 @@ public class DashboardController implements Initializable {
 
         String sql = "INSERT INTO client"
                 + "(clientID, clientNom, clientPrenom, clientGenre, clientDateN, clientCNI, clientEtablissement,"
-                + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientPhoto, DateInscrp)"
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientPhoto, DateInscrp, NomUtilisateur)"
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         connect = database.ConnectDb();
 
@@ -642,6 +644,7 @@ public class DashboardController implements Initializable {
                     uri = uri.replace("\\", "\\\\");
                     prepare.setString(14, uri);
                     prepare.setString(15, String.valueOf(sqlDate));
+                    prepare.setString(16, getData.username);
                     
                     alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Message de confirmation");
@@ -706,7 +709,8 @@ public class DashboardController implements Initializable {
                 + clientTel.getText() + "', clientAdresse = '"
                 + clientAdress.getText() + "', clientPhoto = '"
                 + uri + "', DateInscrp = '"
-                + sqlDate + "' WHERE clientID = '"
+                + sqlDate + "', NomUtilisateur = '"
+                + getData.username +"' WHERE clientID = '"
                 + clientID.getText() + "'";
 
         connect = database.ConnectDb();
@@ -1023,7 +1027,8 @@ public class DashboardController implements Initializable {
                         result.getString("clientTel"),
                         result.getString("clientAdresse"),
                         result.getString("clientPhoto"),
-                        result.getDate("DateInscrp")
+                        result.getDate("DateInscrp"),
+                        result.getString("NomUtilisateur")
                 );
                 listData.add(clientD);
             }
@@ -1054,6 +1059,8 @@ public class DashboardController implements Initializable {
         clientTelCol.setCellValueFactory(new PropertyValueFactory<>("clientTel"));
         clientAdressCol.setCellValueFactory(new PropertyValueFactory<>("clientAdresse"));
         clientDateCol.setCellValueFactory(new PropertyValueFactory<>("DateInscrp"));
+        clientNomUtilisateurCol.setCellValueFactory(new PropertyValueFactory<>("NomUtilisateur"));
+        
 
         clientTableView.setItems(addClientList);
     }
@@ -1481,216 +1488,6 @@ public class DashboardController implements Initializable {
         serviceImageView.setImage(imageService);
     }
 
-    /**
-     * ********************************************************************************
-     * ********************************************************************************
-     * *********************************SEPARATION*************************************
-     * ********************************************************************************
-     * ********************************************************************************
-     * ********************************************************************************
-     */
-    //Section faire un service
-    //Observation des données faire service client sur la tableView.
-    public ObservableList<clientData> faireServiceClientListData() {
-
-        ObservableList<clientData> listData = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM  client";
-
-        connect = database.ConnectDb();
-
-        try {
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            clientData clientD;
-
-            while (result.next()) {
-                clientD = new clientData(
-                        result.getInt("clientID"),
-                        result.getString("clientNom"),
-                        result.getString("clientPrenom")
-                );
-                listData.add(clientD);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listData;
-    }
-
-    private ObservableList<clientData> faireServiceClientList;
-
-    //Afficher les listes des clients sur Tables view
-    public void faireServiceClientShowListData() {
-        faireServiceClientList = faireServiceClientListData();
-
-        faireServiceIDClientCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));
-        faireServiceNomClientCol.setCellValueFactory(new PropertyValueFactory<>("clientNom"));
-        faireServicePrenomClientCol.setCellValueFactory(new PropertyValueFactory<>("clientPrenom"));
-
-        faireServiceClientTableView.setItems(faireServiceClientList);
-    }
-
-    //Selection client via Table View 
-    public void faireServiceClientSelect() {
-        clientData clientD = faireServiceClientTableView.getSelectionModel().getSelectedItem();
-        int num = faireServiceClientTableView.getSelectionModel().getSelectedIndex();
-
-        if ((num - 1) < -1) {
-            return;
-        }
-
-        faireServiceClientID.setText(String.valueOf(clientD.getClientID())); // Assurez-vous que clientID est un TextField ou un contrôle similaire
-        faireServiceClientNom.setText(clientD.getClientNom());
-        faireServiceClientPrenom.setText(clientD.getClientPrenom());
-    }
-
-    //Pour l'actualisation de l'affichage du faire service service (Efa mandeha) 
-    public void faireServiceClientReset() {
-        faireServiceClientID.setText("");
-        faireServiceClientNom.setText("");
-        faireServiceClientPrenom.setText("");
-    }
-
-    //Observation des données faire service client sur la tableView.
-    public ObservableList<serviceData> faireServiceServiceListData() {
-
-        ObservableList<serviceData> listDataS = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM  service";
-
-        connect = database.ConnectDb();
-
-        try {
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            serviceData serviceD;
-
-            while (result.next()) {
-                serviceD = new serviceData(
-                        result.getInt("serviceID"),
-                        result.getString("serviceNom"),
-                        result.getDouble("servicePrix")
-                );
-                listDataS.add(serviceD);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return listDataS;
-    }
-
-    private ObservableList<serviceData> faireServiceServiceList;
-
-    //Afficher les listes des services sur Tables view faireservice
-    public void faireServiceServiceShowListData() {
-        faireServiceServiceList = faireServiceServiceListData();
-
-        faireServiceIDServiceCol.setCellValueFactory(new PropertyValueFactory<>("serviceID"));
-        faireServiceNomServiceCol.setCellValueFactory(new PropertyValueFactory<>("serviceNom"));
-        faireServicePrixServiceCol.setCellValueFactory(new PropertyValueFactory<>("servicePrix"));
-
-        faireServiceServiceTableView.setItems(faireServiceServiceList);
-    }
-
-    //Selection service via Table View
-    public void faireServiceServiceSelect() {
-        serviceData serviceD = faireServiceServiceTableView.getSelectionModel().getSelectedItem();
-        int num = faireServiceServiceTableView.getSelectionModel().getSelectedIndex();
-
-        if ((num - 1) < -1) {
-            return;
-        }
-
-        faireServiceServiceID.setText(String.valueOf(serviceD.getServiceID()));
-        faireServiceServiceNom.setText(serviceD.getServiceNom());
-        faireServiceServicePrix.setText(String.valueOf(serviceD.getServicePrix()));
-    }
-
-    //Pour l'actualisation de l'affichage du faire service service (Efa mandeha) 
-    public void faireServiceServiceReset() {
-        faireServiceServiceID.setText("");
-        faireServiceServiceNom.setText("");
-        faireServiceServicePrix.setText("");
-    }
-
-    //Pour la barre de recherche d'un faire service client (efa mandeha)
-    public void faireServiceClientSearch() {
-
-        FilteredList<clientData> filter = new FilteredList<>(faireServiceClientList, e -> true);
-
-        faireServiceClientRechercheText.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            filter.setPredicate(predicateClientData -> {
-
-                if (newValue == null || newValue.isEmpty()) {
-
-                    return true;
-                }
-                String searchKey = newValue.toLowerCase();
-
-                if (predicateClientData.getClientID().toString().contains(searchKey)) {
-
-                    return true;
-
-                } else if (predicateClientData.getClientNom().toLowerCase().contains(searchKey)) {
-
-                    return true;
-
-                } else if (predicateClientData.getClientPrenom().toLowerCase().contains(searchKey)) {
-
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-
-        });
-
-        SortedList<clientData> sortList = new SortedList<>(filter);
-
-        sortList.comparatorProperty().bind(faireServiceClientTableView.comparatorProperty());
-        faireServiceClientTableView.setItems(sortList);
-    }
-
-    //Pour la barre de recherche d'un faire service service (efa mandeha)
-    public void faireServiceServiceSearch() {
-
-        FilteredList<serviceData> filter = new FilteredList<>(faireServiceServiceList, e -> true);
-
-        faireServiceServiceRechercheText.textProperty().addListener((observable, oldValue, newValue) -> {
-
-            filter.setPredicate(predicateServiceData -> {
-
-                if (newValue == null || newValue.isEmpty()) {
-
-                    return true;
-                }
-
-                String searchKey = newValue.toLowerCase();
-
-                if (predicateServiceData.getServiceID().toString().contains(searchKey)) {
-
-                    return true;
-
-                } else if (predicateServiceData.getServiceNom().toLowerCase().contains(searchKey)) {
-
-                    return true;
-
-                } else if (predicateServiceData.getServicePrix().toString().contains(searchKey)) {
-
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-
-        });
-        SortedList<serviceData> sortList = new SortedList<>(filter);
-
-        sortList.comparatorProperty().bind(faireServiceServiceTableView.comparatorProperty());
-        faireServiceServiceTableView.setItems(sortList);
-    }
 
     /**
      * ********************************************************************************
@@ -1771,58 +1568,59 @@ public class DashboardController implements Initializable {
 
         }
     }
-    
-    public void menuDisplayClient() {
-        menu_paneClient.getChildren().clear(); // Effacez les éléments précédents
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/Interface/cardClient.fxml"));
-                AnchorPane pane = loader.load();
-
-                // Ajoutez le AnchorPane à votre conteneur
-                menu_paneClient.getChildren().add(pane);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }       
-    }
      
     
-    private int sID;
-    public void suivieID() {
+    private Integer sID;
 
-        String sql = "SELECT MAX(suivieID) FROM  suivieclient";
+    public void suivieID() {
+        
+        String sql = "SELECT MAX(suivieID) AS suivieID FROM suivieclient";
+        
+        String checkSIDSql = "SELECT MAX(suivieID) AS suivieID FROM facture";
+        
+        String checkSIDSqlCompte = "SELECT MAX(suivieID) AS suivieID FROM compte";
+
         connect = database.ConnectDb();
 
         try {
+            // Obtenez la valeur maximale de suivieID dans la table suivieclient
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
 
             if (result.next()) {
-                sID = result.getInt("MAX(suivieID)");
+                sID = result.getInt("suivieID");
             }
 
-            String checksID = "SELECT MAX(suivieID) FROM facture";
-            prepare = connect.prepareStatement(checksID);
+            // Obtenez la valeur maximale de suivieID dans la table facture
+            prepare = connect.prepareStatement(checkSIDSql);
             result = prepare.executeQuery();
 
             int checkID = 0;
             if (result.next()) {
-                checkID = result.getInt("MAX(suivieID)");
-            }
-
-            if (sID == 0) {
-                sID+=1;
-            } else if (sID == checkID) {
-                sID+=1;
+                checkID = result.getInt("suivieID");
             }
             
+            // Obtenez la valeur maximale de suivieID dans la table facture
+            prepare = connect.prepareStatement(checkSIDSqlCompte);
+            result = prepare.executeQuery();
+
+            int checkSIDSqlCompt = 0;
+            if (result.next()) {
+                checkSIDSqlCompt = result.getInt("suivieID");
+            }
+
+            // Vérifiez si sID est égal à 0 ou égal à checkID, ou à checkCompt puis incrémentez-le
+            if (sID == 0 || sID == checkID || sID == checkSIDSqlCompt) {
+                sID++;
+            }
+
             getData.sID = sID;
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-    } 
+    }
+ 
     
     
     public ObservableList<suivieData> suivieOrderData() {
@@ -1841,18 +1639,12 @@ public class DashboardController implements Initializable {
 
             while (result.next()) {
                 suiData = new suivieData(
-                        
+                        result.getInt("ID"),
                         result.getInt("suivieID"),
-                        result.getDate("suivieDate"),
-                        result.getInt("clientID"),
-                        result.getString("clientNom"),
                         result.getString("serviceNom"),
                         result.getInt("factureQte"),
-                        result.getDouble("servicePrix"),
-                        result.getDouble("suivieServiceToaleSolde"),
-                        result.getDouble("suivieServiceDejaPayer"),
-                        result.getDouble("suivieServiceRestePayer"),
-                        result.getString("NomUtilisateur")
+                        result.getDouble("servicePrix")
+                     
                 );
                 listData.add(suiData);
             }
@@ -1881,7 +1673,8 @@ public class DashboardController implements Initializable {
         menu_tableView.setItems(menuOrderListData);
     }
     
-    private String getName;
+    private Integer getID;
+    
     public void menuSelectOrder(){
         
         suivieData suivieD = menu_tableView.getSelectionModel().getSelectedItem();
@@ -1891,7 +1684,7 @@ public class DashboardController implements Initializable {
             return;
         }
         
-        getName = suivieD.getServiceNom();
+        getID = suivieD.getID();
     }
     
     
@@ -1922,17 +1715,77 @@ public class DashboardController implements Initializable {
     
     }
     
+    private double soldeRestePayer;
+     
+    private double soldePayer;
+    
+    
+    public void getDejaPayerSolde(){
+    
+        String checkData = "SELECT * FROM suivieclient WHERE clientID = '" +getData.getMenuClientID+ "'";
+                      
+        connect = database.ConnectDb();
+        
+        try {
+            
+            prepare = connect.prepareStatement(checkData);
+            result = prepare.executeQuery();
+                    
+            while (result.next()) {                        
+                        
+                soldePayer = result.getDouble("suivieServiceDejaPayer");
+    
+            }
+           
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    } 
+    
+    
+    public void getRestePayerSolde(){
+    
+        String checkData = "SELECT * FROM suivieclient WHERE clientID = '" +getData.getMenuClientID+ "'";
+                    
+
+        connect = database.ConnectDb();
+        
+        try {
+            
+            prepare = connect.prepareStatement(checkData);
+            result = prepare.executeQuery();
+                    
+            while (result.next()) {                        
+                        
+                soldeRestePayer = result.getDouble("suivieServiceRestePayer");
+    
+            }
+            
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
+    
     public void menuDisplayTotale(){
         
         menuGetTotale();
-        
         menuTotale.setText(totalP + " Ar");
     
     }
+    
+   
+     
     //Pour le bouton de payement
     public void menuPayerBtn(){
         
         Alert alert;
+        
+        suivieID();
         if(totalP == 0){
             
             alert = new Alert(Alert.AlertType.ERROR);
@@ -1971,8 +1824,13 @@ public class DashboardController implements Initializable {
                     prepare.setString(2, String.valueOf(dateFac));
                     prepare.setString(3, String.valueOf(totalP));
                     prepare.setString(4, getData.username);
-                     
                     prepare.executeUpdate();
+           
+                    
+                    String soldeUpdate = "UPDATE suivieclient SET suivieServiceDejaPayer = " + (getData.soldeTotaleTotale - soldeRestePayer) + " WHERE clientID = '" +getData.getMenuClientID+ "'";
+                    
+                    statement = connect.createStatement();
+                    statement.executeUpdate(soldeUpdate);
                     
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
@@ -2000,24 +1858,128 @@ public class DashboardController implements Initializable {
     }
     
     
-    public void menuRemoveBtn(){
+    public void menuCompteBtn(){
         
         Alert alert;
-        if(getName == null){
+        
+        getDejaPayerSolde();
+        suivieID();
+        if(totalP == 0){
             
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Echec!");
+            alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord ajouter un service!");
             alert.showAndWait();
         
         }else{
             
+            Date factureDate = new Date();
+            java.sql.Date dateCompte = new java.sql.Date(factureDate.getTime());
+            
+            menuGetTotale();
+            String inserPay = "INSERT INTO compte (suivieID, compteDate, compteTotale, NomUtilisateur)"
+                    + "VALUES(?,?,?,?)";
+            
+            connect = database.ConnectDb();
+            
+            try {
+                
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sûr de vouloir l'ajouter dans votre compte?");
+                Optional<ButtonType> option = alert.showAndWait();
+                
+                if(option.get().equals(ButtonType.OK)){
+                    
+                    suivieID();
+                    menuGetTotale();
+                    
+                    prepare = connect.prepareStatement(inserPay);
+                    
+                    prepare.setString(1, String.valueOf(sID));
+                    prepare.setString(2, String.valueOf(dateCompte));
+                    prepare.setString(3, String.valueOf(totalP));
+                    prepare.setString(4, getData.username);
+                    prepare.executeUpdate();          
+                    
+                    String soldeUpdate = "UPDATE suivieclient SET suivieServiceRestePayer = " + (getData.soldeTotaleTotale - soldePayer) + " WHERE clientID = '" +getData.getMenuClientID+ "'";
+                    
+                    statement = connect.createStatement();
+                    statement.executeUpdate(soldeUpdate);
+                    
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ajout au compte réussi avec succès!");
+                    alert.showAndWait();
+                    
+                    menuShowOrderListData();
+                    menuRestart();
+                    
+                }else{
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Payement annuler!");
+                    alert.showAndWait();
+                }
+                
+                
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        
+    }
+    
+    
+    public void menuRemoveBtn(){
+        
+        Alert alert;
+        if(getID == 0){
+            
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Echec! \n Vous devez séléctionner ce que vous voulez supprimer");
+            alert.showAndWait();
+        
+        }else{
+            
+            String deleteData = "DELETE FROM suivieclient WHERE ID = " + getID;
+            connect = database.ConnectDb();
+            
+            try {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sur de vouloir le supprimer?");
+                Optional<ButtonType> option = alert.showAndWait();
+            
+                if (option.get().equals(ButtonType.CANCEL)) {
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Suppression annuler!");
+                    alert.showAndWait();
+                    
+                }else{    
+                    prepare = connect.prepareStatement(deleteData);
+                    prepare.executeUpdate();
+                
+                menuShowOrderListData();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         
     }
 
     public void menuRestart(){
+        
         totalP = 0;
         menuTotale.setText("0.0 Ar");
     
@@ -2033,22 +1995,195 @@ public class DashboardController implements Initializable {
      * ********************************************************************************
      */
     
-    //Section suivie
-  
-    public ObservableList<suivieData> suivieListeData() {
+    
+    //Observation des données faire service client sur la tableView.
+    public ObservableList<clientData> menuServiceClientListData() {
 
-        ObservableList<suivieData> listData = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM  suivieclient";
+        ObservableList<clientData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM  client";
 
         connect = database.ConnectDb();
 
         try {
             prepare = connect.prepareStatement(sql);
             result = prepare.executeQuery();
-            suivieData suiData;
+            clientData clientD;
 
             while (result.next()) {
-                suiData = new suivieData(
+                clientD = new clientData(
+                        result.getInt("clientID"),
+                        result.getString("clientNom"),
+                        result.getString("clientPrenom")
+                );
+                listData.add(clientD);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listData;
+    }
+
+    private ObservableList<clientData> menuServiceClientList;
+
+    //Afficher les listes des clients sur Tables view
+    public void menuServiceClientShowListData() {
+        menuServiceClientList = menuServiceClientListData();
+
+        menuColClientID.setCellValueFactory(new PropertyValueFactory<>("clientID"));
+        menuColClientNom.setCellValueFactory(new PropertyValueFactory<>("clientNom"));
+        menuColClientPrenom.setCellValueFactory(new PropertyValueFactory<>("clientPrenom"));
+
+        menu_tableViewClient.setItems(menuServiceClientList);
+    }
+    
+    
+    //Selection client via Table View 
+    public void menuServiceClientSelect() {
+        clientData clientD = menu_tableViewClient.getSelectionModel().getSelectedItem();
+        int num = menu_tableViewClient.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        menuClientID.setText(String.valueOf(clientD.getClientID())); // Assurez-vous que clientID est un TextField ou un contrôle similaire
+        menuClientNom.setText(clientD.getClientNom());
+        menuClientPrenom.setText(clientD.getClientPrenom());
+    }
+
+    //Pour l'actualisation de l'affichage du faire service service (Efa mandeha) 
+    public void menuServiceClientReset() {
+        menuClientRechercheText1.setText("");
+        menuClientID.setText("");
+        menuClientNom.setText("");
+        menuClientPrenom.setText("");
+        getData.getMenuClientID = null;
+        getData.getMenuClientNom = null;
+    }
+    
+    
+    //Pour la barre de recherche sur menu service dans client (efa mandeha)
+    public void menuClientSearch() {
+
+        FilteredList<clientData> filter = new FilteredList<>(menuServiceClientList, e -> true);
+
+        menuClientRechercheText1.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            filter.setPredicate(predicateClientData -> {
+
+                if (newValue == null || newValue.isEmpty()) {
+
+                    return true;
+                }
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateClientData.getClientID().toString().contains(searchKey)) {
+
+                    return true;
+
+                } else if (predicateClientData.getClientNom().toLowerCase().contains(searchKey)) {
+
+                    return true;
+
+                } else if (predicateClientData.getClientPrenom().toLowerCase().contains(searchKey)) {
+
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+        });
+
+        SortedList<clientData> sortList = new SortedList<>(filter);
+
+        sortList.comparatorProperty().bind(menu_tableViewClient.comparatorProperty());
+        menu_tableViewClient.setItems(sortList);
+    } 
+    
+    
+    public void menuclientSelectBtn(){
+        
+        String sqlselectClient = "SELECT * FROM client WHERE clientID = ? AND clientNom = ? AND clientPrenom = ?";
+        connect = database.ConnectDb();
+
+        try {
+            Alert alert;
+
+            if (menuClientID.getText().isEmpty()
+                    || menuClientNom.getText().isEmpty()
+                    || menuClientPrenom.getText().isEmpty()){
+
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez sélectionner un client!");
+                alert.showAndWait();
+
+            }else{
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sûr " + menuClientNom.getText() + " ?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.isPresent() && option.get().equals(ButtonType.CANCEL)) {
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Annuler!");
+                    alert.showAndWait();
+
+                }else{
+                    prepare = connect.prepareStatement(sqlselectClient);
+                    prepare.setString(1, menuClientID.getText());
+                    prepare.setString(2, menuClientNom.getText());
+                    prepare.setString(3, menuClientPrenom.getText());
+                    result = prepare.executeQuery();
+
+                    getData.getMenuClientID = Integer.parseInt(menuClientID.getText());
+                    getData.getMenuClientNom = menuClientNom.getText();
+
+                    menuServiceClientShowListData();
+                    menuServiceClientSelect();
+                }
+            }
+   
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    
+    /**
+     * ********************************************************************************
+     * ********************************************************************************
+     * *********************************SEPARATION*************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     */
+    
+    
+    
+    //Section suivie
+  
+    public ObservableList<suivieData> suivieListeData() {
+
+        ObservableList<suivieData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM suivieclient";
+
+        connect = database.ConnectDb();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            suivieData suivieD;
+
+            while (result.next()) {
+                suivieD = new suivieData(
+                        result.getInt("ID"),
                         result.getInt("suivieID"),
                         result.getDate("suivieDate"),
                         result.getInt("clientID"),
@@ -2061,7 +2196,7 @@ public class DashboardController implements Initializable {
                         result.getDouble("suivieServiceRestePayer"),
                         result.getString("NomUtilisateur")
                 );
-                listData.add(suiData);
+                listData.add(suivieD);
             }
 
         } catch (Exception e) {
@@ -2071,12 +2206,15 @@ public class DashboardController implements Initializable {
         return listData;
     }
     
-    private ObservableList<suivieData> suivieData;
+    
+    
+    private ObservableList<suivieData> suivieListData;
     
     //Afficher les listes des clients sur Tables view
     public void suivieClientShowListData() {
-        suivieData = suivieListeData();
-
+    
+        suivieListData = suivieListeData();
+        
         suivieClientDateCol.setCellValueFactory(new PropertyValueFactory<>("suivieDate"));
         suivieClientIDCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));
         suivieClientNomCol.setCellValueFactory(new PropertyValueFactory<>("clientNom"));
@@ -2088,7 +2226,7 @@ public class DashboardController implements Initializable {
         suivieServiceRestePayerCol.setCellValueFactory(new PropertyValueFactory<>("suivieServiceRestePayer"));
         suivieServiceNomUtlisateurCol.setCellValueFactory(new PropertyValueFactory<>("NomUtilisateur"));
 
-        suivieTableView1.setItems(suivieData);
+        suivieTableView1.setItems(suivieListData);
     }
     
     
@@ -2130,7 +2268,7 @@ public class DashboardController implements Initializable {
     //Pour la barre de recherche d'un service (efa mandeha)
     public void suivieClientSearch() {
 
-        FilteredList<suivieData> filter = new FilteredList<>(suivieData, e -> true);
+        FilteredList<suivieData> filter = new FilteredList<>(suivieListData, e -> true);
 
         suivieRechercheText1.textProperty().addListener((observable, oldValue, newValue) -> {
 
@@ -2184,8 +2322,64 @@ public class DashboardController implements Initializable {
         sortList.comparatorProperty().bind(suivieTableView1.comparatorProperty());
         suivieTableView1.setItems(sortList);
     }
-
     
+    
+    public void suivieClientRemove(){
+        
+        try {
+            Alert alert;
+            if (suivieClientID.getText().isEmpty() || suivieClientNom.getText().isEmpty()) {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
+                alert.showAndWait();
+                return;
+            }
+
+
+            String sql = "DELETE FROM suivieclient WHERE ID = " + getID;;
+            
+            connect = database.ConnectDb();
+            if (connect == null) {
+                // Gérer l'échec de la connexion à la base de données
+                return;
+            }
+
+            alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Message de confirmation");
+            alert.setHeaderText(null);
+            alert.setContentText("Êtes-vous sûr de vouloir supprimer la serviice de ce client " + suivieClientNom.getText() + " ?");
+            Optional<ButtonType> option = alert.showAndWait();
+
+            if (option.isPresent() && option.get() == ButtonType.OK) {
+                statement = connect.createStatement();
+                statement.executeUpdate(sql);
+
+                alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Message d'information");
+                alert.setHeaderText(null);
+                alert.setContentText("Service supprimé avec succès!");
+                alert.showAndWait();
+                
+            }else{
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Echec de suppression!");
+                alert.showAndWait();
+            }
+            
+            suivieClientShowListData();
+            SuivieClientReset();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Gérer l'exception
+        }
+    
+    } 
+
     
 
     //Relier les fenêtres
@@ -2195,7 +2389,6 @@ public class DashboardController implements Initializable {
             acceuilForm.setVisible(true);
             clientForm.setVisible(false);
             serviceForm.setVisible(false);
-            makeServiceForm.setVisible(false);
             suivieForm.setVisible(false);
             factureForm.setVisible(false);
             historiqueForm.setVisible(false);
@@ -2205,14 +2398,12 @@ public class DashboardController implements Initializable {
             serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
 
         } else if (event.getSource() == clientBtn) {
             acceuilForm.setVisible(false);
             clientForm.setVisible(true);
             serviceForm.setVisible(false);
-            makeServiceForm.setVisible(false);
             suivieForm.setVisible(false);
             factureForm.setVisible(false);
             historiqueForm.setVisible(false);
@@ -2222,7 +2413,6 @@ public class DashboardController implements Initializable {
             serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
 
             //Pour les combox dans clients
@@ -2238,7 +2428,6 @@ public class DashboardController implements Initializable {
             acceuilForm.setVisible(false);
             clientForm.setVisible(false);
             serviceForm.setVisible(true);
-            makeServiceForm.setVisible(false);
             suivieForm.setVisible(false);
             factureForm.setVisible(false);
             historiqueForm.setVisible(false);
@@ -2248,7 +2437,6 @@ public class DashboardController implements Initializable {
             acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
 
             //Pour la liste des clients dans la base de donnée
@@ -2261,34 +2449,33 @@ public class DashboardController implements Initializable {
             acceuilForm.setVisible(false);
             clientForm.setVisible(false);
             serviceForm.setVisible(false);
-            makeServiceForm.setVisible(true);
             suivieForm.setVisible(false);
-            factureForm.setVisible(false);
+            factureForm.setVisible(true);
             historiqueForm.setVisible(false);
-
+          
             makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+            acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
 
-            //Pour la liste des client au nivea de faire un service
-            faireServiceClientShowListData();
-            faireServiceClientSearch();
-            faireServiceClientSelect();
+            //Pour menu affiche produit
+            menuDisplayCard();
+            
+            menuShowOrderListData();
+            suivieListeData();
+            menuDisplayTotale();
+            menuSelectOrder();
+            
+            menuServiceClientShowListData();
+            menuServiceClientListData();
 
-            //Pour la liste des services au niveau de faire un service
-            faireServiceServiceShowListData();
-            faireServiceServiceSearch();
-            faireServiceServiceSelect();
 
         } else if (event.getSource() == suivieBtn) {
             acceuilForm.setVisible(false);
             clientForm.setVisible(false);
             serviceForm.setVisible(false);
-            makeServiceForm.setVisible(false);
             suivieForm.setVisible(true);
             factureForm.setVisible(false);
             historiqueForm.setVisible(false);
@@ -2297,47 +2484,19 @@ public class DashboardController implements Initializable {
             suivieClientShowListData();
             suivieClientSelect();
             SuivieClientReset();
-            suivieClientSearch();
+            suivieClientSearch(); 
 
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-
-        } else if (event.getSource() == factureBtn) {
-            acceuilForm.setVisible(false);
-            clientForm.setVisible(false);
-            serviceForm.setVisible(false);
-            makeServiceForm.setVisible(false);
-            suivieForm.setVisible(false);
-            factureForm.setVisible(true);
-            historiqueForm.setVisible(false);
-            
-            suivieListeData();
-            menuShowOrderListData();
-            menuDisplayTotale();
-
-            factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
-            clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-
-            //Pour menu affiche produit
-            menuDisplayCard();
-
-            
 
         } else if (event.getSource() == historiqueBtn) {
             acceuilForm.setVisible(false);
             clientForm.setVisible(false);
             serviceForm.setVisible(false);
-            makeServiceForm.setVisible(false);
             suivieForm.setVisible(false);
             factureForm.setVisible(false);
             historiqueForm.setVisible(true);
@@ -2347,7 +2506,6 @@ public class DashboardController implements Initializable {
             serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            factureBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
         }
     }
@@ -2426,6 +2584,16 @@ public class DashboardController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
+        //Pour la suivie des clients
+        menuShowOrderListData();
+        suivieClientShowListData();
+        suivieListeData();
+        menuDisplayTotale();
+        menuSelectOrder();
+        
+        menuServiceClientShowListData();
+        menuServiceClientListData();
+        
         // Initialiser sID lors de l'initialisation du contrôleur
         suivieID();
 
@@ -2441,26 +2609,12 @@ public class DashboardController implements Initializable {
         //Pour menu affiche service
         menuDisplayCard();
         
-        //Pour menu affiche client  
-        menuDisplayClient();
 
         //Pour les combox dans clients
         addClientgenreList();
         addClientetablissementList();
         addClientniveauList();
         addClientpassantList();
-
-        //Pour la liste des client au nivea de faire un service
-        faireServiceClientShowListData();
-
-        //Pour la liste des services au niveau de faire un service
-        faireServiceServiceShowListData();
         
-        
-        //Pour la suivie des clients
-        suivieClientShowListData();
-        suivieListeData();
-        menuShowOrderListData();
-        menuDisplayTotale();
     }
 }

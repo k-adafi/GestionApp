@@ -8,6 +8,8 @@ package jirehstudentsapp;
 
 import java.util.Date;
 
+
+
 /**
  *
  * @author KADAFI Ben
@@ -15,6 +17,7 @@ import java.util.Date;
 public class suivieData {
     
     //Pour les suivie
+    private Integer ID;
     private Integer suivieID;
     private Date suivieDate;
     private Integer clientID;
@@ -29,10 +32,11 @@ public class suivieData {
   
     
     //Pour les clients
-    public suivieData(Integer suivieID, Date suivieDate, Integer clientID, String clientNom,
+    public suivieData(Integer ID,Integer suivieID, Date suivieDate, Integer clientID, String clientNom,
         String serviceNom, Integer factureQte, Double servicePrix, Double suivieServiceToaleSolde, 
         Double suivieServiceDejaPayer, Double suivieServiceRestePayer, String NomUtilisateur)
     {
+        this.ID = ID;
         this.suivieID = suivieID;
         this.suivieDate = suivieDate;
         this.clientID = clientID;
@@ -45,6 +49,22 @@ public class suivieData {
         this.suivieServiceRestePayer = suivieServiceRestePayer;
         this.NomUtilisateur = NomUtilisateur;
       
+    }
+    
+    //Pour les clients
+    public suivieData(Integer ID,Integer suivieID,
+        String serviceNom, Integer factureQte, Double servicePrix)
+    {
+        this.ID = ID;
+        this.suivieID = suivieID;
+        this.serviceNom = serviceNom;
+        this.factureQte = factureQte;
+        this.servicePrix = servicePrix;
+      
+    }
+    
+    public Integer getID(){
+        return ID;
     }
     
     public Integer getSuivieID(){

@@ -5,6 +5,7 @@
  */
 package jirehstudentsapp;
 
+
 /**
  *
  * @author KADAFI Ben
@@ -23,9 +24,7 @@ public class adminData {
     
     }
     
-    public adminData(int aInt, String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    
     
     public String getNomUtilisateur(){
         return NomUtilisateur;

@@ -18,9 +18,10 @@ public class database {
     public Connection cn = null;
     
     public static Connection ConnectDb(){
-         try{
+        
+        try{
              Class.forName("com.mysql.jdbc.Driver");
-             Connection cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jirehstudentsbdd?characterEncoding=UTF-8", "root", "");
+             Connection cn = DriverManager.getConnection("jdbc:mysql://localhost:3306/jirehstudentsbdd2?characterEncoding=UTF-8", "root", "");
              System.out.println("Connexion réussi");
              return cn;
         

@@ -8,6 +8,8 @@ package jirehstudentsapp;
 
 import java.util.Date;
 
+
+
 /**
  *
  * @author KADAFI Ben
@@ -30,12 +32,13 @@ public class clientData {
     private String clientAdresse;
     private String clientPhoto;
     private Date DateInscrp;
+    private String NomUtilisateur;
     
  
     //Pour les clients
     public clientData(Integer clientID, String clientNom,String clientPrenom, String clientGenre, Date clientDateN,
         String clientCNI, String clientEtablissement, String clientMention, String clientNiveau, String clientCodage,
-        String clientPassant,String clientTel, String clientAdresse, String clientPhoto, Date DateInscrp)
+        String clientPassant,String clientTel, String clientAdresse, String clientPhoto, Date DateInscrp, String NomUtilisateur)
     {
         this.clientID = clientID;
         this.clientNom = clientNom;
@@ -52,6 +55,7 @@ public class clientData {
         this.clientAdresse = clientAdresse;
         this.clientPhoto = clientPhoto;
         this.DateInscrp = DateInscrp;
+        this.NomUtilisateur = NomUtilisateur;
     }  
     
     
@@ -66,9 +70,6 @@ public class clientData {
         this.clientNom = clientNom;    
     }
 
-    public clientData(int aInt, String string) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     //Pour les clients
     public Integer getClientID(){
@@ -129,6 +130,10 @@ public class clientData {
     
     public Date getDateInscrp(){
         return DateInscrp;
+    }
+    
+    public String getNomUtilisateur(){
+        return NomUtilisateur;
     }
     
 }
