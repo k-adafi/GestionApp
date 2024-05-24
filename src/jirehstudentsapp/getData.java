@@ -22,6 +22,7 @@ public class getData {
     public static Integer getMenuClientID;
     
     public static String getMenuClientNom;
+    public static boolean clickAdd = false;
     
     //public static Double soldePayer;
     

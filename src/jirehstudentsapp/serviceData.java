@@ -24,10 +24,11 @@ public class serviceData {
     private Date serviceDateDebut;
     private Date serviceDateFin;
     private String serviceImage;
+    private String NomUtilisateur;
 
         
     public serviceData(Integer serviceID, String serviceNom, String serviceType, Double servicePrix, 
-            String serviceDuree, Date serviceDateDebut, Date serviceDateFin, String serviceImage)
+            String serviceDuree, Date serviceDateDebut, Date serviceDateFin, String serviceImage, String NomUtilisateur)
     {
         this.serviceID = serviceID;
         this.serviceNom = serviceNom;
@@ -37,6 +38,7 @@ public class serviceData {
         this.serviceDateDebut = serviceDateDebut;
         this.serviceDateFin = serviceDateFin;
         this.serviceImage = serviceImage;
+        this.NomUtilisateur = NomUtilisateur;
     }
     
     
@@ -88,6 +90,10 @@ public class serviceData {
     
     public String getServiceImage(){
         return serviceImage;
+    }
+    
+    public String getNomUtilisateur(){
+        return NomUtilisateur;
     }
    
 }

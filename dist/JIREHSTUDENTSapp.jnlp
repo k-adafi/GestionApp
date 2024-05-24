@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="JIREHSTUDENTSapp.jar" size="278356" download="eager" />
+    <jar href="JIREHSTUDENTSapp.jar" size="451465" download="eager" />
     <jar href="lib\HikariCP-5.0.1.jar" size="161902" download="eager" />
     <jar href="lib\activation-1.1.jar" size="62983" download="eager" />
     <jar href="lib\activemq-core-5.7.0.jar" size="3963881" download="eager" />
@@ -83,7 +83,9 @@
     <jar href="lib\mariadb-java-client-3.0.4.jar" size="571732" download="eager" />
     <jar href="lib\mqtt-client-1.3.jar" size="111146" download="eager" />
     <jar href="lib\mysql-connector-j-8.3.0.jar" size="2495536" download="eager" />
+    <jar href="lib\mysql-connector-java-5.1.3.jar" size="646552" download="eager" />
     <jar href="lib\ojdbc14-10.2.0.2.0.jar" size="1545954" download="eager" />
+    <jar href="lib\ojdbc6-11.2.0.4.jar" size="2739670" download="eager" />
     <jar href="lib\ons-11.2.0.4.jar" size="71830" download="eager" />
     <jar href="lib\oraclepki-11.2.0.4.jar" size="219382" download="eager" />
     <jar href="lib\osdt_cert-11.2.0.4.jar" size="170248" download="eager" />

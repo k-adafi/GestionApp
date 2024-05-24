@@ -30,15 +30,18 @@ public class clientData {
     private String clientPassant;
     private String clientTel;
     private String clientAdresse;
+    private String clientType;
     private String clientPhoto;
     private Date DateInscrp;
     private String NomUtilisateur;
+    private Double clientSoldeDejaPayer;
+    private Double clientSoldeRestePayer;
     
  
     //Pour les clients
     public clientData(Integer clientID, String clientNom,String clientPrenom, String clientGenre, Date clientDateN,
         String clientCNI, String clientEtablissement, String clientMention, String clientNiveau, String clientCodage,
-        String clientPassant,String clientTel, String clientAdresse, String clientPhoto, Date DateInscrp, String NomUtilisateur)
+        String clientPassant,String clientTel, String clientAdresse, String clientType, String clientPhoto, Date DateInscrp, String NomUtilisateur)
     {
         this.clientID = clientID;
         this.clientNom = clientNom;
@@ -53,6 +56,7 @@ public class clientData {
         this.clientPassant = clientPassant;
         this.clientTel = clientTel;
         this.clientAdresse = clientAdresse;
+        this.clientType = clientType;
         this.clientPhoto = clientPhoto;
         this.DateInscrp = DateInscrp;
         this.NomUtilisateur = NomUtilisateur;
@@ -68,6 +72,13 @@ public class clientData {
     public clientData(Integer clientID, String clientNom){
         this.clientID = clientID;
         this.clientNom = clientNom;    
+    }
+    
+    public clientData(Integer clientID, String clientNom, Double clientSoldeDejaPayer, Double clientSoldeRestePayer){
+        this.clientID = clientID;
+        this.clientNom = clientNom;
+        this.clientSoldeDejaPayer = clientSoldeDejaPayer;
+        this.clientSoldeRestePayer = clientSoldeRestePayer;
     }
 
     
@@ -124,6 +135,10 @@ public class clientData {
         return clientAdresse;
     }
     
+    public String getClientType(){
+        return clientType;
+    }
+    
     public String getClientPhoto(){
         return clientPhoto;
     }
@@ -134,6 +149,14 @@ public class clientData {
     
     public String getNomUtilisateur(){
         return NomUtilisateur;
+    }
+    
+    public Double getclientSoldeDejaPayer(){
+        return clientSoldeDejaPayer;
+    }
+    
+    public Double getclientSoldeRestePayer(){
+        return clientSoldeRestePayer;
     }
     
 }

@@ -10,6 +10,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.time.ZoneId;
@@ -55,14 +56,11 @@ import jirehstudentsapp.getData;
 import jirehstudentsapp.serviceData;
 import jirehstudentsapp.suivieData;
 
-
-
 /**
  *
  * @author KADAFI Ben
  */
 public class DashboardController implements Initializable {
-
 
     @FXML
     private AnchorPane main_form;
@@ -164,8 +162,11 @@ public class DashboardController implements Initializable {
     private TableColumn<clientData, String> clientAdressCol;
 
     @FXML
+    private TableColumn<clientData, String> clientTypeCol;
+
+    @FXML
     private TableColumn<clientData, String> clientDateCol;
-    
+
     @FXML
     private TableColumn<clientData, String> clientNomUtilisateurCol;
 
@@ -207,6 +208,9 @@ public class DashboardController implements Initializable {
 
     @FXML
     private TextField clientAdress;
+
+    @FXML
+    private ComboBox<String> clientType;
 
     @FXML
     private ImageView clientImageView;
@@ -259,6 +263,9 @@ public class DashboardController implements Initializable {
 
     @FXML
     private TableColumn<serviceData, String> serviceDateFinCol;
+
+    @FXML
+    private TableColumn<serviceData, String> serviceNomUtlisateurCol;
 
     @FXML
     private TextField serviceTextFieldRecherche;
@@ -368,9 +375,7 @@ public class DashboardController implements Initializable {
 
     @FXML
     private Label faireServiceServicePrix;
-    
-    
-    
+
     //Suivie client
     @FXML
     private TextField suivieRechercheText1;
@@ -390,7 +395,7 @@ public class DashboardController implements Initializable {
     @FXML
     private TableColumn<suivieData, String> suivieServiceNomCol;
 
-     @FXML
+    @FXML
     private TableColumn<suivieData, String> suivieServiceQteCol;
 
     @FXML
@@ -431,14 +436,58 @@ public class DashboardController implements Initializable {
 
     @FXML
     private Label suivieServiceQte;
-    
+
     @FXML
     private Label suivieServicePrix;
 
     @FXML
     private Button suivieEffacerBtn;
-    
-    
+
+    //Suivie payement
+    @FXML
+    private TextField soldePayerText;
+
+    @FXML
+    private Button suiviePayerCompteBtn;
+
+    @FXML
+    private TextField clientSuivieRechercheTextCol;
+
+    @FXML
+    private TableView<clientData> clientSuivieTableView;
+
+    @FXML
+    private TableColumn<clientData, Integer> clientSuivieIDCol;
+
+    @FXML
+    private TableColumn<clientData, String> clientSuivieNomCol;
+
+    @FXML
+    private TableColumn<clientData, Double> clientSuivieDejaPayerCol;
+
+    @FXML
+    private TableColumn<clientData, Double> clientSuivieRestePayerCol;
+
+    @FXML
+    private TextField clientSuivieRechercheTxt;
+
+    @FXML
+    private Label clientSuivieNomTxt;
+
+    @FXML
+    private Label clientSuivieDejaPayerTxt;
+
+    @FXML
+    private Label clientSuivieRestePayerTxt;
+
+    @FXML
+    private Label clientSuivieIDTxt;
+
+    @FXML
+    private TextField clientsoldePayerText;
+
+    @FXML
+    private Label clientsuivieReste;
 
     //Facture
     @FXML
@@ -504,12 +553,10 @@ public class DashboardController implements Initializable {
 
     @FXML
     private GridPane menu_gridPane;
-    
+
     @FXML
     private AnchorPane menu_paneClient;
-    
 
-    
     //menu client
     @FXML
     private TableView<clientData> menu_tableViewClient;
@@ -540,9 +587,12 @@ public class DashboardController implements Initializable {
 
     @FXML
     private Button menuClientConfirmerBtn;
-    
-    
-    
+
+    @FXML
+    private TextField menuMonttantPayerTxt;
+
+    @FXML
+    private Label menuReste;
 
     //Historique
     @FXML
@@ -566,9 +616,6 @@ public class DashboardController implements Initializable {
     private Image imageClient;
 
     private Image imageService;
-    
-    
-   
 
     //Ajout nouveau client (efa mandeha)
     public void addClientAdd() {
@@ -582,8 +629,8 @@ public class DashboardController implements Initializable {
 
         String sql = "INSERT INTO client"
                 + "(clientID, clientNom, clientPrenom, clientGenre, clientDateN, clientCNI, clientEtablissement,"
-                + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientPhoto, DateInscrp, NomUtilisateur)"
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientType, clientPhoto, DateInscrp, NomUtilisateur, clientSoldeDejaPayer, clientSoldeRestePayer)"
+                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         connect = database.ConnectDb();
 
@@ -603,6 +650,7 @@ public class DashboardController implements Initializable {
                     || clientPassant.getSelectionModel().getSelectedItem() == null
                     || clientTel.getText().isEmpty()
                     || clientAdress.getText().isEmpty()
+                    || clientType.getSelectionModel().getSelectedItem() == null
                     || sqlDate == null
                     || getData.path == null || getData.path == "") {
                 alert = new Alert(AlertType.ERROR);
@@ -638,30 +686,33 @@ public class DashboardController implements Initializable {
                     prepare.setString(11, (String) clientPassant.getSelectionModel().getSelectedItem());
                     prepare.setString(12, clientTel.getText());
                     prepare.setString(13, clientAdress.getText());
+                    prepare.setString(14, (String) clientType.getSelectionModel().getSelectedItem());
 
                     //Pour la photo du client
                     String uri = getData.path;
                     uri = uri.replace("\\", "\\\\");
-                    prepare.setString(14, uri);
-                    prepare.setString(15, String.valueOf(sqlDate));
-                    prepare.setString(16, getData.username);
-                    
+                    prepare.setString(15, uri);
+                    prepare.setString(16, String.valueOf(sqlDate));
+                    prepare.setString(17, getData.username);
+                    prepare.setDouble(18, 0.0);
+                    prepare.setDouble(19, 0.0);
+
                     alert = new Alert(Alert.AlertType.CONFIRMATION);
                     alert.setTitle("Message de confirmation");
                     alert.setHeaderText(null);
                     alert.setContentText("Êtes-vous sur de vouloir ajouter cette client?");
                     Optional<ButtonType> option = alert.showAndWait();
-                    
+
                     if (option.get().equals(ButtonType.CANCEL)) {
                         alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Message d'erreur");
                         alert.setHeaderText(null);
                         alert.setContentText("Echec d'ajout client!");
                         alert.showAndWait();
-                    
-                    }else{
+
+                    } else {
                         prepare.executeUpdate();
-                        
+
                         alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Message d'information");
                         alert.setHeaderText(null);
@@ -670,9 +721,9 @@ public class DashboardController implements Initializable {
 
                         addClientShowListData();
                         addClientReset();
-                    
+
                     }
-      
+
                 }
 
             }
@@ -710,7 +761,7 @@ public class DashboardController implements Initializable {
                 + clientAdress.getText() + "', clientPhoto = '"
                 + uri + "', DateInscrp = '"
                 + sqlDate + "', NomUtilisateur = '"
-                + getData.username +"' WHERE clientID = '"
+                + getData.username + "' WHERE clientID = '"
                 + clientID.getText() + "'";
 
         connect = database.ConnectDb();
@@ -730,6 +781,7 @@ public class DashboardController implements Initializable {
                     || clientPassant.getSelectionModel().getSelectedItem() == null
                     || clientTel.getText().isEmpty()
                     || clientAdress.getText().isEmpty()
+                    || clientType.getSelectionModel().getSelectedItem() == null
                     || getData.path == null || getData.path == ""
                     || sqlDate == null) {
                 alert = new Alert(AlertType.ERROR);
@@ -747,21 +799,21 @@ public class DashboardController implements Initializable {
                 if (option.get().equals(ButtonType.OK)) {
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
-     
+
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
                     alert.setContentText("Client a été modifier avec succès!");
                     alert.showAndWait();
 
-                }else{
+                } else {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Message d'erreur");
                     alert.setHeaderText(null);
                     alert.setContentText("Echec de modification du client!");
                     alert.showAndWait();
                 }
-                
+
                 addClientShowListData();
                 addClientReset();
             }
@@ -773,9 +825,34 @@ public class DashboardController implements Initializable {
 
     //Supprimer un client (efa mandeha) 
     public void addClientDelete() {
+
+        String uri = getData.path.replace("\\", "\\\\");
+
+        Date DateInscrp = new Date();
+        java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
+
+        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateN = sdf.format(javaDate);
+
         try {
             Alert alert;
-            if (clientID.getText().isEmpty() || clientNom.getText().isEmpty() || getData.path == null || getData.path.equals("")) {
+            if (clientID.getText().isEmpty()
+                    || clientNom.getText().isEmpty()
+                    || clientPrenom.getText().isEmpty()
+                    || clientGenre.getSelectionModel().getSelectedItem() == null
+                    || dateN == null
+                    || clientCNI.getText().isEmpty()
+                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
+                    || clientMention.getText().isEmpty()
+                    || clientNiveau.getSelectionModel().getSelectedItem() == null
+                    || clientCodage.getText().isEmpty()
+                    || clientPassant.getSelectionModel().getSelectedItem() == null
+                    || clientTel.getText().isEmpty()
+                    || clientAdress.getText().isEmpty()
+                    || clientType.getSelectionModel().getSelectedItem() == null
+                    || getData.path == null || getData.path.equals("")
+                    || sqlDate == null) {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
@@ -783,15 +860,6 @@ public class DashboardController implements Initializable {
                 alert.showAndWait();
                 return;
             }
-
-            Date DateInscrp = new Date();
-            java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
-
-            String uri = getData.path.replace("\\", "\\\\");
-
-            java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String dateN = sdf.format(javaDate);
 
             String sql = "DELETE FROM client WHERE clientID = '" + clientID.getText() + "'";
 
@@ -816,18 +884,18 @@ public class DashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Client supprimé avec succès!");
                 alert.showAndWait();
-                
-            }else{
+
+            } else {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
                 alert.setContentText("Echec de suppression!");
                 alert.showAndWait();
             }
-            
+
             addClientShowListData();
             addClientReset();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             // Gérer l'exception
@@ -849,6 +917,7 @@ public class DashboardController implements Initializable {
         clientPassant.getSelectionModel().clearSelection();
         clientTel.setText("");
         clientAdress.setText("");
+        clientType.getSelectionModel().clearSelection();
         clientImageView.setImage(null);
         getData.path = "";
     }
@@ -924,6 +993,20 @@ public class DashboardController implements Initializable {
         clientPassant.setItems(listData);
     }
 
+    //Pour combox Passant ou redoublant de client
+    private String[] typeList = {"Membre simple", "Déléguer", "Oportuniste"};
+
+    public void addClientTypeList() {
+        List<String> listP = new ArrayList<>();
+
+        for (String data : typeList) {
+            listP.add(data);
+        }
+
+        ObservableList listData = FXCollections.observableArrayList(listP);
+        clientType.setItems(listData);
+    }
+
     //Pour la barre de recherche d'un client (efa mandeha)
     public void addClientSearch() {
 
@@ -981,8 +1064,14 @@ public class DashboardController implements Initializable {
                 } else if (predicateClientData.getClientAdresse().toLowerCase().contains(searchKey)) {
 
                     return true;
+                } else if (predicateClientData.getClientType().toLowerCase().contains(searchKey)) {
+
+                    return true;
 
                 } else if (predicateClientData.getDateInscrp().toString().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateClientData.getNomUtilisateur().toString().contains(searchKey)) {
 
                     return true;
                 } else {
@@ -1026,6 +1115,7 @@ public class DashboardController implements Initializable {
                         result.getString("clientPassant"),
                         result.getString("clientTel"),
                         result.getString("clientAdresse"),
+                        result.getString("clientType"),
                         result.getString("clientPhoto"),
                         result.getDate("DateInscrp"),
                         result.getString("NomUtilisateur")
@@ -1058,9 +1148,9 @@ public class DashboardController implements Initializable {
         clientPassantCol.setCellValueFactory(new PropertyValueFactory<>("clientPassant"));
         clientTelCol.setCellValueFactory(new PropertyValueFactory<>("clientTel"));
         clientAdressCol.setCellValueFactory(new PropertyValueFactory<>("clientAdresse"));
+        clientTypeCol.setCellValueFactory(new PropertyValueFactory<>("clientType"));
         clientDateCol.setCellValueFactory(new PropertyValueFactory<>("DateInscrp"));
         clientNomUtilisateurCol.setCellValueFactory(new PropertyValueFactory<>("NomUtilisateur"));
-        
 
         clientTableView.setItems(addClientList);
     }
@@ -1132,8 +1222,8 @@ public class DashboardController implements Initializable {
         String dateF = sdf2.format(javaDate2);
 
         String sql = "INSERT INTO service"
-                + "(serviceID, serviceNom, serviceType, servicePrix, serviceDuree, serviceDateDebut, serviceDateFin, serviceImage)"
-                + "VALUES(?,?,?,?,?,?,?,?)";
+                + "(serviceID, serviceNom, serviceType, servicePrix, serviceDuree, serviceDateDebut, serviceDateFin, serviceImage, NomUtilisateur)"
+                + "VALUES(?,?,?,?,?,?,?,?,?)";
 
         connect = database.ConnectDb();
 
@@ -1180,21 +1270,22 @@ public class DashboardController implements Initializable {
                     String uri = getData.pathService;
                     uri = uri.replace("\\", "\\\\");
                     prepare.setString(8, uri);
-                    
+                    prepare.setString(9, getData.username);
+
                     alert = new Alert(AlertType.CONFIRMATION);
                     alert.setTitle("Message de confirmation");
                     alert.setHeaderText(null);
                     alert.setContentText("Êtes-vous sur de vouloir ajouter cette service?");
                     Optional<ButtonType> option = alert.showAndWait();
-                    
+
                     if (option.get().equals(ButtonType.CANCEL)) {
                         alert = new Alert(Alert.AlertType.ERROR);
                         alert.setTitle("Message d'erreur");
                         alert.setHeaderText(null);
                         alert.setContentText("Echec d'ajout du service!");
                         alert.showAndWait();
-                    
-                    }else{
+
+                    } else {
                         prepare.executeUpdate();
 
                         alert = new Alert(AlertType.INFORMATION);
@@ -1207,7 +1298,7 @@ public class DashboardController implements Initializable {
                         addServiceReset();
 
                     }
-                       
+
                 }
 
             }
@@ -1238,7 +1329,8 @@ public class DashboardController implements Initializable {
                 + serviceDuree.getText() + "', serviceDateDebut = '"
                 + dateD + "', serviceDateFin = '"
                 + dateF + "',  serviceImage = '"
-                + uri + "' WHERE serviceID = '"
+                + uri + "', NomUtilisateur = '"
+                + getData.username + "' WHERE serviceID = '"
                 + serviceID.getText() + "'";
 
         connect = database.ConnectDb();
@@ -1274,14 +1366,14 @@ public class DashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Service a été modifier avec succès!");
                     alert.showAndWait();
-                 
-                }else{
+
+                } else {
                     alert = new Alert(Alert.AlertType.ERROR);
                     alert.setTitle("Message d'erreur");
                     alert.setHeaderText(null);
                     alert.setContentText("Echec de modification du service!");
-                    alert.showAndWait();        
-                }    
+                    alert.showAndWait();
+                }
 
                 addServiceShowListData();
                 addServiceReset();
@@ -1294,10 +1386,10 @@ public class DashboardController implements Initializable {
 
     //Supprimer un client (efa mandeha) 
     public void addServiceDelete() {
-        
+
         try {
             Alert alert;
-            
+
             if (serviceID.getText().isEmpty() || serviceNom.getText().isEmpty()) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
@@ -1332,19 +1424,18 @@ public class DashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Service a été supprimé avec succès!");
                 alert.showAndWait();
-                
-            }else{
+
+            } else {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
                 alert.setContentText("Echec de suppression du service!");
-                alert.showAndWait(); 
-            }    
-            
+                alert.showAndWait();
+            }
+
             addServiceShowListData();
             addServiceReset();
-                
-               
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1387,6 +1478,9 @@ public class DashboardController implements Initializable {
 
                     return true;
                 } else if (predicateServiceData.getServiceDateFin().toString().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateServiceData.getNomUtilisateur().toString().contains(searchKey)) {
 
                     return true;
                 } else {
@@ -1437,7 +1531,8 @@ public class DashboardController implements Initializable {
                         result.getString("serviceDuree"),
                         result.getDate("serviceDateDebut"),
                         result.getDate("serviceDateFin"),
-                        result.getString("serviceImage")
+                        result.getString("serviceImage"),
+                        result.getString("NomUtilisateur")
                 );
                 listDataS.add(serviceD);
             }
@@ -1462,6 +1557,7 @@ public class DashboardController implements Initializable {
         serviceDureeCol.setCellValueFactory(new PropertyValueFactory<>("serviceDuree"));
         serviceDateDebutCol.setCellValueFactory(new PropertyValueFactory<>("serviceDateDebut"));
         serviceDateFinCol.setCellValueFactory(new PropertyValueFactory<>("serviceDateFin"));
+        serviceNomUtlisateurCol.setCellValueFactory(new PropertyValueFactory<>("NomUtilisateur"));
 
         serviceTableView.setItems(addServiceList);
     }
@@ -1488,7 +1584,6 @@ public class DashboardController implements Initializable {
         serviceImageView.setImage(imageService);
     }
 
-
     /**
      * ********************************************************************************
      * ********************************************************************************
@@ -1498,7 +1593,6 @@ public class DashboardController implements Initializable {
      * ********************************************************************************
      */
     //section Menu Service
-    
     //Liste service sur la menu card
     private ObservableList<serviceData> cardListData = FXCollections.observableArrayList();
 
@@ -1530,7 +1624,6 @@ public class DashboardController implements Initializable {
 
         return listData;
     }
-    
 
     public void menuDisplayCard() {
         cardListData.clear();
@@ -1568,16 +1661,48 @@ public class DashboardController implements Initializable {
 
         }
     }
-     
-    
+
     private Integer sID;
 
+//   public int countIdSuivie(){
+//       String sql = "SELECT COUNT(suivieID) as countSuivie FROM `suivieclient` WHERE 1";
+//       int nb = 0;
+//       connect = database.ConnectDb();
+//       try {
+//            prepare = connect.prepareStatement(sql);
+//            result = prepare.executeQuery();
+//            while (result.next()) {
+//                   nb = result.getInt("countSuivie");
+//            }
+//            System.err.println("SUIVIE ID : "+nb);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//       return nb-1;
+//   }
+    public int getSid() {
+        String sql = "SELECT Max(suivieID) as idS FROM `suivieclient` WHERE 1";
+        int nb = 0;
+        connect = database.ConnectDb();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            while (result.next()) {
+                nb = result.getInt("idS");
+            }
+            System.err.println("SUIVIE ID : " + nb);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return nb;
+    }
+
     public void suivieID() {
-        
+
         String sql = "SELECT MAX(suivieID) AS suivieID FROM suivieclient";
-        
+
         String checkSIDSql = "SELECT MAX(suivieID) AS suivieID FROM facture";
-        
+
         String checkSIDSqlCompte = "SELECT MAX(suivieID) AS suivieID FROM compte";
 
         connect = database.ConnectDb();
@@ -1599,7 +1724,7 @@ public class DashboardController implements Initializable {
             if (result.next()) {
                 checkID = result.getInt("suivieID");
             }
-            
+
             // Obtenez la valeur maximale de suivieID dans la table facture
             prepare = connect.prepareStatement(checkSIDSqlCompte);
             result = prepare.executeQuery();
@@ -1610,8 +1735,9 @@ public class DashboardController implements Initializable {
             }
 
             // Vérifiez si sID est égal à 0 ou égal à checkID, ou à checkCompt puis incrémentez-le
-            if (sID == 0 || sID == checkID || sID == checkSIDSqlCompt) {
+            while (sID == 0 || sID == checkID || sID == checkSIDSqlCompt) {
                 sID++;
+                System.out.println("suivie ID" + sID);
             }
 
             getData.sID = sID;
@@ -1620,15 +1746,14 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
         }
     }
- 
-    
-    
+
     public ObservableList<suivieData> suivieOrderData() {
-        
-        suivieID();
+
+//        suivieID();
         ObservableList<suivieData> listData = FXCollections.observableArrayList();
-        
-        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + sID;
+
+//        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + sID;
+        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + (getData.sID);
 
         connect = database.ConnectDb();
 
@@ -1644,7 +1769,6 @@ public class DashboardController implements Initializable {
                         result.getString("serviceNom"),
                         result.getInt("factureQte"),
                         result.getDouble("servicePrix")
-                     
                 );
                 listData.add(suiData);
             }
@@ -1655,337 +1779,418 @@ public class DashboardController implements Initializable {
 
         return listData;
     }
-    
-    
-    
-    
+
     private ObservableList<suivieData> menuOrderListData;
-    
+
     //Afficher les listes des clients sur Tables view
     public void menuShowOrderListData() {
         menuOrderListData = suivieOrderData();
-        
+
         menuColServiceNom.setCellValueFactory(new PropertyValueFactory<>("serviceNom"));
         menuColServiceQuantite.setCellValueFactory(new PropertyValueFactory<>("factureQte"));
         menuColServicePrix.setCellValueFactory(new PropertyValueFactory<>("servicePrix"));
-        
-
-        menu_tableView.setItems(menuOrderListData);
+        if (getData.clickAdd) {
+            menu_tableView.setItems(menuOrderListData);
+        } else {
+            menu_tableView.setItems(null);
+            menuTotale.setText("0.0 Ar");
+            totalP = 0;
+        }
     }
-    
+
     private Integer getID;
-    
-    public void menuSelectOrder(){
-        
+
+    public void menuSelectOrder() {
+
         suivieData suivieD = menu_tableView.getSelectionModel().getSelectedItem();
         int num = menu_tableView.getSelectionModel().getSelectedIndex();
 
         if ((num - 1) < -1) {
             return;
         }
-        
+
         getID = suivieD.getID();
     }
-    
-    
+
     private double totalP;
-    
-    public void menuGetTotale(){
-        
+
+    public void menuGetTotale() {
+
         suivieID();
-        
-        String total = "SELECT SUM(servicePrix) FROM suivieclient WHERE suivieID =" +sID;
-        
-        connect = database.ConnectDb();
-        
-        try {
-            
-            prepare = connect.prepareStatement(total);
-            result = prepare.executeQuery();
-            
-            if (result.next()) {
-                totalP = result.getDouble("SUM(servicePrix)");
-                
-            }
-           
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    
-    }
-    
-    private double soldeRestePayer;
-     
-    private double soldePayer;
-    
-    
-    public void getDejaPayerSolde(){
-    
-        String checkData = "SELECT * FROM suivieclient WHERE clientID = '" +getData.getMenuClientID+ "'";
-                      
-        connect = database.ConnectDb();
-        
-        try {
-            
-            prepare = connect.prepareStatement(checkData);
-            result = prepare.executeQuery();
-                    
-            while (result.next()) {                        
-                        
-                soldePayer = result.getDouble("suivieServiceDejaPayer");
-    
-            }
-           
-            
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-    } 
-    
-    
-    public void getRestePayerSolde(){
-    
-        String checkData = "SELECT * FROM suivieclient WHERE clientID = '" +getData.getMenuClientID+ "'";
-                    
+
+        String total = "SELECT SUM(servicePrix) FROM suivieclient WHERE suivieID =" + sID;
 
         connect = database.ConnectDb();
-        
+
         try {
-            
-            prepare = connect.prepareStatement(checkData);
+
+            prepare = connect.prepareStatement(total);
             result = prepare.executeQuery();
-                    
-            while (result.next()) {                        
-                        
-                soldeRestePayer = result.getDouble("suivieServiceRestePayer");
-    
+
+            if (result.next()) {
+                totalP = result.getDouble("SUM(servicePrix)");
+
             }
-            
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
-    
-    
-    public void menuDisplayTotale(){
-        
+
+    private double soldeRestePayer;
+
+    private double soldePayer;
+
+    public double getDejaPayerSolde() {
+
+        String checkData = "SELECT SUM(suivieServiceDejaPayer) as reste FROM suivieclient WHERE clientID = '" + getData.getMenuClientID + "'";
+
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(checkData);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+
+                soldePayer = result.getDouble("reste");
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return soldePayer;
+    }
+
+    public double getRestePayerSolde() {
+
+        String checkData = "SELECT SUM(suivieServiceRestePayer) as reste FROM suivieclient WHERE clientID = '" + getData.getMenuClientID + "'";
+
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(checkData);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+
+                soldeRestePayer = result.getDouble("reste");
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return soldeRestePayer;
+
+    }
+    public double getDernierRestePayerSolde() {
+
+        String checkData = "SELECT suivieServiceRestePayer as reste FROM suivieclient WHERE ID=LAST_INSERT_ID() AND clientID = '" + getData.getMenuClientID + "'" ;
+
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(checkData);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+
+                soldeRestePayer = result.getDouble("reste");
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return soldeRestePayer;
+
+    }
+
+    public double getDejaPayerSolde2() {
+
+        String checkData = "SELECT clientSoldeRestePayer FROM client WHERE clientID = '" + getData.getMenuClientID + "'";
+
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(checkData);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+
+                soldeRestePayer = result.getDouble("clientSoldeRestePayer");
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return soldeRestePayer;
+
+    }
+
+    public void menuDisplayTotale() {
+
         menuGetTotale();
         menuTotale.setText(totalP + " Ar");
-    
+
     }
-    
-   
-     
+
+    private double mttpayer;
+    private double reste;
+
+    public void menuSeulePayer() {
+
+        menuGetTotale();
+        if (menuMonttantPayerTxt.getText().isEmpty() || totalP == 0) {
+
+            Alert alert;
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'information");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous devez complètez le monttant que vous voulez payer!");
+            alert.showAndWait();
+
+        } else {
+            mttpayer = Double.parseDouble(menuMonttantPayerTxt.getText());
+
+            reste = totalP - mttpayer;
+            menuReste.setText(reste + " Ar");
+        }
+
+    }
+
+    CardServiceController cSc = new CardServiceController();
+
     //Pour le bouton de payement
-    public void menuPayerBtn(){
-        
+    public void menuPayerBtn() {
+
         Alert alert;
-        
-        suivieID();
-        if(totalP == 0){
-            
+
+        getDejaPayerSolde();
+        if (totalP == 0) {
+
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
             alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord ajouter un service!");
             alert.showAndWait();
-        
-        }else{
-            
+            System.out.println(" Suivie IDn: " + sID);
+
+        } else {
+            System.out.println(" Suivie IDn: " + sID);
             Date factureDate = new Date();
             java.sql.Date dateFac = new java.sql.Date(factureDate.getTime());
-            
+
             menuGetTotale();
             String inserPay = "INSERT INTO facture (suivieID, factureDate, factureTotale, NomUtilisateur)"
                     + "VALUES(?,?,?,?)";
-            
+
             connect = database.ConnectDb();
-            
+
             try {
-                
+
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Message de confirmation");
                 alert.setHeaderText(null);
                 alert.setContentText("Êtes-vous sûr de vouloir faire le payement?");
                 Optional<ButtonType> option = alert.showAndWait();
-                
-                if(option.get().equals(ButtonType.OK)){
-                    
-                    suivieID();
+
+                if (option.get().equals(ButtonType.OK)) {
+
                     menuGetTotale();
-                    
                     prepare = connect.prepareStatement(inserPay);
-                    
-                    prepare.setString(1, String.valueOf(sID));
+
+                    prepare.setString(1, String.valueOf(getData.sID));
+
                     prepare.setString(2, String.valueOf(dateFac));
-                    prepare.setString(3, String.valueOf(totalP));
+
+                    double total = this.totalP - this.reste;
+                    System.out.println(total + "_______" + reste);
+                    prepare.setString(3, String.valueOf(total));
                     prepare.setString(4, getData.username);
                     prepare.executeUpdate();
-           
-                    
-                    String soldeUpdate = "UPDATE suivieclient SET suivieServiceDejaPayer = " + (getData.soldeTotaleTotale - soldeRestePayer) + " WHERE clientID = '" +getData.getMenuClientID+ "'";
-                    
+
+                    String soldeUpdate = "UPDATE suivieclient SET suivieServicerestePayer = '" + this.reste + "' , suivieServiceDejaPayer = (servicePrix- '" + this.reste + "') WHERE suivieID = '" + getSid() + "'";
+
                     statement = connect.createStatement();
                     statement.executeUpdate(soldeUpdate);
-                    
+
+                    String updateSolde = "UPDATE client SET clientSoldeRestePayer ='" + getRestePayerSolde() + "', clientSoldeDejaPayer ='" + getDejaPayerSolde() + "' WHERE clientID = '" + getData.getMenuClientID + "'";
+                    statement.executeUpdate(updateSolde);
+
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
                     alert.setContentText("Payement avec succès!");
                     alert.showAndWait();
-                    
+
                     menuShowOrderListData();
                     menuRestart();
-                    
-                }else{
+
+                    menu_tableView.setItems(null);
+                    getData.clickAdd = false;
+
+                } else {
                     alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
                     alert.setContentText("Payement annuler!");
                     alert.showAndWait();
                 }
-                
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        
+
     }
-    
-    
-    public void menuCompteBtn(){
-        
+
+    public void menuCompteBtn() {
+
         Alert alert;
-        
-        getDejaPayerSolde();
+
+//        getRestePayerSolde();
         suivieID();
-        if(totalP == 0){
-            
+        if (totalP == 0) {
+
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
             alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord ajouter un service!");
             alert.showAndWait();
-        
-        }else{
-            
+
+        } else {
+
             Date factureDate = new Date();
             java.sql.Date dateCompte = new java.sql.Date(factureDate.getTime());
-            
+
             menuGetTotale();
             String inserPay = "INSERT INTO compte (suivieID, compteDate, compteTotale, NomUtilisateur)"
                     + "VALUES(?,?,?,?)";
-            
+
             connect = database.ConnectDb();
-            
+
             try {
-                
+
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Message de confirmation");
                 alert.setHeaderText(null);
                 alert.setContentText("Êtes-vous sûr de vouloir l'ajouter dans votre compte?");
                 Optional<ButtonType> option = alert.showAndWait();
-                
-                if(option.get().equals(ButtonType.OK)){
-                    
+
+                if (option.get().equals(ButtonType.OK)) {
+
                     suivieID();
                     menuGetTotale();
-                    
+
                     prepare = connect.prepareStatement(inserPay);
-                    
+
                     prepare.setString(1, String.valueOf(sID));
                     prepare.setString(2, String.valueOf(dateCompte));
-                    prepare.setString(3, String.valueOf(totalP));
+                    prepare.setString(3, String.valueOf(totalP - mttpayer));
                     prepare.setString(4, getData.username);
-                    prepare.executeUpdate();          
-                    
-                    String soldeUpdate = "UPDATE suivieclient SET suivieServiceRestePayer = " + (getData.soldeTotaleTotale - soldePayer) + " WHERE clientID = '" +getData.getMenuClientID+ "'";
-                    
+                    prepare.executeUpdate();
+
+                    String soldeUpdate = "UPDATE suivieclient SET suivieServiceRestePayer = servicePrix WHERE suivieID = '" + getSid() + "'";
+
                     statement = connect.createStatement();
                     statement.executeUpdate(soldeUpdate);
-                    
+
+                    String updateSolde = "UPDATE client SET clientSoldeRestePayer = '" + (getRestePayerSolde() + totalP) + "'";
+                    statement.executeUpdate(updateSolde);
+
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
                     alert.setContentText("Ajout au compte réussi avec succès!");
                     alert.showAndWait();
-                    
+
                     menuShowOrderListData();
                     menuRestart();
-                    
-                }else{
+
+                    menu_tableView.setItems(null);
+                    getData.clickAdd = false;
+                } else {
                     alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
                     alert.setContentText("Payement annuler!");
                     alert.showAndWait();
                 }
-                
-                
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        
+
     }
-    
-    
-    public void menuRemoveBtn(){
-        
+
+    public void menuRemoveBtn() {
+
         Alert alert;
-        if(getID == 0){
-            
+        if (getID == 0) {
+
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
             alert.setContentText("Echec! \n Vous devez séléctionner ce que vous voulez supprimer");
             alert.showAndWait();
-        
-        }else{
-            
+
+        } else {
+
             String deleteData = "DELETE FROM suivieclient WHERE ID = " + getID;
             connect = database.ConnectDb();
-            
+
             try {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Message de confirmation");
                 alert.setHeaderText(null);
                 alert.setContentText("Êtes-vous sur de vouloir le supprimer?");
                 Optional<ButtonType> option = alert.showAndWait();
-            
+
                 if (option.get().equals(ButtonType.CANCEL)) {
                     alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
                     alert.setContentText("Suppression annuler!");
                     alert.showAndWait();
-                    
-                }else{    
+
+                } else {
                     prepare = connect.prepareStatement(deleteData);
                     prepare.executeUpdate();
-                
-                menuShowOrderListData();
+
+                    menuShowOrderListData();
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-        
+
     }
 
-    public void menuRestart(){
-        
+    public void menuRestart() {
+
+        menuShowOrderListData();
+
         totalP = 0;
         menuTotale.setText("0.0 Ar");
-    
+
+        mttpayer = 0;
+        menuMonttantPayerTxt.setText("");
+
+        reste = 0;
+        menuReste.setText("0.0 Ar");
+
     }
-    
-    
+
     /**
      * ********************************************************************************
      * ********************************************************************************
@@ -1994,8 +2199,6 @@ public class DashboardController implements Initializable {
      * ********************************************************************************
      * ********************************************************************************
      */
-    
-    
     //Observation des données faire service client sur la tableView.
     public ObservableList<clientData> menuServiceClientListData() {
 
@@ -2036,8 +2239,7 @@ public class DashboardController implements Initializable {
 
         menu_tableViewClient.setItems(menuServiceClientList);
     }
-    
-    
+
     //Selection client via Table View 
     public void menuServiceClientSelect() {
         clientData clientD = menu_tableViewClient.getSelectionModel().getSelectedItem();
@@ -2061,8 +2263,7 @@ public class DashboardController implements Initializable {
         getData.getMenuClientID = null;
         getData.getMenuClientNom = null;
     }
-    
-    
+
     //Pour la barre de recherche sur menu service dans client (efa mandeha)
     public void menuClientSearch() {
 
@@ -2100,11 +2301,10 @@ public class DashboardController implements Initializable {
 
         sortList.comparatorProperty().bind(menu_tableViewClient.comparatorProperty());
         menu_tableViewClient.setItems(sortList);
-    } 
-    
-    
-    public void menuclientSelectBtn(){
-        
+    }
+
+    public void menuclientSelectBtn() {
+
         String sqlselectClient = "SELECT * FROM client WHERE clientID = ? AND clientNom = ? AND clientPrenom = ?";
         connect = database.ConnectDb();
 
@@ -2113,7 +2313,7 @@ public class DashboardController implements Initializable {
 
             if (menuClientID.getText().isEmpty()
                     || menuClientNom.getText().isEmpty()
-                    || menuClientPrenom.getText().isEmpty()){
+                    || menuClientPrenom.getText().isEmpty()) {
 
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
@@ -2121,7 +2321,7 @@ public class DashboardController implements Initializable {
                 alert.setContentText("S'il vous plaît, vous devez sélectionner un client!");
                 alert.showAndWait();
 
-            }else{
+            } else {
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
                 alert.setTitle("Message de confirmation");
                 alert.setHeaderText(null);
@@ -2135,7 +2335,7 @@ public class DashboardController implements Initializable {
                     alert.setContentText("Annuler!");
                     alert.showAndWait();
 
-                }else{
+                } else {
                     prepare = connect.prepareStatement(sqlselectClient);
                     prepare.setString(1, menuClientID.getText());
                     prepare.setString(2, menuClientNom.getText());
@@ -2149,13 +2349,12 @@ public class DashboardController implements Initializable {
                     menuServiceClientSelect();
                 }
             }
-   
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    
+
     /**
      * ********************************************************************************
      * ********************************************************************************
@@ -2164,11 +2363,7 @@ public class DashboardController implements Initializable {
      * ********************************************************************************
      * ********************************************************************************
      */
-    
-    
-    
     //Section suivie
-  
     public ObservableList<suivieData> suivieListeData() {
 
         ObservableList<suivieData> listData = FXCollections.observableArrayList();
@@ -2205,16 +2400,14 @@ public class DashboardController implements Initializable {
 
         return listData;
     }
-    
-    
-    
+
     private ObservableList<suivieData> suivieListData;
-    
+
     //Afficher les listes des clients sur Tables view
     public void suivieClientShowListData() {
-    
+
         suivieListData = suivieListeData();
-        
+
         suivieClientDateCol.setCellValueFactory(new PropertyValueFactory<>("suivieDate"));
         suivieClientIDCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));
         suivieClientNomCol.setCellValueFactory(new PropertyValueFactory<>("clientNom"));
@@ -2228,8 +2421,7 @@ public class DashboardController implements Initializable {
 
         suivieTableView1.setItems(suivieListData);
     }
-    
-    
+
     //Selection service via Table View
     public void suivieClientSelect() {
         suivieData suivieD = suivieTableView1.getSelectionModel().getSelectedItem();
@@ -2248,8 +2440,6 @@ public class DashboardController implements Initializable {
         suivieServiceDejaPayer.setText(String.valueOf(suivieD.getServiceDejaPayer()));
         suivieServiceRestePayer.setText(String.valueOf(suivieD.getServiceRestePayer()));
     }
-    
-    
 
     //Pour l'actualisation de l'affichage du faire service service (Efa mandeha) 
     public void SuivieClientReset() {
@@ -2263,8 +2453,7 @@ public class DashboardController implements Initializable {
         suivieServiceDejaPayer.setText("");
         suivieServiceRestePayer.setText("");
     }
-    
-    
+
     //Pour la barre de recherche d'un service (efa mandeha)
     public void suivieClientSearch() {
 
@@ -2309,7 +2498,7 @@ public class DashboardController implements Initializable {
                     return true;
                 } else if (predicateSuivieData.getNomUtilisateur().toLowerCase().contains(searchKey)) {
 
-                    return true;    
+                    return true;
                 } else {
                     return false;
                 }
@@ -2322,10 +2511,9 @@ public class DashboardController implements Initializable {
         sortList.comparatorProperty().bind(suivieTableView1.comparatorProperty());
         suivieTableView1.setItems(sortList);
     }
-    
-    
-    public void suivieClientRemove(){
-        
+
+    public void suivieClientRemove() {
+
         try {
             Alert alert;
             if (suivieClientID.getText().isEmpty() || suivieClientNom.getText().isEmpty()) {
@@ -2337,9 +2525,8 @@ public class DashboardController implements Initializable {
                 return;
             }
 
-
             String sql = "DELETE FROM suivieclient WHERE ID = " + getID;;
-            
+
             connect = database.ConnectDb();
             if (connect == null) {
                 // Gérer l'échec de la connexion à la base de données
@@ -2361,26 +2548,277 @@ public class DashboardController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("Service supprimé avec succès!");
                 alert.showAndWait();
-                
-            }else{
+
+            } else {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
                 alert.setContentText("Echec de suppression!");
                 alert.showAndWait();
             }
-            
+
             suivieClientShowListData();
             SuivieClientReset();
-            
+
         } catch (Exception e) {
             e.printStackTrace();
             // Gérer l'exception
         }
-    
-    } 
 
-    
+    }
+
+    public ObservableList<clientData> clientSuivieListeData() {
+
+        ObservableList<clientData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM client";
+
+        connect = database.ConnectDb();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            clientData cliD;
+
+            while (result.next()) {
+                cliD = new clientData(
+                        result.getInt("clientID"),
+                        result.getString("clientNom"),
+                        result.getDouble("clientSoldeDejaPayer"),
+                        result.getDouble("clientSoldeRestePayer")
+                );
+                listData.add(cliD);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return listData;
+    }
+
+    private ObservableList<clientData> clientsuivieListData;
+
+    //Afficher les listes des clients sur Tables view
+    public void clientSuivieShowListData() {
+
+        clientsuivieListData = clientSuivieListeData();
+
+        clientSuivieIDCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));
+        clientSuivieNomCol.setCellValueFactory(new PropertyValueFactory<>("clientNom"));
+        clientSuivieDejaPayerCol.setCellValueFactory(new PropertyValueFactory<>("clientSoldeDejaPayer"));
+        clientSuivieRestePayerCol.setCellValueFactory(new PropertyValueFactory<>("clientSoldeRestePayer"));
+
+        clientSuivieTableView.setItems(clientsuivieListData);
+    }
+
+    public void clientsuivieSelect() {
+        clientData clientD = clientSuivieTableView.getSelectionModel().getSelectedItem();
+        int num = clientSuivieTableView.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+
+        clientSuivieIDTxt.setText(String.valueOf(clientD.getClientID())); // Assurez-vous que clientID est un TextField ou un contrôle similaire
+        clientSuivieNomTxt.setText(clientD.getClientNom());
+        clientSuivieDejaPayerTxt.setText(String.valueOf(clientD.getclientSoldeDejaPayer()));
+        clientSuivieRestePayerTxt.setText(String.valueOf(clientD.getclientSoldeRestePayer()));
+        getData.getMenuClientID = clientD.getClientID();
+        System.out.println(getData.getMenuClientID);
+    }
+
+    public void clientsuivieReset() {
+
+        clientSuivieIDTxt.setText("");
+        clientSuivieNomTxt.setText("");
+        clientSuivieDejaPayerTxt.setText("");
+        clientSuivieRestePayerTxt.setText("");
+        clientSuivieRechercheTxt.setText("");
+    }
+
+    public void clientsuivieSearch() {
+
+        FilteredList<clientData> filter = new FilteredList<>(clientsuivieListData, e -> true);
+
+        clientSuivieRechercheTxt.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            filter.setPredicate(predicateSuivieData -> {
+
+                if (newValue == null || newValue.isEmpty()) {
+
+                    return true;
+                }
+
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateSuivieData.getClientID().toString().contains(searchKey)) {
+
+                    return true;
+
+                } else if (predicateSuivieData.getClientNom().toLowerCase().contains(searchKey)) {
+
+                    return true;
+
+                } else if (predicateSuivieData.getclientSoldeDejaPayer().toString().contains(searchKey)) {
+
+                    return true;
+                } else if (predicateSuivieData.getclientSoldeRestePayer().toString().contains(searchKey)) {
+
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+        });
+
+        SortedList<clientData> sortList = new SortedList<>(filter);
+
+        sortList.comparatorProperty().bind(clientSuivieTableView.comparatorProperty());
+        clientSuivieTableView.setItems(sortList);
+    }
+
+//    public double getSoldeApayer() {
+//
+//        String totalSolde = "SELECT suivieServiceToaleSolde FROM suivieclient WHERE clientID =" + getData.getMenuClientID;
+//
+//        connect = database.ConnectDb();
+//
+//        try {
+//
+//            prepare = connect.prepareStatement(totalSolde);
+//            result = prepare.executeQuery();
+//
+//            if (result.next()) {
+//                soldeTotale = result.getDouble("MAX(suivieServiceToaleSolde)");
+//
+//            }
+//
+//            getData.soldeTotaleTotale = soldeTotale;
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return soldeTotale;
+//    }
+//    
+    public void validerCompte() {
+//                   CardServiceController cardS = new CardServiceController();
+        DashboardController dashForm = new DashboardController(); // Utiliser la même instance de DashboardController
+//        dashForm.suivieID();
+
+        double totaleP = (0 * 0);
+        double soldeTotaleTotale = (totaleP + getTolaleSolde());
+        double soldedejaPayer = Double.parseDouble(clientsoldePayerText.getText());
+        double soldeRestePayer1 = Double.parseDouble(clientSuivieRestePayerTxt.getText()) - Double.parseDouble(clientsoldePayerText.getText());
+        double totalSolde = getTolaleSolde();
+        Alert alert;
+        try {
+            if (getData.getMenuClientID == null || getData.getMenuClientNom == null) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez sélectionner un client !");
+                alert.showAndWait();
+
+            } else {
+                // Récupérer la date actuelle
+                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+
+                // Insérer les données dans la table suivieclient
+                String insertDataQuery = "INSERT INTO suivieclient (suivieID, suivieDate, clientID, clientNom, serviceNom, factureQte, "
+                        + "servicePrix, suivieServiceToaleSolde, suivieServiceDejaPayer, suivieServiceRestePayer, NomUtilisateur)"
+                        + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+
+                connect = database.ConnectDb();
+
+                prepare = connect.prepareStatement(insertDataQuery);
+//                prepare.setString(1, String.valueOf(getData.sID));
+                if (getData.clickAdd) {
+                    prepare.setString(1, String.valueOf(dashForm.getSid()));
+                } else {
+                    prepare.setString(1, String.valueOf(dashForm.getSid() + 1));
+                    getData.sID = dashForm.getSid() + 1;
+                }
+
+                prepare.setDate(2, currentDate);
+                prepare.setString(3, String.valueOf(getData.getMenuClientID));
+                prepare.setString(4, getData.getMenuClientNom);
+                prepare.setString(5, "Reglement");
+                prepare.setInt(6, 0);
+
+                prepare.setDouble(7, totaleP);
+
+                prepare.setDouble(8, totalSolde);
+
+                prepare.setDouble(9, soldedejaPayer);
+
+                // soldeRestePayer = ( soldeTotaleTotale - soldedejaPayer);
+                prepare.setDouble(10, soldeRestePayer1);
+
+                prepare.setString(11, getData.username);
+
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sûr d'ajouter ce service ?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.CANCEL)) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Échec de l'ajout !");
+                    alert.showAndWait();
+
+                } else {
+                    prepare.executeUpdate();
+                    statement = connect.createStatement();
+                    String updateSolde = "UPDATE client SET clientSoldeRestePayer ='" + getDernierRestePayerSolde() + "', clientSoldeDejaPayer ='" + getDejaPayerSolde() + "' WHERE clientID = '" + getData.getMenuClientID + "'";
+                    statement.executeUpdate(updateSolde);
+//                    String updateSolde = "UPDATE client SET clientSoldeRestePayer ='" + getRestePayerSolde() + "', clientSoldeDejaPayer ='" + getDejaPayerSolde() + "' WHERE clientID = '" + getData.getMenuClientID + "'";
+//                    statement.executeUpdate(updateSolde);
+                    getData.clickAdd = true;
+//                    dashForm.menuShowOrderListData();
+
+                    getData.soldeTotaleTotale = soldeTotaleTotale;
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ajout réussi !\nVous devez cliquer sur Actualiser avant d'ajouter un autre client sur un service");
+                    alert.showAndWait();
+
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public double getTolaleSolde() {
+
+        String totalSolde = "SELECT MAX(suivieServiceToaleSolde) FROM suivieclient WHERE clientID =" + getData.getMenuClientID;
+        double soldeTotale = 0;
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(totalSolde);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                soldeTotale = result.getDouble("MAX(suivieServiceToaleSolde)");
+
+            }
+
+            getData.soldeTotaleTotale = soldeTotale;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return soldeTotale;
+    }
 
     //Relier les fenêtres
     public void SwitchForm(ActionEvent event) {
@@ -2392,7 +2830,9 @@ public class DashboardController implements Initializable {
             suivieForm.setVisible(false);
             factureForm.setVisible(false);
             historiqueForm.setVisible(false);
-
+            
+            
+            
             acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
@@ -2420,6 +2860,7 @@ public class DashboardController implements Initializable {
             addClientetablissementList();
             addClientniveauList();
             addClientpassantList();
+            addClientTypeList();
 
             //Barre de recherche des clients
             addClientSearch();
@@ -2452,7 +2893,7 @@ public class DashboardController implements Initializable {
             suivieForm.setVisible(false);
             factureForm.setVisible(true);
             historiqueForm.setVisible(false);
-          
+
             makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
@@ -2462,15 +2903,16 @@ public class DashboardController implements Initializable {
 
             //Pour menu affiche produit
             menuDisplayCard();
-            
+
             menuShowOrderListData();
+            menuRestart();
+
             suivieListeData();
             menuDisplayTotale();
             menuSelectOrder();
-            
+
             menuServiceClientShowListData();
             menuServiceClientListData();
-
 
         } else if (event.getSource() == suivieBtn) {
             acceuilForm.setVisible(false);
@@ -2479,12 +2921,14 @@ public class DashboardController implements Initializable {
             suivieForm.setVisible(true);
             factureForm.setVisible(false);
             historiqueForm.setVisible(false);
-            
+
             //Pour la suivie des clients
             suivieClientShowListData();
             suivieClientSelect();
             SuivieClientReset();
-            suivieClientSearch(); 
+            suivieClientSearch();
+
+            clientSuivieShowListData();
 
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
@@ -2554,12 +2998,11 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     //Pour la fermeture du fenetre
     public void close() {
-        
-       // quitte = logout();
-        
+
+        // quitte = logout();
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Message de confirmation");
         alert.setHeaderText(null);
@@ -2583,17 +3026,18 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        
+
         //Pour la suivie des clients
         menuShowOrderListData();
         suivieClientShowListData();
         suivieListeData();
         menuDisplayTotale();
         menuSelectOrder();
-        
+        menuRestart();
+
         menuServiceClientShowListData();
         menuServiceClientListData();
-        
+
         // Initialiser sID lors de l'initialisation du contrôleur
         suivieID();
 
@@ -2608,13 +3052,21 @@ public class DashboardController implements Initializable {
 
         //Pour menu affiche service
         menuDisplayCard();
-        
 
         //Pour les combox dans clients
         addClientgenreList();
         addClientetablissementList();
         addClientniveauList();
         addClientpassantList();
+        addClientTypeList();
+
+        clientSuivieShowListData();
+
+    }
+    public void historique(int a, int b){
+        String sql = "";
         
+        int s = a+b;
+        System.out.println(s);
     }
 }

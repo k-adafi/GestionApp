@@ -30,8 +30,6 @@ import java.util.Optional;
 import javafx.scene.control.ButtonType;
 import jirehstudentsapp.database;
 
-
-
 /**
  * FXML Controller class
  *
@@ -59,16 +57,14 @@ public class CardServiceController implements Initializable {
 
     @FXML
     private Button menuServiceAjouterBtn;
-    
-    
+
     private Integer clientID;
-    
+
     private clientData cliData;
-    
+
     private serviceData serveData;
 
-   //private DashboardController cliData;
-
+    //private DashboardController cliData;
     private Image imageService;
 
     private SpinnerValueFactory<Integer> spin;
@@ -83,19 +79,18 @@ public class CardServiceController implements Initializable {
 
     private double totaleP;
     private Double prix;
-    
+
     private double soldeTotale;
     private double soldeTotaleTotale;
-    
+
     private double soldedejaPayer;
-    private double soldeRestePayer ;
+    private double soldeRestePayer;
     private int qty;
-    
-    private Date serveDate; 
+
+    private Date serveDate;
 
     private String serviceImage;
- 
-   
+
     //Debut du Service
     public void setData(serviceData serveData) {
         this.serveData = serveData;
@@ -107,45 +102,45 @@ public class CardServiceController implements Initializable {
         String path = "File:" + serveData.getServiceImage();
         imageService = new Image(path, 200, 160, false, true);
         menuServiceImageView.setImage(imageService);
-        
+
         serviceImage = serveData.getServiceImage();
         prix = serveData.getServicePrix();
     }
-
 
     public void SetQuantity() {
         spin = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0);
         menuServiceSpinner.setValueFactory(spin);
     }
-    
-    public void getTolaleSolde(){
-        
-        String totalSolde = "SELECT SUM(suivieServiceToaleSolde) FROM suivieclient WHERE clientID =" +getData.getMenuClientID;
-        
+
+    public double getTolaleSolde() {
+
+        String totalSolde = "SELECT MAX(suivieServiceToaleSolde) FROM suivieclient WHERE clientID =" + getData.getMenuClientID;
+
         connect = database.ConnectDb();
-        
+
         try {
-            
+
             prepare = connect.prepareStatement(totalSolde);
             result = prepare.executeQuery();
-            
+
             if (result.next()) {
-                soldeTotale = result.getDouble("SUM(suivieServiceToaleSolde)");
-                
+                soldeTotale = result.getDouble("MAX(suivieServiceToaleSolde)");
+
             }
-           
+
             getData.soldeTotaleTotale = soldeTotale;
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return soldeTotale;
     }
+
     
-    
-    
+
     public void ajoutMenuServiceBtn() {
-        DashboardController dashForm =  new DashboardController(); // Utiliser la même instance de DashboardController
-        dashForm.suivieID();
+        DashboardController dashForm = new DashboardController(); // Utiliser la même instance de DashboardController
+//        dashForm.suivieID();
 
         getTolaleSolde();
 
@@ -179,27 +174,32 @@ public class CardServiceController implements Initializable {
                 connect = database.ConnectDb();
 
                 prepare = connect.prepareStatement(insertDataQuery);
-                prepare.setString(1, String.valueOf(getData.sID));
+//                prepare.setString(1, String.valueOf(getData.sID));
+                if (getData.clickAdd) {
+                    prepare.setString(1, String.valueOf(dashForm.getSid()));
+                } else {
+                    prepare.setString(1, String.valueOf(dashForm.getSid()+ 1));
+                    getData.sID = dashForm.getSid()+1;
+                }
+
                 prepare.setDate(2, currentDate);
                 prepare.setString(3, String.valueOf(getData.getMenuClientID));
                 prepare.setString(4, getData.getMenuClientNom);
                 prepare.setString(5, menuServiceNom.getText());
                 prepare.setInt(6, qty);
-                
+
                 totaleP = (qty * prix);
                 prepare.setDouble(7, totaleP);
-                
+
                 soldeTotaleTotale = (totaleP + soldeTotale);
                 prepare.setDouble(8, soldeTotaleTotale);
-                
+
                 //soldedejaPayer = ( soldeTotaleTotale - soldeRestePayer);
-                
                 prepare.setDouble(9, 0.0);
-                
-               // soldeRestePayer = ( soldeTotaleTotale - soldedejaPayer);
-                
+
+                // soldeRestePayer = ( soldeTotaleTotale - soldedejaPayer);
                 prepare.setDouble(10, 0.0);
-                
+
                 prepare.setString(11, getData.username);
 
                 alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -217,6 +217,9 @@ public class CardServiceController implements Initializable {
 
                 } else {
                     prepare.executeUpdate();
+                    getData.clickAdd = true;
+//                    dashForm.menuShowOrderListData();
+                    
                     getData.soldeTotaleTotale = soldeTotaleTotale;
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
@@ -231,113 +234,14 @@ public class CardServiceController implements Initializable {
         }
     }
 
-    
-    
-      
-   /* public void ajoutMenuServiceBtn() {
-        
-        DashboardController dashForm =  new DashboardController();
-        dashForm.suivieID();
-        
-        getTolaleSolde();
-        
-        Alert alert;
-        try {
-            qty = menuServiceSpinner.getValue();
-
-            if (qty == 0) {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez ajouter au moins un quantité!");
-                alert.showAndWait();
-            
-            }else if(getData.getMenuClientID == null|| getData.getMenuClientNom == null){
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez séléctionner un client!");
-                alert.showAndWait();
-                
-            } else {
-                // Récupérer la date actuelle
-                java.sql.Date dateS = new java.sql.Date(System.currentTimeMillis());
-
-                // Insérer les données dans la table suivieclient
-                String insertData = "INSERT INTO suivieclient (suivieID, suivieDate, clientID, clientNom, serviceNom, factureQte, "
-                        + "servicePrix, suivieServiceToaleSolde, suivieServiceDejaPayer, suivieServiceRestePayer, NomUtilisateur)"
-                        + "VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-                
-                connect = database.ConnectDb();
-
-                prepare = connect.prepareStatement(insertData);
-                prepare.setString(1, String.valueOf(getData.sID));
-                prepare.setDate(2, dateS);
-                
-                prepare.setString(3, String.valueOf(getData.getMenuClientID));
-                prepare.setString(4, getData.getMenuClientNom);
-                prepare.setString(5, menuServiceNom.getText());
-                prepare.setInt(6, qty);
-                
-                totaleP = (qty * prix);
-                prepare.setDouble(7, totaleP);
-                
-                soldeTotaleTotale = (totaleP + soldeTotale);
-                prepare.setDouble(8, soldeTotaleTotale);
-                
-                soldedejaPayer = ( soldeTotaleTotale - soldeRestePayer);
-                prepare.setDouble(9, soldedejaPayer);
-                
-                soldeRestePayer = ( soldeTotaleTotale - soldedejaPayer);
-                prepare.setDouble(10, soldeRestePayer);
-                
-                prepare.setString(11, getData.username);
-                
-                alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Message de confirmation");
-                alert.setHeaderText(null);
-                alert.setContentText("Êtes-vous sur d'ajout cette service ?");
-                Optional<ButtonType> option = alert.showAndWait();
-                
-                if (option.get().equals(ButtonType.CANCEL)) {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Message d'erreur");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Echec d'ajout !");
-                    alert.showAndWait();
-                   
-                }else{
-                    prepare.executeUpdate();
-                    
-                    getData.soldeTotaleTotale = soldeTotaleTotale;
-                  //  getData.soldePayer = soldedejaPayer;
-                  //  getData.soldeRestePayer = soldeRestePayer;
-                     
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Ajout avec succès !\nVous devez cliquer sur Actualiser avant d'ajouter un autre client sur un service");
-                    alert.showAndWait();
-                    
-                    dashForm.menuGetTotale();
-                }
-                
-     
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }  */
-
-    
+   
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-         
+
         //Comment faire pour charger deux fichier fxml dans un même controller et traitrer aficher leurs données sans provoque l'erreur "NullPointException"
-  
         //Pour la quantité des services.
         SetQuantity();
-  
+
     }
 
 }

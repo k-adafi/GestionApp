@@ -122,6 +122,7 @@ public class FXMLDocumentController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("S'il vous plaît, vous devez complètez ces formulaires!");
                 alert.showAndWait();
+                
             } else {
  
                 String check = "SELECT NomUtilisateur FROM admin WHERE NomUtilisateur = '"
@@ -262,6 +263,7 @@ public class FXMLDocumentController implements Initializable {
         }catch(Exception e){e.printStackTrace();}
     }
 
+    
     //Pour la fermeture du fenetre
     public void close(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -274,6 +276,7 @@ public class FXMLDocumentController implements Initializable {
              System.exit(0);
         }
     }
+    
     
     //Pour l'ouverture du fenetre d'inscription
     public void OpenSign(){

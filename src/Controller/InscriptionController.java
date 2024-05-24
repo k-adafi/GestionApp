@@ -98,9 +98,15 @@ public class InscriptionController implements Initializable {
                 alert.setHeaderText(null);
                 alert.setContentText("S'il vous plaît, vous devez complètez ces formulaires!");
                 alert.showAndWait();
-            }
-            else
-            {
+                
+            }else if(password.getText().length() < 8){
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, le mot de passe doit être minimum à 8 caractères!");
+                alert.showAndWait();
+            
+            }else{
                 String check = "SELECT NomUtilisateur FROM admin WHERE NomUtilisateur = '"
                         +username.getText()+"'";
                 
