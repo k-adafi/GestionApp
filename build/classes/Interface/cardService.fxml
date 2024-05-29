@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
@@ -44,7 +45,10 @@
                         <Insets right="2.0" />
                      </HBox.margin>
                   </Spinner>
-                  <Button fx:id="menuServiceAjouterBtn" mnemonicParsing="false" onAction="#ajoutMenuServiceBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajouter" textFill="WHITE" />
+                  <Button fx:id="menuServiceAjouterBtn" mnemonicParsing="false" onAction="#ajoutMenuServiceBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajouter" textFill="WHITE">
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="PLUS_CIRCLE" size="1.5em" />
+                     </graphic></Button>
                </children>
             </HBox>
          </children>

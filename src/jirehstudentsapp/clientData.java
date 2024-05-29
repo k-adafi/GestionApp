@@ -15,7 +15,7 @@ import java.util.Date;
  * @author KADAFI Ben
  */
 public class clientData {
-    
+
     //Pour les clients
     private Integer clientID;
     private String clientNom;
@@ -86,6 +86,92 @@ public class clientData {
     public Integer getClientID(){
         return clientID;
     }
+
+    public void setClientID(Integer clientID) {
+        this.clientID = clientID;
+    }
+
+    public void setClientNom(String clientNom) {
+        this.clientNom = clientNom;
+    }
+
+    public void setClientPrenom(String clientPrenom) {
+        this.clientPrenom = clientPrenom;
+    }
+
+    public void setClientGenre(String clientGenre) {
+        this.clientGenre = clientGenre;
+    }
+
+    public void setClientDateN(Date clientDateN) {
+        this.clientDateN = clientDateN;
+    }
+
+    public void setClientCNI(String clientCNI) {
+        this.clientCNI = clientCNI;
+    }
+
+    public void setClientEtablissement(String clientEtablissement) {
+        this.clientEtablissement = clientEtablissement;
+    }
+
+    public void setClientMention(String clientMention) {
+        this.clientMention = clientMention;
+    }
+
+    public void setClientNiveau(String clientNiveau) {
+        this.clientNiveau = clientNiveau;
+    }
+
+    public void setClientCodage(String clientCodage) {
+        this.clientCodage = clientCodage;
+    }
+
+    public void setClientPassant(String clientPassant) {
+        this.clientPassant = clientPassant;
+    }
+
+    public void setClientTel(String clientTel) {
+        this.clientTel = clientTel;
+    }
+
+    public void setClientAdresse(String clientAdresse) {
+        this.clientAdresse = clientAdresse;
+    }
+
+    public void setClientType(String clientType) {
+        this.clientType = clientType;
+    }
+
+    public void setClientPhoto(String clientPhoto) {
+        this.clientPhoto = clientPhoto;
+    }
+
+    public void setDateInscrp(Date DateInscrp) {
+        this.DateInscrp = DateInscrp;
+    }
+
+    public void setNomUtilisateur(String NomUtilisateur) {
+        this.NomUtilisateur = NomUtilisateur;
+    }
+    
+    
+     public Double getClientSoldeDejaPayer() {
+        return clientSoldeDejaPayer;
+    }
+
+    public void setClientSoldeDejaPayer(Double clientSoldeDejaPayer) {
+        this.clientSoldeDejaPayer = clientSoldeDejaPayer;
+    }
+
+    public Double getClientSoldeRestePayer() {
+        return clientSoldeRestePayer;
+    }
+
+    public void setClientSoldeRestePayer(Double clientSoldeRestePayer) {
+        this.clientSoldeRestePayer = clientSoldeRestePayer;
+    }
+    
     
     public String getClientNom(){
         return clientNom;

@@ -60,7 +60,7 @@
                <left>
                   <AnchorPane prefHeight="556.0" prefWidth="220.0" stylesheets="@../Design/DashboardDesign.css" BorderPane.alignment="CENTER">
                      <children>
-                        <AnchorPane layoutX="-1.0" layoutY="-1.0" prefHeight="651.0" prefWidth="221.0" styleClass="right-formD" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
+                        <AnchorPane layoutX="-1.0" layoutY="-1.0" prefHeight="653.0" prefWidth="221.0" styleClass="right-formD" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="-1.0" AnchorPane.leftAnchor="-1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-1.0">
                            <children>
                               <Line endX="102.0" layoutX="115.0" layoutY="199.0" startX="-100.0" />
                               <Button fx:id="acceuilBtn" layoutX="22.0" layoutY="215.0" mnemonicParsing="false" onAction="#SwitchForm" prefHeight="35.0" prefWidth="189.0" styleClass="BtnD" stylesheets="@../Design/DashboardDesign.css" text="Acceuil">
@@ -194,102 +194,17 @@
                                     <Font name="System Bold" size="24.0" />
                                  </font>
                               </Label>
-                              <ImageView fitHeight="32.0" fitWidth="27.0" layoutX="848.0" layoutY="464.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Image/icone-de-vecteur.png" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fitHeight="32.0" fitWidth="27.0" layoutX="846.0" layoutY="507.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Image/linternet.png" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fitHeight="32.0" fitWidth="27.0" layoutX="846.0" layoutY="549.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Image/facebook%20(2).png" />
-                                 </image>
-                              </ImageView>
-                              <Line endX="134.0" layoutX="992.0" layoutY="491.0" startX="-100.0" />
-                              <Label layoutX="890.0" layoutY="471.0" text="+261 34 79 587 04 / +261 32 60 669 10" textFill="#141414">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Line endX="134.0" layoutX="992.0" layoutY="532.0" startX="-100.0" />
-                              <Label layoutX="892.0" layoutY="512.0" text="jirehstudents@gmail.com" textFill="#141414">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <Line endX="134.0" layoutX="990.0" layoutY="574.0" startX="-100.0" />
-                              <Label layoutX="890.0" layoutY="554.0" text="Jireh Students" textFill="#141414">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <ImageView fitHeight="32.0" fitWidth="27.0" layoutX="845.0" layoutY="588.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Image/bouton-daccueil.png" />
-                                 </image>
-                              </ImageView>
-                              <Line endX="134.0" layoutX="989.0" layoutY="613.0" startX="-100.0" />
-                              <Label layoutX="889.0" layoutY="593.0" text="R+3 Barikadimy, université de Toamasina" textFill="#141414">
-                                 <font>
-                                    <Font name="System Bold" size="12.0" />
-                                 </font>
-                              </Label>
-                              <ImageView fitHeight="105.0" fitWidth="101.0" layoutX="48.0" layoutY="214.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Image/mortier.png" />
-                                 </image>
-                              </ImageView>
                               <ImageView fitHeight="317.0" fitWidth="352.0" layoutX="401.0" layoutY="297.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../Image/1704805960156.jpg" />
                                  </image>
                               </ImageView>
-                              <ImageView fitHeight="105.0" fitWidth="101.0" layoutX="992.0" layoutY="214.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../Image/enfants%20(3).png" />
-                                 </image>
-                              </ImageView>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="clientForm" layoutX="2.4" layoutY="4.4" prefHeight="645.0" prefWidth="1163.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="3.0" AnchorPane.topAnchor="4.0">
+                        <AnchorPane fx:id="clientForm" layoutX="2.4" layoutY="3.4" prefHeight="646.0" prefWidth="1168.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="2.0" AnchorPane.topAnchor="3.0">
                            <children>
-                              <AnchorPane layoutX="5.0" layoutY="4.0" prefHeight="639.0" prefWidth="1153.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="3.0">
+                              <AnchorPane layoutX="6.0" layoutY="9.0" prefHeight="629.0" prefWidth="1158.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="8.0">
                                  <children>
-                                    <AnchorPane layoutX="2.0" prefHeight="369.0" prefWidth="1147.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
-                                       <children>
-                                          <TableView fx:id="clientTableView" layoutX="2.0" layoutY="40.0" onMouseClicked="#addClientSelect" prefHeight="327.0" prefWidth="1143.0" stylesheets="@../Design/DashboardDesign.css">
-                                            <columns>
-                                              <TableColumn fx:id="clientIDCol" prefWidth="23.999969482421875" text="ID " />
-                                              <TableColumn fx:id="clientNomCol" prefWidth="78.99996757507324" text="Nom" />
-                                                <TableColumn fx:id="clientPrenomCol" prefWidth="89.00000762939453" text="Prénom" />
-                                                <TableColumn fx:id="clientGenreCol" prefWidth="66.00006103515625" text="Genre" />
-                                                <TableColumn fx:id="clientDateNCol" prefWidth="85.0" text="Date de N" />
-                                                <TableColumn fx:id="clientCINCol" prefWidth="99.0" text="N° CNI" />
-                                                <TableColumn fx:id="clientEtablissementCol" prefWidth="110.99996948242188" text="Etablissement" />
-                                                <TableColumn fx:id="clientMentionCol" prefWidth="82.0" text="M &amp; P" />
-                                                <TableColumn fx:id="clientNiveauCol" prefWidth="93.0" text="Niveau" />
-                                                <TableColumn fx:id="clientCodageCol" prefWidth="76.0" text="N° codage" />
-                                                <TableColumn fx:id="clientPassantCol" prefWidth="69.0" text="P/P/T" />
-                                                <TableColumn fx:id="clientTelCol" minWidth="5.9998779296875" prefWidth="56.0" text="Tél" />
-                                                <TableColumn fx:id="clientAdressCol" prefWidth="69.0" text="Adresse" />
-                                                <TableColumn fx:id="clientTypeCol" minWidth="0.0" prefWidth="54.0" text="Type cli" />
-                                                <TableColumn fx:id="clientDateCol" prefWidth="61.0" text="Date Inscrp" />
-                                                <TableColumn fx:id="clientNomUtilisateurCol" prefWidth="28.0" text="Nom utilisateur" />
-                                            </columns>
-                                          </TableView>
-                                          <TextField fx:id="clientRechercheText" layoutX="6.0" layoutY="5.0" onKeyTyped="#addClientSearch" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@../Design/DashboardDesign.css" />
-                                          <Label layoutX="323.0" layoutY="7.0" text="Nos clients" textFill="#329302">
-                                             <font>
-                                                <Font name="System Bold" size="18.0" />
-                                             </font>
-                                          </Label>
-                                          <FontAwesomeIconView glyphName="SEARCH" layoutX="13.0" layoutY="27.0" size="1.5em" />
-                                       </children>
-                                    </AnchorPane>
                                     <Label layoutX="55.0" layoutY="384.0" text="ID: ">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
@@ -370,17 +285,32 @@
                                     <AnchorPane layoutX="950.0" layoutY="380.0" prefHeight="176.0" prefWidth="187.0" stylesheets="@../Design/DashboardDesign.css">
                                        <children>
                                           <ImageView fx:id="clientImageView" fitHeight="150.0" fitWidth="186.0" layoutX="2.0" pickOnBounds="true" preserveRatio="true" />
-                                          <Button fx:id="clientPhotoBtn" layoutX="35.0" layoutY="140.0" mnemonicParsing="false" onMouseClicked="#addClientInsertImage" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Photo" textFill="WHITE" />
+                                          <Button fx:id="clientPhotoBtn" layoutX="35.0" layoutY="140.0" mnemonicParsing="false" onMouseClicked="#addClientInsertImage" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Photo" textFill="WHITE">
+                                             <graphic>
+                                                <FontAwesomeIconView fill="WHITE" glyphName="IMAGE" size="1.5em" />
+                                             </graphic></Button>
                                        </children>
                                        <styleClass>
                                           <String fx:value="centre-formDE" />
                                           <String fx:value="textfield" />
                                        </styleClass>
                                     </AnchorPane>
-                                    <Button fx:id="clientAjouterBtn" layoutX="515.0" layoutY="591.0" mnemonicParsing="false" onAction="#addClientAdd" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajouter" textFill="WHITE" />
-                                    <Button fx:id="clientModifierBtn" layoutX="371.0" layoutY="591.0" mnemonicParsing="false" onAction="#addClientUpdate" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Modifier" textFill="WHITE" />
-                                    <Button fx:id="clientEffacerBtn" layoutX="227.0" layoutY="591.0" mnemonicParsing="false" onAction="#addClientDelete" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE" />
-                                    <Button fx:id="clientActualiserBtn" layoutX="83.0" layoutY="592.0" mnemonicParsing="false" onAction="#addClientReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE" />
+                                    <Button fx:id="clientAjouterBtn" layoutX="515.0" layoutY="591.0" mnemonicParsing="false" onAction="#addClientAdd" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajouter" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="PLUS_CIRCLE" size="1.5em" />
+                                       </graphic></Button>
+                                    <Button fx:id="clientModifierBtn" layoutX="371.0" layoutY="591.0" mnemonicParsing="false" onAction="#addClientUpdate" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Modifier" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="EDIT" size="1.5em" />
+                                       </graphic></Button>
+                                    <Button fx:id="clientEffacerBtn" layoutX="227.0" layoutY="591.0" mnemonicParsing="false" onAction="#addClientDelete" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="1.5em" />
+                                       </graphic></Button>
+                                    <Button fx:id="clientActualiserBtn" layoutX="83.0" layoutY="592.0" mnemonicParsing="false" onAction="#addClientReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="REFRESH" size="1.5em" />
+                                       </graphic></Button>
                                     <DatePicker fx:id="clientDateN" layoutX="82.0" layoutY="543.0" prefHeight="27.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
                                     <Label layoutX="642.0" layoutY="508.0" text="Types cli:">
                                        <font>
@@ -388,14 +318,41 @@
                                        </font>
                                     </Label>
                                     <ComboBox fx:id="clientType" layoutX="703.0" layoutY="502.0" onAction="#addClientTypeList" prefHeight="27.0" prefWidth="226.0" promptText="Choisir" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <TableView fx:id="clientTableView" layoutY="42.0" onMouseClicked="#addClientSelect" prefHeight="327.0" prefWidth="1152.0" stylesheets="@../Design/DashboardDesign.css">
+                                      <columns>
+                                        <TableColumn fx:id="clientIDCol" prefWidth="23.999969482421875" text="ID " />
+                                        <TableColumn fx:id="clientNomCol" prefWidth="78.99996757507324" text="Nom" />
+                                          <TableColumn fx:id="clientPrenomCol" prefWidth="89.00000762939453" text="Prénom" />
+                                          <TableColumn fx:id="clientGenreCol" prefWidth="66.00006103515625" text="Genre" />
+                                          <TableColumn fx:id="clientDateNCol" prefWidth="85.0" text="Date de N" />
+                                          <TableColumn fx:id="clientCINCol" prefWidth="99.0" text="N° CNI" />
+                                          <TableColumn fx:id="clientEtablissementCol" prefWidth="110.99996948242188" text="Etablissement" />
+                                          <TableColumn fx:id="clientMentionCol" prefWidth="82.0" text="M &amp; P" />
+                                          <TableColumn fx:id="clientNiveauCol" prefWidth="58.0" text="Niveau" />
+                                          <TableColumn fx:id="clientCodageCol" prefWidth="76.0" text="N° codage" />
+                                          <TableColumn fx:id="clientPassantCol" prefWidth="61.9998779296875" text="P/P/T" />
+                                          <TableColumn fx:id="clientTelCol" minWidth="5.9998779296875" prefWidth="61.0" text="Tél" />
+                                          <TableColumn fx:id="clientAdressCol" prefWidth="74.0" text="Adresse" />
+                                          <TableColumn fx:id="clientTypeCol" minWidth="0.0" prefWidth="63.0" text="Type cli" />
+                                          <TableColumn fx:id="clientDateCol" minWidth="0.0" prefWidth="83.0" text="Date Inscrp" />
+                                          <TableColumn fx:id="clientNomUtilisateurCol" prefWidth="110.0" text="Nom utilisateur" />
+                                      </columns>
+                                    </TableView>
+                                    <TextField fx:id="clientRechercheText" layoutX="7.0" layoutY="6.0" onKeyTyped="#addClientSearch" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="324.0" layoutY="8.0" text="Nos clients" textFill="#329302">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <FontAwesomeIconView glyphName="SEARCH" layoutX="14.0" layoutY="28.0" size="1.5em" />
                                  </children>
                               </AnchorPane>
                            </children>
                         </AnchorPane>
                         
-                        <AnchorPane fx:id="suivieForm" layoutX="2.0" prefHeight="649.0" prefWidth="1163.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
+                        <AnchorPane fx:id="suivieForm" layoutX="2.0" prefHeight="649.0" prefWidth="1168.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
                            <children>
-                              <AnchorPane layoutX="3.0" layoutY="3.0" prefHeight="643.0" prefWidth="1155.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="2.0">
+                              <AnchorPane layoutX="3.0" layoutY="3.0" prefHeight="643.0" prefWidth="1155.0" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="4.0" AnchorPane.topAnchor="2.0">
                                  <children>
                                     <Label layoutX="67.0" layoutY="411.0" text="ID client:">
                                        <font>
@@ -412,7 +369,10 @@
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="suivieActualiserBtn1" layoutX="609.0" layoutY="598.0" mnemonicParsing="false" onAction="#SuivieClientReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE" />
+                                    <Button fx:id="suivieActualiserBtn1" layoutX="609.0" layoutY="600.0" mnemonicParsing="false" onAction="#SuivieClientReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="REFRESH" size="1.5em" />
+                                       </graphic></Button>
                                     <Label layoutX="408.0" layoutY="504.0" text="Déjà payer(Ar):">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
@@ -446,15 +406,21 @@
                                        </font>
                                     </Label>
                                     <Label fx:id="suivieServicePrix" layoutX="503.0" layoutY="408.0" prefHeight="30.0" prefWidth="230.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" />
-                                    <Button fx:id="suivieEffacerBtn" layoutX="124.0" layoutY="598.0" mnemonicParsing="false" onAction="#suivieClientRemove" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE" />
+                                    <Button fx:id="suivieEffacerBtn" layoutX="124.0" layoutY="600.0" mnemonicParsing="false" onAction="#suivieClientRemove" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="1.5em" />
+                                       </graphic></Button>
                                     <Line endX="-121.0" endY="474.0" layoutX="877.0" layoutY="162.0" startX="-121.0" startY="-157.0" />
-                                    <TextField fx:id="clientsoldePayerText" layoutX="854.0" layoutY="554.0" prefHeight="30.0" prefWidth="147.0" promptText="0.0 Ar" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
-                                    <Label layoutX="761.0" layoutY="558.0" text="Solde à payer:">
+                                    <TextField fx:id="clientsoldePayerText" layoutX="857.0" layoutY="511.0" onKeyReleased="#saisieMontantR" prefHeight="30.0" prefWidth="147.0" promptText="0.0 Ar" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="764.0" layoutY="515.0" text="Solde à payer:">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="suiviePayerCompteBtn" layoutX="1023.0" layoutY="598.0" mnemonicParsing="false" onAction="#validerCompte" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Valider" textFill="WHITE" />
+                                    <Button fx:id="suiviePayerCompteBtn" layoutX="1023.0" layoutY="600.0" mnemonicParsing="false" onAction="#validerCompte" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Valider" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="CHECK" size="1.5em" />
+                                       </graphic></Button>
                                     <TextField fx:id="clientSuivieRechercheTxt" layoutX="849.0" layoutY="8.0" onKeyTyped="#clientsuivieSearch" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@../Design/DashboardDesign.css" />
                                     <FontAwesomeIconView glyphName="SEARCH" layoutX="855.0" layoutY="30.0" size="1.5em" />
                                     <Label layoutX="833.0" layoutY="99.0" text="Client Nom:">
@@ -488,38 +454,46 @@
                                           <Font name="System Bold" size="18.0" />
                                        </font>
                                     </Label>
-                                    <TableView fx:id="suivieTableView1" layoutX="2.0" layoutY="46.0" onMouseClicked="#suivieClientSelect" prefHeight="348.0" prefWidth="746.0" stylesheets="@../Design/DashboardDesign.css">
+                                    <TableView fx:id="suivieTableView1" layoutX="2.0" layoutY="46.0" onMouseClicked="#suivieClientSelect" prefHeight="348.0" prefWidth="745.0" stylesheets="@../Design/DashboardDesign.css">
                                        <columns>
-                                          <TableColumn fx:id="suivieClientDateCol" prefWidth="54.0" text="Date" />
-                                          <TableColumn fx:id="suivieClientIDCol" prefWidth="66.0" text="Client ID" />
-                                          <TableColumn fx:id="suivieClientNomCol" prefWidth="84.0" text="Client Nom" />
-                                          <TableColumn fx:id="suivieServiceNomCol" prefWidth="93.0" text="Service Nom" />
+                                          <TableColumn fx:id="suivieClientDateCol" prefWidth="135.0" text="Date &amp; heure" />
+                                          <TableColumn fx:id="suivieClientIDCol" prefWidth="64.0" text="Client ID" />
+                                          <TableColumn fx:id="suivieClientNomCol" prefWidth="103.0" text="Client Nom" />
+                                          <TableColumn fx:id="suivieServiceNomCol" prefWidth="114.0" text="Service Nom" />
                                           <TableColumn fx:id="suivieServiceQteCol" prefWidth="88.0" text="Service Qte" />
-                                          <TableColumn fx:id="suivieServicePrixUnitCol" prefWidth="68.0" text="Monttant" />
-                                          <TableColumn fx:id="suivieServiceToaleSoldeCol" prefWidth="89.0" text="Totale solde" />
-                                          <TableColumn fx:id="suivieServiceDejaPayerCol" prefWidth="81.0" text="Déjà payer" />
-                                          <TableColumn fx:id="suivieServiceRestePayerCol" prefWidth="88.0" text="Reste payer" />
-                                          <TableColumn fx:id="suivieServiceNomUtlisateurCol" prefWidth="82.0" text="Nom utilisateur" />
+                                          <TableColumn fx:id="suivieServicePrixUnitCol" minWidth="0.0" prefWidth="72.0" text="Montant" />
+                                          <TableColumn fx:id="suivieServiceToaleSoldeCol" prefWidth="99.0" text="Totale solde" />
+                                          <TableColumn fx:id="suivieServiceDejaPayerCol" prefWidth="91.0" text="Déjà payer" />
+                                          <TableColumn fx:id="suivieServiceRestePayerCol" prefWidth="95.0" text="Reste payer" />
+                                          <TableColumn fx:id="suivieServiceNomUtlisateurCol" prefWidth="130.0" text="Nom utilisateur" />
                                        </columns>
                                     </TableView>
-                                    <Button fx:id="suivieActualiserBtn11" layoutX="1023.0" layoutY="553.0" mnemonicParsing="false" onAction="#clientsuivieReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE" />
-                                    <Label layoutX="812.0" layoutY="606.0" prefHeight="17.0" prefWidth="34.0" text="Reste:" />
-                                    <Label fx:id="clientsuivieReste" layoutX="854.0" layoutY="600.0" prefHeight="29.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0 Ar" />
+                                    <Button fx:id="suivieActualiserBtn11" layoutX="1023.0" layoutY="510.0" mnemonicParsing="false" onAction="#clientsuivieReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="REFRESH" size="1.5em" />
+                                       </graphic></Button>
+                                    <Label layoutX="815.0" layoutY="563.0" prefHeight="17.0" prefWidth="34.0" text="Reste:" />
+                                    <Label fx:id="clientsuivieReste" layoutX="857.0" layoutY="557.0" prefHeight="29.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0 Ar" />
+                                    <Button fx:id="suivieActualiserBtn111" layoutX="1023.0" layoutY="555.0" mnemonicParsing="false" onAction="#suivieClienttConfirmerBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Confirmer" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="CHECK_CIRCLE" size="1.5em" />
+                                       </graphic>
+                                    </Button>
                                  </children>
                               </AnchorPane>
-                              <TableView fx:id="clientSuivieTableView" layoutX="766.0" layoutY="223.0" onMouseClicked="#clientsuivieSelect" prefHeight="319.0" prefWidth="384.0">
+                              <TableView fx:id="clientSuivieTableView" layoutX="767.0" layoutY="225.0" onMouseClicked="#clientsuivieSelect" prefHeight="279.0" prefWidth="384.0">
                                  <columns>
-                                    <TableColumn fx:id="clientSuivieIDCol" prefWidth="69.0" text="Client ID" />
-                                    <TableColumn fx:id="clientSuivieNomCol" prefWidth="88.0" text="Client Nom" />
-                                    <TableColumn fx:id="clientSuivieDejaPayerCol" prefWidth="122.0" text="Solde deja payer" />
-                                    <TableColumn fx:id="clientSuivieRestePayerCol" prefWidth="104.0" text="Solde reste payer" />
+                                    <TableColumn fx:id="clientSuivieIDCol" prefWidth="63.0" text="Client ID" />
+                                    <TableColumn fx:id="clientSuivieNomCol" text="Client Nom" />
+                                    <TableColumn fx:id="clientSuivieDejaPayerCol" prefWidth="163.0" text="Totale solde deja payer" />
+                                    <TableColumn fx:id="clientSuivieRestePayerCol" prefWidth="199.0" text="Totale solde reste payer" />
                                  </columns>
                               </TableView>
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="factureForm" prefHeight="650.0" prefWidth="1171.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false">
                            <children>
-                              <AnchorPane layoutX="2.0" layoutY="6.0" prefHeight="641.0" prefWidth="1159.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                              <AnchorPane layoutX="2.0" layoutY="6.0" prefHeight="641.0" prefWidth="1159.0" AnchorPane.bottomAnchor="4.0" AnchorPane.leftAnchor="4.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                                  <children>
                                     <Label layoutX="45.0" layoutY="143.0">
                                        <font>
@@ -552,11 +526,20 @@
                                           <TableColumn fx:id="menuColServicePrix" prefWidth="118.0" text="Prix(Ar)" />
                                       </columns>
                                     </TableView>
-                                    <Label layoutX="941.0" layoutY="410.0" prefHeight="17.0" prefWidth="44.0" text="Totale : " />
-                                    <Label fx:id="menuTotale" layoutX="992.0" layoutY="404.0" prefHeight="29.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0 Ar" />
-                                    <Button fx:id="menuEffacerBtn" layoutX="849.0" layoutY="593.0" mnemonicParsing="false" onAction="#menuRemoveBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE" />
-                                    <Button fx:id="menuPayerBtn" layoutX="849.0" layoutY="538.0" mnemonicParsing="false" onAction="#menuPayerBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Payer" textFill="WHITE" />
-                                    <Button fx:id="menuAjouterDannsCompteBtn" layoutX="1014.0" layoutY="538.0" mnemonicParsing="false" onAction="#menuCompteBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajout au compte" textFill="WHITE" />
+                                    <Label layoutX="923.0" layoutY="410.0" prefHeight="17.0" prefWidth="62.0" text="Totale (Ar): " />
+                                    <Label fx:id="menuTotale" layoutX="992.0" layoutY="404.0" prefHeight="29.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0" />
+                                    <Button fx:id="menuEffacerBtn" layoutX="850.0" layoutY="593.0" mnemonicParsing="false" onAction="#menuRemoveBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="1.5em" />
+                                       </graphic></Button>
+                                    <Button fx:id="menuPayerBtn" layoutX="930.0" layoutY="538.0" mnemonicParsing="false" onAction="#menuPayerBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Payer" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="MONEY" size="1.5em" />
+                                       </graphic></Button>
+                                    <Button fx:id="menuAjouterDannsCompteBtn" layoutX="1014.0" layoutY="592.0" mnemonicParsing="false" onAction="#menuCompteBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Compter" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="CALCULATOR" size="1.5em" />
+                                       </graphic></Button>
                                     <TableView fx:id="menu_tableViewClient" layoutX="494.0" layoutY="7.0" onMouseClicked="#menuServiceClientSelect" prefHeight="388.0" prefWidth="323.0" stylesheets="@../Design/DashboardDesign.css">
                                        <columns>
                                           <TableColumn fx:id="menuColClientID" prefWidth="102.0" text="clientID" />
@@ -579,64 +562,59 @@
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="menuClientActualiserBtn" layoutX="681.0" layoutY="593.0" mnemonicParsing="false" onAction="#menuServiceClientReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE" />
+                                    <Button fx:id="menuClientActualiserBtn" layoutX="681.0" layoutY="593.0" mnemonicParsing="false" onAction="#menuServiceClientReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="REFRESH" size="1.5em" />
+                                       </graphic></Button>
                                     <Label fx:id="menuClientNom" layoutX="576.0" layoutY="501.0" prefHeight="29.0" prefWidth="226.0" styleClass="textfield-label" stylesheets="@../Design/DashboardDesign.css" />
                                     <Label fx:id="menuClientPrenom" layoutX="576.0" layoutY="548.0" prefHeight="29.0" prefWidth="226.0" styleClass="textfield-label" stylesheets="@../Design/DashboardDesign.css" />
                                     <TextField fx:id="menuClientRechercheText1" layoutX="509.0" layoutY="405.0" onKeyTyped="#menuClientSearch" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@../Design/DashboardDesign.css" />
                                     <Label fx:id="menuClientID" layoutX="576.0" layoutY="454.0" prefHeight="29.0" prefWidth="226.0" styleClass="textfield-label" stylesheets="@../Design/DashboardDesign.css" />
                                     <FontAwesomeIconView glyphName="SEARCH" layoutX="514.0" layoutY="427.0" size="1.5em" />
-                                    <Button fx:id="menuClientConfirmerBtn" layoutX="511.0" layoutY="594.0" mnemonicParsing="false" onAction="#menuclientSelectBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Confirmer" textFill="WHITE" />
-                                    <Button fx:id="menuImprimerBtn" layoutX="1014.0" layoutY="593.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Imprimer" textFill="WHITE" />
-                                    <TextField fx:id="menuMonttantPayerTxt" layoutX="992.0" layoutY="446.0" onAction="#menuSeulePayer" prefHeight="29.0" prefWidth="147.0" promptText="0.0 Ar" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
-                                    <Label layoutX="903.0" layoutY="452.0" prefHeight="17.0" prefWidth="81.0" text="Seule à payer : " />
-                                    <Label layoutX="950.0" layoutY="494.0" prefHeight="17.0" prefWidth="34.0" text="Reste:" />
-                                    <Label fx:id="menuReste" layoutX="992.0" layoutY="488.0" prefHeight="29.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0 Ar" />
+                                    <Button fx:id="menuClientConfirmerBtn" layoutX="511.0" layoutY="594.0" mnemonicParsing="false" onAction="#menuclientSelectBtn" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Confirmer" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="CHECK_CIRCLE" size="1.5em" />
+                                       </graphic></Button>
+                                    <TextField fx:id="menuMonttantPayerTxt" layoutX="992.0" layoutY="446.0" onKeyReleased="#saisieMontant" prefHeight="29.0" prefWidth="147.0" promptText="0.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
+                                    <Label layoutX="886.0" layoutY="452.0" prefHeight="17.0" prefWidth="103.0" text="Seule à payer (Ar): " />
+                                    <Label layoutX="926.0" layoutY="494.0" prefHeight="17.0" prefWidth="59.0" text="Reste (Ar):" />
+                                    <Label fx:id="menuReste" layoutX="992.0" layoutY="488.0" prefHeight="29.0" prefWidth="147.0" styleClass="labelfiled" stylesheets="@../Design/DashboardDesign.css" text="0.0" />
                                  </children>
                               </AnchorPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane fx:id="historiqueForm" prefHeight="648.0" prefWidth="1165.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false">
+                        <AnchorPane fx:id="historiqueForm" prefHeight="648.0" prefWidth="1170.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false">
                            <children>
-                              <TableView fx:id="historiqueTableview" layoutX="3.0" layoutY="62.0" prefHeight="582.0" prefWidth="1158.0" stylesheets="@../Design/DashboardDesign.css">
+                              <TableView fx:id="historiqueTableview" layoutX="3.0" layoutY="42.0" onMouseClicked="#menuSelectOrderHistorique" prefHeight="552.0" prefWidth="1163.0" stylesheets="@../Design/DashboardDesign.css">
                                 <columns>
                                   <TableColumn fx:id="historiqueDateCol" prefWidth="218.00003051757812" text="Date &amp; l'heure" />
-                                  <TableColumn fx:id="historiqueActiviteCol" minWidth="0.0" prefWidth="938.0" text="Activitées" />
+                                  <TableColumn fx:id="historiqueActiviteCol" minWidth="0.0" prefWidth="703.0" text="Activitées" />
+                                    <TableColumn fx:id="historiqueNomUtilisateurCol" minWidth="0.0" prefWidth="240.0" text="Nom utilisateur" />
                                 </columns>
                               </TableView>
-                              <Label layoutX="359.0" layoutY="17.0" text="Liste de tous les activités récents dans l'application" textFill="#329302">
+                              <Label layoutX="359.0" layoutY="7.0" text="Liste de tous les activités récents dans l'application" textFill="#329302">
                                  <font>
                                     <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
+                              <TextField fx:id="historiqueTextFieldRecherche" layoutX="5.0" layoutY="6.0" onKeyTyped="#historiqueSearch" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@../Design/DashboardDesign.css" />
+                              <FontAwesomeIconView glyphName="SEARCH" layoutX="11.0" layoutY="28.0" size="1.5em" />
+                              <Button fx:id="historiqueEffacerBtn" layoutX="10.0" layoutY="604.0" mnemonicParsing="false" onAction="#effacerHistorique" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer un" textFill="WHITE">
+                                 <graphic>
+                                    <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="1.5em" />
+                                 </graphic>
+                              </Button>
+                              <Button fx:id="historiqueEffacerToutBtn" layoutX="145.0" layoutY="604.0" mnemonicParsing="false" onAction="#effacerHistoriqueTout" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer tout" textFill="WHITE">
+                                 <graphic>
+                                    <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="1.5em" />
+                                 </graphic>
+                              </Button>
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="serviceForm" prefHeight="649.0" prefWidth="1168.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" visible="false">
                            <children>
-                              <AnchorPane layoutX="102.0" layoutY="56.0" prefHeight="620.2" prefWidth="1124.1999999999998" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <AnchorPane layoutX="102.0" layoutY="56.0" prefHeight="620.2" prefWidth="1124.1999999999998" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
-                                    <AnchorPane layoutX="375.0" layoutY="3.0" prefHeight="640.0" prefWidth="792.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
-                                       <children>
-                                          <TableView fx:id="serviceTableView" layoutX="4.0" layoutY="50.0" onMouseClicked="#addServiceSelect" prefHeight="585.0" prefWidth="786.0" stylesheets="@../Design/DashboardDesign.css">
-                                             <columns>
-                                                <TableColumn fx:id="serviceIDCol" prefWidth="87.0" text="ID services" />
-                                                <TableColumn fx:id="serviceNomCol" prefWidth="123.0" text="Nom du services" />
-                                                <TableColumn fx:id="serviceTypeCol" prefWidth="128.0" text="Types du services" />
-                                                <TableColumn fx:id="servicePrixCol" prefWidth="120.0" text="Prix du services" />
-                                                <TableColumn fx:id="serviceDureeCol" prefWidth="121.0" text="Durée du service" />
-                                                <TableColumn fx:id="serviceDateDebutCol" prefWidth="81.0" text="Date début" />
-                                                <TableColumn fx:id="serviceDateFinCol" prefWidth="73.0" text="Date fin" />
-                                                <TableColumn fx:id="serviceNomUtlisateurCol" prefWidth="52.0" text="Nom utilisateur" />
-                                             </columns>
-                                          </TableView>
-                                          <TextField fx:id="serviceTextFieldRecherche" layoutX="4.0" layoutY="10.0" onKeyTyped="#addServiceSearch" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@../Design/DashboardDesign.css" />
-                                          <FontAwesomeIconView glyphName="SEARCH" layoutX="12.0" layoutY="32.0" size="1.5em" />
-                                          <Label layoutX="310.0" layoutY="12.0" text="Nos services:" textFill="#329302">
-                                             <font>
-                                                <Font name="System Bold" size="18.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                    </AnchorPane>
                                     <Label layoutX="42.0" layoutY="217.0" text="ID du services:">
                                        <font>
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
@@ -668,13 +646,25 @@
                                           <Font name="Berlin Sans FB Bold" size="13.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="serviceModifierBtn" layoutX="36.0" layoutY="602.0" mnemonicParsing="false" onAction="#addServiceUpdate" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Modifier" textFill="WHITE" />
-                                    <Button fx:id="serviceAjouterBtn" layoutX="36.0" layoutY="542.0" mnemonicParsing="false" onAction="#addServiceAdd" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajouter" textFill="WHITE" />
-                                    <Button fx:id="serviceEffacerBtn" layoutX="224.0" layoutY="541.0" mnemonicParsing="false" onAction="#addServiceDelete" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE" />
+                                    <Button fx:id="serviceModifierBtn" layoutX="36.0" layoutY="602.0" mnemonicParsing="false" onAction="#addServiceUpdate" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Modifier" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="EDIT" size="1.5em" />
+                                       </graphic></Button>
+                                    <Button fx:id="serviceAjouterBtn" layoutX="36.0" layoutY="542.0" mnemonicParsing="false" onAction="#addServiceAdd" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Ajouter" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="PLUS_CIRCLE" size="1.5em" />
+                                       </graphic></Button>
+                                    <Button fx:id="serviceEffacerBtn" layoutX="224.0" layoutY="541.0" mnemonicParsing="false" onAction="#addServiceDelete" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Effacer" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="TRASH" size="1.5em" />
+                                       </graphic></Button>
                                     <TextField fx:id="serviceType" layoutX="136.0" layoutY="299.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
                                     <DatePicker fx:id="serviceDateDebut" layoutX="135.0" layoutY="432.0" prefHeight="29.0" prefWidth="226.0" />
                                     <DatePicker fx:id="serviceDateFin" layoutX="136.0" layoutY="478.0" prefHeight="29.0" prefWidth="226.0" />
-                                    <Button fx:id="serviceActualiserBtn" layoutX="224.0" layoutY="602.0" mnemonicParsing="false" onAction="#addServiceReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE" />
+                                    <Button fx:id="serviceActualiserBtn" layoutX="224.0" layoutY="602.0" mnemonicParsing="false" onAction="#addServiceReset" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Actualiser" textFill="WHITE">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="REFRESH" size="1.5em" />
+                                       </graphic></Button>
                                     <TextField fx:id="servicePrix" layoutX="136.0" layoutY="345.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
                                     <TextField fx:id="serviceNom" layoutX="135.0" layoutY="256.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
                                     <Label layoutX="21.0" layoutY="392.0" text="Durée du services:">
@@ -685,10 +675,32 @@
                                     <TextField fx:id="serviceDuree" layoutX="136.0" layoutY="388.0" prefHeight="28.0" prefWidth="226.0" styleClass="textfield" stylesheets="@../Design/DashboardDesign.css" />
                                     <AnchorPane layoutX="150.0" layoutY="5.0" prefHeight="200.0" prefWidth="211.0" styleClass="centre-formDE" stylesheets="@../Design/DashboardDesign.css">
                                        <children>
-                                          <Button fx:id="serviceImportImage" layoutX="46.0" layoutY="164.0" mnemonicParsing="false" onMouseClicked="#addServiceInsertImage" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Image" textFill="WHITE" />
+                                          <Button fx:id="serviceImportImage" layoutX="46.0" layoutY="164.0" mnemonicParsing="false" onMouseClicked="#addServiceInsertImage" prefHeight="32.0" prefWidth="120.0" styleClass="loginbtn" stylesheets="@../Design/DashboardDesign.css" text="Image" textFill="WHITE">
+                                             <graphic>
+                                                <FontAwesomeIconView fill="WHITE" glyphName="IMAGE" size="1.5em" />
+                                             </graphic></Button>
                                           <ImageView fx:id="serviceImageView" fitHeight="160.0" fitWidth="200.0" layoutX="6.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true" />
                                        </children>
                                     </AnchorPane>
+                                    <TableView fx:id="serviceTableView" layoutX="375.0" layoutY="47.0" onMouseClicked="#addServiceSelect" prefHeight="594.0" prefWidth="786.0" stylesheets="@../Design/DashboardDesign.css">
+                                       <columns>
+                                          <TableColumn fx:id="serviceIDCol" prefWidth="87.0" text="ID services" />
+                                          <TableColumn fx:id="serviceNomCol" prefWidth="123.0" text="Nom du services" />
+                                          <TableColumn fx:id="serviceTypeCol" prefWidth="128.0" text="Types du services" />
+                                          <TableColumn fx:id="servicePrixCol" prefWidth="120.0" text="Prix du services" />
+                                          <TableColumn fx:id="serviceDureeCol" prefWidth="121.0" text="Durée du service" />
+                                          <TableColumn fx:id="serviceDateDebutCol" prefWidth="81.0" text="Date début" />
+                                          <TableColumn fx:id="serviceDateFinCol" prefWidth="73.0" text="Date fin" />
+                                          <TableColumn fx:id="serviceNomUtlisateurCol" prefWidth="52.0" text="Nom utilisateur" />
+                                       </columns>
+                                    </TableView>
+                                    <TextField fx:id="serviceTextFieldRecherche" layoutX="375.0" layoutY="8.0" onKeyTyped="#addServiceSearch" prefHeight="31.0" prefWidth="294.0" promptText="Recherche" styleClass="search" stylesheets="@../Design/DashboardDesign.css" />
+                                    <FontAwesomeIconView glyphName="SEARCH" layoutX="383.0" layoutY="30.0" size="1.5em" />
+                                    <Label layoutX="681.0" layoutY="10.0" text="Nos services:" textFill="#329302">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                               </AnchorPane>
                            </children>

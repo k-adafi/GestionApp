@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="226" pageHeight="425" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="2.143588810000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="19"/>
+	<style name="Title" lineSpacing="Single" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" lineSpacing="Single" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" lineSpacing="Single" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" lineSpacing="Single" fontName="Arial" fontSize="12"/>
+	<parameter name="idClient" class="java.lang.Integer"/>
+	<parameter name="idSuivie" class="java.lang.Integer"/>
+	<parameter name="mttTotal" class="java.lang.Double"/>
+	<parameter name="reste" class="java.lang.Double"/>
+	<parameter name="nomResponsable" class="java.lang.String"/>
+	<parameter name="dejaPayer" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE 1;]]>
+	</queryString>
+	<field name="serviceNom" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="factureQte" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="servicePrix" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="clientNom" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<group name="montotale">
+		<groupExpression><![CDATA[$P{idSuivie}]]></groupExpression>
+		<groupFooter>
+			<band height="101">
+				<staticText>
+					<reportElement x="68" y="1" width="50" height="10"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Montant total : ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="124" y="1" width="56" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$P{mttTotal}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="68" y="22" width="50" height="10"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Reste à payer : ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="124" y="22" width="56" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$P{reste}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="0" width="186" height="1"/>
+				</line>
+				<staticText>
+					<reportElement x="18" y="37" width="24" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7"/>
+					</textElement>
+					<text><![CDATA[ client]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="3" y="54" width="56" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{clientNom}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="118" y="37" width="51" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7"/>
+					</textElement>
+					<text><![CDATA[Le responsable]]></text>
+				</staticText>
+				<textField>
+					<reportElement style="Column header" x="111" y="81" width="40" height="20"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="6" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="156" y="81" width="26" height="20"/>
+					<textElement verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="6" isBold="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Title" x="4" y="80" width="85" height="20"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7" isBold="false" isItalic="true"/>
+					</textElement>
+					<text><![CDATA["Veuille à l'épanouissement de tous les étudiants"]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="118" y="54" width="51" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{nomResponsable}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="68" y="11" width="50" height="10"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Déja payer : ]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="124" y="11" width="56" height="10"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+						<font fontName="Berlin Sans FB" size="7"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$P{dejaPayer}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="70">
+			<staticText>
+				<reportElement style="Title" x="50" y="6" width="92" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="10"/>
+				</textElement>
+				<text><![CDATA[JIREH STUDENTS]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="130" y="56" width="52" height="12"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="16" y="39" width="35" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<text><![CDATA[Adresse : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="39" width="135" height="10"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<text><![CDATA[Batiment R+3, 1ère étage Campus Barikadimy]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="36" y="29" width="15" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<text><![CDATA[Tél : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="51" y="28" width="106" height="11"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<text><![CDATA[034 79 587 04 / 032 60 669 10]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="57" width="18" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<image>
+				<reportElement x="7" y="2" width="30" height="30"/>
+				<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Image\\1704805960156.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="5" y="57" width="34" height="10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<text><![CDATA[N° facture:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="69" width="186" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="43" y="58" width="43" height="10"/>
+				<textElement lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{idSuivie}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band/>
+	</pageHeader>
+	<columnHeader>
+		<band height="18">
+			<staticText>
+				<reportElement style="Column header" x="68" y="0" width="45" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Quantité]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="124" y="0" width="56" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Montant]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="16" width="186" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="7" y="0" width="49" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Désignation]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17">
+			<textField>
+				<reportElement style="Detail" x="7" y="1" width="49" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{serviceNom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="68" y="1" width="45" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{factureQte}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="124" y="1" width="56" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Berlin Sans FB" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{servicePrix}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band/>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

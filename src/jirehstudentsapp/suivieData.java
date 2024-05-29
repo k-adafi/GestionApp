@@ -6,6 +6,7 @@
  */
 package jirehstudentsapp;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 
@@ -19,7 +20,7 @@ public class suivieData {
     //Pour les suivie
     private Integer ID;
     private Integer suivieID;
-    private Date suivieDate;
+    private Timestamp suivieDate;
     private Integer clientID;
     private String clientNom;
     private String serviceNom;
@@ -32,7 +33,7 @@ public class suivieData {
   
     
     //Pour les clients
-    public suivieData(Integer ID,Integer suivieID, Date suivieDate, Integer clientID, String clientNom,
+    public suivieData(Integer ID,Integer suivieID, Timestamp suivieDate, Integer clientID, String clientNom,
         String serviceNom, Integer factureQte, Double servicePrix, Double suivieServiceToaleSolde, 
         Double suivieServiceDejaPayer, Double suivieServiceRestePayer, String NomUtilisateur)
     {
@@ -50,18 +51,42 @@ public class suivieData {
         this.NomUtilisateur = NomUtilisateur;
       
     }
+
+    public Double getSuivieServiceToaleSolde() {
+        return suivieServiceToaleSolde;
+    }
+
+    public void setSuivieServiceToaleSolde(Double suivieServiceToaleSolde) {
+        this.suivieServiceToaleSolde = suivieServiceToaleSolde;
+    }
+
+    public Double getSuivieServiceDejaPayer() {
+        return suivieServiceDejaPayer;
+    }
+
+    public void setSuivieServiceDejaPayer(Double suivieServiceDejaPayer) {
+        this.suivieServiceDejaPayer = suivieServiceDejaPayer;
+    }
+
+    public Double getSuivieServiceRestePayer() {
+        return suivieServiceRestePayer;
+    }
+
+    public void setSuivieServiceRestePayer(Double suivieServiceRestePayer) {
+        this.suivieServiceRestePayer = suivieServiceRestePayer;
+    }
     
     //Pour les clients
-    public suivieData(Integer ID,Integer suivieID,
-        String serviceNom, Integer factureQte, Double servicePrix)
-    {
-        this.ID = ID;
-        this.suivieID = suivieID;
-        this.serviceNom = serviceNom;
-        this.factureQte = factureQte;
-        this.servicePrix = servicePrix;
-      
-    }
+////    public suivieData(Integer ID,Integer suivieID,
+////        String serviceNom, Integer factureQte, Double servicePrix)
+////    {
+////        this.ID = ID;
+////        this.suivieID = suivieID;
+////        this.serviceNom = serviceNom;
+////        this.factureQte = factureQte;
+////        this.servicePrix = servicePrix;
+////      
+////    }
     
     public Integer getID(){
         return ID;

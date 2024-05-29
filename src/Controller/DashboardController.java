@@ -13,12 +13,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -53,8 +58,18 @@ import javafx.stage.StageStyle;
 import jirehstudentsapp.clientData;
 import jirehstudentsapp.database;
 import jirehstudentsapp.getData;
+import jirehstudentsapp.historiqueData;
 import jirehstudentsapp.serviceData;
 import jirehstudentsapp.suivieData;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.design.JRDesignQuery;
+import net.sf.jasperreports.engine.design.JasperDesign;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -599,13 +614,26 @@ public class DashboardController implements Initializable {
     private AnchorPane historiqueForm;
 
     @FXML
-    private TableView<?> historiqueTableview;
+    private TableView<historiqueData> historiqueTableview;
 
     @FXML
-    private TableColumn<?, ?> historiqueDateCol;
+    private TableColumn<historiqueData, String> historiqueDateCol;
 
     @FXML
-    private TableColumn<?, ?> historiqueActiviteCol;
+    private TableColumn<historiqueData, String> historiqueActiviteCol;
+
+    @FXML
+    private TableColumn<historiqueData, String> historiqueNomUtilisateurCol;
+
+    @FXML
+    private TextField historiqueTextFieldRecherche;
+
+    @FXML
+    private Button historiqueEffacerBtn;
+    
+    @FXML
+    private Button historiqueEffacerToutBtn;
+
 
     private PreparedStatement prepare;
     private Statement statement;
@@ -617,291 +645,638 @@ public class DashboardController implements Initializable {
 
     private Image imageService;
 
-    //Ajout nouveau client (efa mandeha)
-    public void addClientAdd() {
-
-        Date DateInscrp = new Date();
-        java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
-
-        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String dateN = sdf.format(javaDate);
-
-        String sql = "INSERT INTO client"
-                + "(clientID, clientNom, clientPrenom, clientGenre, clientDateN, clientCNI, clientEtablissement,"
-                + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientType, clientPhoto, DateInscrp, NomUtilisateur, clientSoldeDejaPayer, clientSoldeRestePayer)"
-                + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-
-        connect = database.ConnectDb();
-
+//    //Ajout nouveau client (efa mandeha)    
+//    public void addClientAdd() {
+//        
+//        if (clientID != null 
+//                && clientNom != null 
+//                && clientPrenom != null 
+//                && clientGenre != null 
+//                && clientDateN != null 
+//                && clientCNI != null 
+//                && clientEtablissement != null 
+//                && clientMention != null 
+//                && clientNiveau != null 
+//                && clientCodage != null 
+//                && clientPassant != null
+//                && clientTel != null
+//                && clientAdress != null
+//                && clientType !=null) {
+//            
+//            Date DateInscrp = new Date();
+//            java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
+//
+//            java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//            String dateN = sdf.format(javaDate);
+//
+//            String sql = "INSERT INTO client"
+//                    + "(clientID, clientNom, clientPrenom, clientGenre, clientDateN, clientCNI, clientEtablissement,"
+//                    + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientType, clientPhoto, DateInscrp, NomUtilisateur, clientSoldeDejaPayer, clientSoldeRestePayer)"
+//                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+//
+//            connect = database.ConnectDb();
+//
+//            try {
+//                Alert alert;
+//
+//                if (clientID.getText().isEmpty()
+//                        || clientNom.getText().isEmpty()
+//                        || clientPrenom.getText().isEmpty()
+//                        || clientGenre.getSelectionModel().getSelectedItem() == null
+//                        || dateN == null
+//                        || clientCNI.getText().isEmpty()
+//                        || clientEtablissement.getSelectionModel().getSelectedItem() == null
+//                        || clientMention.getText().isEmpty()
+//                        || clientNiveau.getSelectionModel().getSelectedItem() == null
+//                        || clientCodage.getText().isEmpty()
+//                        || clientPassant.getSelectionModel().getSelectedItem() == null
+//                        || clientTel.getText().isEmpty()
+//                        || clientAdress.getText().isEmpty()
+//                        || clientType.getSelectionModel().getSelectedItem() == null
+//                        || sqlDate == null
+//                        || getData.path == null || getData.path == "") {
+//                    alert = new Alert(AlertType.ERROR);
+//                    alert.setTitle("Message d'erreur");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("S'il vous plaît, vous devez complètez ces formulaires!");
+//                    alert.showAndWait();
+//                } else {
+//                    String check = "SELECT clientID FROM client WHERE clientID = '"
+//                            + clientID.getText() + "'";
+//
+//                    statement = connect.createStatement();
+//                    result = statement.executeQuery(check);
+//
+//                    if (result.next()) {
+//                        alert = new Alert(AlertType.ERROR);
+//                        alert.setTitle("Message d'erreur");
+//                        alert.setHeaderText(null);
+//                        alert.setContentText("Cette ClientID:" + clientID.getText() + "existe déjà!");
+//                        alert.showAndWait();
+//                    } else {
+//                        prepare = connect.prepareStatement(sql);
+//                        prepare.setString(1, clientID.getText());
+//                        prepare.setString(2, clientNom.getText());
+//                        prepare.setString(3, clientPrenom.getText());
+//                        prepare.setString(4, (String) clientGenre.getSelectionModel().getSelectedItem());
+//                        prepare.setString(5, String.valueOf(dateN));
+//                        prepare.setString(6, clientCNI.getText());
+//                        prepare.setString(7, (String) clientEtablissement.getSelectionModel().getSelectedItem());
+//                        prepare.setString(8, clientMention.getText());
+//                        prepare.setString(9, (String) clientNiveau.getSelectionModel().getSelectedItem());
+//                        prepare.setString(10, clientCodage.getText());
+//                        prepare.setString(11, (String) clientPassant.getSelectionModel().getSelectedItem());
+//                        prepare.setString(12, clientTel.getText());
+//                        prepare.setString(13, clientAdress.getText());
+//                        prepare.setString(14, (String) clientType.getSelectionModel().getSelectedItem());
+//
+//                        //Pour la photo du client
+//                        String uri = getData.path;
+//                        uri = uri.replace("\\", "\\\\");
+//                        prepare.setString(15, uri);
+//                        prepare.setString(16, String.valueOf(sqlDate));
+//                        prepare.setString(17, getData.username);
+//                        prepare.setDouble(18, 0.0);
+//                        prepare.setDouble(19, 0.0);
+//
+//                        alert = new Alert(Alert.AlertType.CONFIRMATION);
+//                        alert.setTitle("Message de confirmation");
+//                        alert.setHeaderText(null);
+//                        alert.setContentText("Êtes-vous sur de vouloir ajouter cette client?");
+//                        Optional<ButtonType> option = alert.showAndWait();
+//
+//                        if (option.get().equals(ButtonType.CANCEL)) {
+//
+//                            historique("Echec! Ajout d'un nouveau client: " + clientID.getText() + " anuler.", getData.username);
+//
+//                            alert = new Alert(Alert.AlertType.ERROR);
+//                            alert.setTitle("Message d'erreur");
+//                            alert.setHeaderText(null);
+//                            alert.setContentText("Echec d'ajout client!");
+//                            alert.showAndWait();
+//
+//                        } else {
+//                            prepare.executeUpdate();
+//
+//                            historique("Ajout d'un nouveau client: " + clientID.getText() + " réussi avec succès.", getData.username);
+//
+//                            alert = new Alert(AlertType.INFORMATION);
+//                            alert.setTitle("Message d'information");
+//                            alert.setHeaderText(null);
+//                            alert.setContentText("Ajout de client réussi avec succès!");
+//                            alert.showAndWait();
+//
+//                            addClientShowListData();
+//                            addClientReset();
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//         
+//        }    
+//    }
+    
+    
+    public void addClientAdd() throws SQLException {
+        Alert alert;
         try {
-            Alert alert;
-
+            // Vérifier si tous les champs sont remplis
             if (clientID.getText().isEmpty()
                     || clientNom.getText().isEmpty()
                     || clientPrenom.getText().isEmpty()
-                    || clientGenre.getSelectionModel().getSelectedItem() == null
-                    || dateN == null
+                    || clientGenre.getSelectionModel().isEmpty()
+                    || clientDateN.getValue() == null
                     || clientCNI.getText().isEmpty()
-                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
+                    || clientEtablissement.getSelectionModel().isEmpty()
                     || clientMention.getText().isEmpty()
-                    || clientNiveau.getSelectionModel().getSelectedItem() == null
+                    || clientNiveau.getSelectionModel().isEmpty()
                     || clientCodage.getText().isEmpty()
-                    || clientPassant.getSelectionModel().getSelectedItem() == null
+                    || clientPassant.getSelectionModel().isEmpty()
                     || clientTel.getText().isEmpty()
                     || clientAdress.getText().isEmpty()
-                    || clientType.getSelectionModel().getSelectedItem() == null
-                    || sqlDate == null
-                    || getData.path == null || getData.path == "") {
+                    || clientType.getSelectionModel().isEmpty()
+                    || getData.path == null || getData.path.isEmpty()) {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
+                alert.setContentText("S'il vous plait, veuillez remplir tous les champs!");
                 alert.showAndWait();
-            } else {
-                String check = "SELECT clientID FROM client WHERE clientID = '"
-                        + clientID.getText() + "'";
+                return; // Sortir de la méthode si un champ est vide
+            }
 
-                statement = connect.createStatement();
-                result = statement.executeQuery(check);
+            // Vérifier si le clientID existe déjà
+            String check = "SELECT clientID FROM client WHERE clientID = ?";
+            connect = database.ConnectDb();
+            prepare = connect.prepareStatement(check);
+            prepare.setString(1, clientID.getText());
+            result = prepare.executeQuery();
+            if (result.next()) {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Ce clientID existe déjà!");
+                alert.showAndWait();
+                return; // Sortir de la méthode si le clientID existe déjà
+                
+            }else{
+                    // Insertion des données dans la base de données
+                String sql = "INSERT INTO client (clientID, clientNom, clientPrenom, clientGenre, clientDateN, clientCNI, clientEtablissement, "
+                        + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientType, clientPhoto, DateInscrp, NomUtilisateur, "
+                        + "clientSoldeDejaPayer, clientSoldeRestePayer) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, clientID.getText());
+                prepare.setString(2, clientNom.getText());
+                prepare.setString(3, clientPrenom.getText());
+                prepare.setString(4, clientGenre.getSelectionModel().getSelectedItem());
+                prepare.setDate(5, java.sql.Date.valueOf(clientDateN.getValue()));
+                prepare.setString(6, clientCNI.getText());
+                prepare.setString(7, clientEtablissement.getSelectionModel().getSelectedItem());
+                prepare.setString(8, clientMention.getText());
+                prepare.setString(9, clientNiveau.getSelectionModel().getSelectedItem());
+                prepare.setString(10, clientCodage.getText());
+                prepare.setString(11, clientPassant.getSelectionModel().getSelectedItem());
+                prepare.setString(12, clientTel.getText());
+                prepare.setString(13, clientAdress.getText());
+                prepare.setString(14, clientType.getSelectionModel().getSelectedItem());
+                prepare.setString(15, getData.path);
+                prepare.setDate(16, new java.sql.Date(System.currentTimeMillis()));
+                prepare.setString(17, getData.username);
+                prepare.setDouble(18, 0.0);
+                prepare.setDouble(19, 0.0);
 
-                if (result.next()) {
-                    alert = new Alert(AlertType.ERROR);
-                    alert.setTitle("Message d'erreur");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Cette ClientID:" + clientID.getText() + "existe déjà!");
-                    alert.showAndWait();
-                } else {
-                    prepare = connect.prepareStatement(sql);
-                    prepare.setString(1, clientID.getText());
-                    prepare.setString(2, clientNom.getText());
-                    prepare.setString(3, clientPrenom.getText());
-                    prepare.setString(4, (String) clientGenre.getSelectionModel().getSelectedItem());
-                    prepare.setString(5, String.valueOf(dateN));
-                    prepare.setString(6, clientCNI.getText());
-                    prepare.setString(7, (String) clientEtablissement.getSelectionModel().getSelectedItem());
-                    prepare.setString(8, clientMention.getText());
-                    prepare.setString(9, (String) clientNiveau.getSelectionModel().getSelectedItem());
-                    prepare.setString(10, clientCodage.getText());
-                    prepare.setString(11, (String) clientPassant.getSelectionModel().getSelectedItem());
-                    prepare.setString(12, clientTel.getText());
-                    prepare.setString(13, clientAdress.getText());
-                    prepare.setString(14, (String) clientType.getSelectionModel().getSelectedItem());
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sur de vouloir ajouter cette client?");
+                Optional<ButtonType> option = alert.showAndWait();
 
-                    //Pour la photo du client
-                    String uri = getData.path;
-                    uri = uri.replace("\\", "\\\\");
-                    prepare.setString(15, uri);
-                    prepare.setString(16, String.valueOf(sqlDate));
-                    prepare.setString(17, getData.username);
-                    prepare.setDouble(18, 0.0);
-                    prepare.setDouble(19, 0.0);
-
-                    alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Message de confirmation");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Êtes-vous sur de vouloir ajouter cette client?");
-                    Optional<ButtonType> option = alert.showAndWait();
-
-                    if (option.get().equals(ButtonType.CANCEL)) {
-                        alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Message d'erreur");
+                if (option.get().equals(ButtonType.OK)) {
+                    int rowsAffected = prepare.executeUpdate();
+                    if (rowsAffected > 0){ 
+                        
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Message d'information");
                         alert.setHeaderText(null);
-                        alert.setContentText("Echec d'ajout client!");
+                        alert.setContentText("Client ajouté avec succès!");
                         alert.showAndWait();
 
                     } else {
-                        prepare.executeUpdate();
+                        alert = new Alert(AlertType.WARNING);
+                        alert.setTitle("Message d'erreur");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Ajout du client anuler!");
+                        alert.showAndWait();
+                    }
+                }else{
+                    alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ajout du client anuler!");
+                    alert.showAndWait();
+                }
+
+            }
+            
+            // Effacer les champs après l'ajout
+            addClientReset();
+            // Rafraîchir la liste des clients
+            addClientShowListData();
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Une erreur s'est produite lors de l'ajout du client!");
+            alert.showAndWait();
+        }
+
+  }
+        
+    //Mise à jour de client (EFA MANDEHA)
+    public void addClientUpdate() {
+        
+            String uri = getData.path;
+            uri = uri.replace("\\", "\\\\");
+
+            Date DateInscrp = new Date();
+            java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
+
+
+            try {
+                Alert alert;
+                if (clientID.getText().isEmpty()
+                        || clientNom.getText().isEmpty()
+                        || clientPrenom.getText().isEmpty()
+                        || clientGenre.getSelectionModel().getSelectedItem() == null
+                        || clientDateN.getValue() == null
+                        || clientCNI.getText().isEmpty()
+                        || clientEtablissement.getSelectionModel().getSelectedItem() == null
+                        || clientMention.getText().isEmpty()
+                        || clientNiveau.getSelectionModel().getSelectedItem() == null
+                        || clientCodage.getText().isEmpty()
+                        || clientPassant.getSelectionModel().getSelectedItem() == null
+                        || clientTel.getText().isEmpty()
+                        || clientAdress.getText().isEmpty()
+                        || clientType.getSelectionModel().getSelectedItem() == null
+                        || getData.path == null || getData.path.isEmpty()
+                        || sqlDate == null) {
+
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("S'il vous plaît, vous devez sélectionner un client et compléter ces formulaires!");
+                    alert.showAndWait();
+                    
+                } else {
+                    
+                    LocalDate dateNaissance = clientDateN.getValue();
+                    String dateN = dateNaissance != null ? dateNaissance.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+                    
+                    String sql = "UPDATE client SET clientNom = ?, clientPrenom = ?, clientGenre = ?, clientDateN = ?, clientCNI = ?, clientEtablissement = ?, clientMention = ?, clientNiveau = ?, clientCodage = ?, clientPassant = ?, clientTel = ?, clientAdresse = ?, clientPhoto = ?, DateInscrp = ?, NomUtilisateur = ? WHERE clientID = ?";
+                    connect = database.ConnectDb();
+                    
+                    alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Message de confirmation");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Êtes-vous sûr de vouloir modifier ce client " + clientID.getText() + " ?");
+                    Optional<ButtonType> option = alert.showAndWait();
+
+                    if (option.isPresent() && option.get().equals(ButtonType.OK)) {
+                        PreparedStatement preparedStatement = connect.prepareStatement(sql);
+                        preparedStatement.setString(1, clientNom.getText());
+                        preparedStatement.setString(2, clientPrenom.getText());
+                        preparedStatement.setString(3, clientGenre.getSelectionModel().getSelectedItem());
+                        preparedStatement.setString(4, dateN);
+                        preparedStatement.setString(5, clientCNI.getText());
+                        preparedStatement.setString(6, clientEtablissement.getSelectionModel().getSelectedItem());
+                        preparedStatement.setString(7, clientMention.getText());
+                        preparedStatement.setString(8, clientNiveau.getSelectionModel().getSelectedItem());
+                        preparedStatement.setString(9, clientCodage.getText());
+                        preparedStatement.setString(10, clientPassant.getSelectionModel().getSelectedItem());
+                        preparedStatement.setString(11, clientTel.getText());
+                        preparedStatement.setString(12, clientAdress.getText());
+                        preparedStatement.setString(13, uri);
+                        preparedStatement.setDate(14, sqlDate);
+                        preparedStatement.setString(15, getData.username);
+                        preparedStatement.setString(16, clientID.getText());
+                        preparedStatement.executeUpdate();
+
+                        historique("Mise à jour du client: " + clientID.getText() + " réussie avec succès.", getData.username);
 
                         alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Message d'information");
                         alert.setHeaderText(null);
-                        alert.setContentText("Ajout de client réussi avec succès!");
+                        alert.setContentText("Le client a été modifié avec succès!");
                         alert.showAndWait();
+                    } else {
+                        historique("Échec! Mise à jour du client: " + clientID.getText() + " annulée.", getData.username);
 
-                        addClientShowListData();
-                        addClientReset();
-
+                        alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("Message d'erreur");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Modification du client annulée!");
+                        alert.showAndWait();
                     }
 
+                    addClientShowListData();
+                    addClientReset();
                 }
 
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        
     }
 
-    //Mise à jour de client (EFA MANDEHA)
-    public void addClientUpdate() {
+    
+    
+//    public void addClientUpdate() {
+//
+//        String uri = getData.path;
+//        uri = uri.replace("\\", "\\\\");
+//
+//        Date DateInscrp = new Date();
+//        java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
+//
+//        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//        String dateN = sdf.format(javaDate);
+//
+//        String sql = "UPDATE client SET clientNom = '"
+//                + clientNom.getText() + "', clientPrenom = '"
+//                + clientPrenom.getText() + "', clientGenre = '"
+//                + clientGenre.getSelectionModel().getSelectedItem() + "', clientDateN = '"
+//                + dateN + "', clientCNI = '"
+//                + clientCNI.getText() + "',  clientEtablissement = '"
+//                + clientEtablissement.getSelectionModel().getSelectedItem() + "', clientMention = '"
+//                + clientMention.getText() + "', clientNiveau ='"
+//                + clientNiveau.getSelectionModel().getSelectedItem() + "', clientCodage = '"
+//                + clientCodage.getText() + "', clientPassant = '"
+//                + clientPassant.getSelectionModel().getSelectedItem() + "', clientTel = '"
+//                + clientTel.getText() + "', clientAdresse = '"
+//                + clientAdress.getText() + "', clientPhoto = '"
+//                + uri + "', DateInscrp = '"
+//                + sqlDate + "', NomUtilisateur = '"
+//                + getData.username + "' WHERE clientID = '"
+//                + clientID.getText() + "'";
+//
+//        connect = database.ConnectDb();
+//
+//        try {
+//            Alert alert;
+//            if (clientID.getText().isEmpty()
+//                    || clientNom.getText().isEmpty()
+//                    || clientPrenom.getText().isEmpty()
+//                    || clientGenre.getSelectionModel().getSelectedItem() == null
+//                    || dateN == null
+//                    || clientCNI.getText().isEmpty()
+//                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
+//                    || clientMention.getText().isEmpty()
+//                    || clientNiveau.getSelectionModel().getSelectedItem() == null
+//                    || clientCodage.getText().isEmpty()
+//                    || clientPassant.getSelectionModel().getSelectedItem() == null
+//                    || clientTel.getText().isEmpty()
+//                    || clientAdress.getText().isEmpty()
+//                    || clientType.getSelectionModel().getSelectedItem() == null
+//                    || getData.path == null || getData.path == ""
+//                    || sqlDate == null) {
+//                alert = new Alert(AlertType.ERROR);
+//                alert.setTitle("Message d'erreur");
+//                alert.setHeaderText(null);
+//                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
+//                alert.showAndWait();
+//            } else {
+//                alert = new Alert(AlertType.CONFIRMATION);
+//                alert.setTitle("Message de confirmation");
+//                alert.setHeaderText(null);
+//                alert.setContentText("Êtes-vous sur de vouloir modifier cette client " + clientID.getText() + " ?");
+//                Optional<ButtonType> option = alert.showAndWait();
+//
+//                if (option.get().equals(ButtonType.OK)) {
+//                    statement = connect.createStatement();
+//                    statement.executeUpdate(sql);
+//
+//                    historique("Mise à jour du client: " + clientID.getText() + " réussi avec succès.", getData.username);
+//
+//                    alert = new Alert(AlertType.INFORMATION);
+//                    alert.setTitle("Message d'information");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Client a été modifier avec succès!");
+//                    alert.showAndWait();
+//
+//                } else {
+//
+//                    historique("Echech! mise à jour du client: " + clientID.getText() + " anuler.", getData.username);
+//
+//                    alert = new Alert(Alert.AlertType.ERROR);
+//                    alert.setTitle("Message d'erreur");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Modification du client anuler!");
+//                    alert.showAndWait();
+//                }
+//
+//                addClientShowListData();
+//                addClientReset();
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+    
 
-        String uri = getData.path;
-        uri = uri.replace("\\", "\\\\");
+    //Supprimer un client (efa mandeha) 
+    public void addClientDelete() {
+        Alert alert;
+        if (getData.username != null && getData.username.equals("kadafi")) {
+            
+            try {
+                String uri = getData.path != null ? getData.path.replace("\\", "\\\\") : null;
 
-        Date DateInscrp = new Date();
-        java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
+                Date DateInscrp = new Date();
+                java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
 
-        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String dateN = sdf.format(javaDate);
+                LocalDate dateNaissance = clientDateN.getValue();
+                String dateN = dateNaissance != null ? dateNaissance.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
 
-        String sql = "UPDATE client SET clientNom = '"
-                + clientNom.getText() + "', clientPrenom = '"
-                + clientPrenom.getText() + "', clientGenre = '"
-                + clientGenre.getSelectionModel().getSelectedItem() + "', clientDateN = '"
-                + dateN + "', clientCNI = '"
-                + clientCNI.getText() + "',  clientEtablissement = '"
-                + clientEtablissement.getSelectionModel().getSelectedItem() + "', clientMention = '"
-                + clientMention.getText() + "', clientNiveau ='"
-                + clientNiveau.getSelectionModel().getSelectedItem() + "', clientCodage = '"
-                + clientCodage.getText() + "', clientPassant = '"
-                + clientPassant.getSelectionModel().getSelectedItem() + "', clientTel = '"
-                + clientTel.getText() + "', clientAdresse = '"
-                + clientAdress.getText() + "', clientPhoto = '"
-                + uri + "', DateInscrp = '"
-                + sqlDate + "', NomUtilisateur = '"
-                + getData.username + "' WHERE clientID = '"
-                + clientID.getText() + "'";
+                if (clientID.getText().isEmpty()
+                        || clientNom.getText().isEmpty()
+                        || clientPrenom.getText().isEmpty()
+                        || clientCNI.getText().isEmpty()
+                        || clientMention.getText().isEmpty()
+                        || clientCodage.getText().isEmpty()
+                        || clientTel.getText().isEmpty()
+                        || clientAdress.getText().isEmpty()
+                        || uri == null || uri.isEmpty()
+                        || sqlDate == null) {
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("S'il vous plaît, vous devez sélectioner un client!");
+                    alert.showAndWait();
+                    return;
+                }
 
-        connect = database.ConnectDb();
+                String sql = "DELETE FROM client WHERE clientID = '" + clientID.getText() + "'";
 
-        try {
-            Alert alert;
-            if (clientID.getText().isEmpty()
-                    || clientNom.getText().isEmpty()
-                    || clientPrenom.getText().isEmpty()
-                    || clientGenre.getSelectionModel().getSelectedItem() == null
-                    || dateN == null
-                    || clientCNI.getText().isEmpty()
-                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
-                    || clientMention.getText().isEmpty()
-                    || clientNiveau.getSelectionModel().getSelectedItem() == null
-                    || clientCodage.getText().isEmpty()
-                    || clientPassant.getSelectionModel().getSelectedItem() == null
-                    || clientTel.getText().isEmpty()
-                    || clientAdress.getText().isEmpty()
-                    || clientType.getSelectionModel().getSelectedItem() == null
-                    || getData.path == null || getData.path == ""
-                    || sqlDate == null) {
-                alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
-                alert.showAndWait();
-            } else {
+                connect = database.ConnectDb();
+                if (connect == null) {
+                    // Gérer l'échec de la connexion à la base de données
+                    return;
+                }
+
                 alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Message de confirmation");
                 alert.setHeaderText(null);
-                alert.setContentText("Êtes-vous sur de vouloir modifier cette client " + clientID.getText() + " ?");
+                alert.setContentText("Êtes-vous sûr de vouloir supprimer ce client " + clientID.getText() + " ?");
                 Optional<ButtonType> option = alert.showAndWait();
 
-                if (option.get().equals(ButtonType.OK)) {
+                if (option.isPresent() && option.get() == ButtonType.OK) {
                     statement = connect.createStatement();
                     statement.executeUpdate(sql);
+
+                    historique("Suppression du client: " + clientID.getText() + " réussie avec succès.", getData.username);
 
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
-                    alert.setContentText("Client a été modifier avec succès!");
+                    alert.setContentText("Client supprimé avec succès!");
                     alert.showAndWait();
 
                 } else {
-                    alert = new Alert(Alert.AlertType.ERROR);
+                    historique("Échec! suppression du client: " + clientID.getText() + " annulée.", getData.username);
+
+                    alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Message d'erreur");
                     alert.setHeaderText(null);
-                    alert.setContentText("Echec de modification du client!");
+                    alert.setContentText("Suppression annulée!");
                     alert.showAndWait();
                 }
 
                 addClientShowListData();
                 addClientReset();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Gérer l'exception
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    //Supprimer un client (efa mandeha) 
-    public void addClientDelete() {
-
-        String uri = getData.path.replace("\\", "\\\\");
-
-        Date DateInscrp = new Date();
-        java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
-
-        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String dateN = sdf.format(javaDate);
-
-        try {
-            Alert alert;
-            if (clientID.getText().isEmpty()
-                    || clientNom.getText().isEmpty()
-                    || clientPrenom.getText().isEmpty()
-                    || clientGenre.getSelectionModel().getSelectedItem() == null
-                    || dateN == null
-                    || clientCNI.getText().isEmpty()
-                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
-                    || clientMention.getText().isEmpty()
-                    || clientNiveau.getSelectionModel().getSelectedItem() == null
-                    || clientCodage.getText().isEmpty()
-                    || clientPassant.getSelectionModel().getSelectedItem() == null
-                    || clientTel.getText().isEmpty()
-                    || clientAdress.getText().isEmpty()
-                    || clientType.getSelectionModel().getSelectedItem() == null
-                    || getData.path == null || getData.path.equals("")
-                    || sqlDate == null) {
-                alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
-                alert.showAndWait();
-                return;
-            }
-
-            String sql = "DELETE FROM client WHERE clientID = '" + clientID.getText() + "'";
-
-            connect = database.ConnectDb();
-            if (connect == null) {
-                // Gérer l'échec de la connexion à la base de données
-                return;
-            }
-
-            alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Message de confirmation");
+        } else {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Êtes-vous sûr de vouloir supprimer ce client " + clientID.getText() + " ?");
-            Optional<ButtonType> option = alert.showAndWait();
-
-            if (option.isPresent() && option.get() == ButtonType.OK) {
-                statement = connect.createStatement();
-                statement.executeUpdate(sql);
-
-                alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Message d'information");
-                alert.setHeaderText(null);
-                alert.setContentText("Client supprimé avec succès!");
-                alert.showAndWait();
-
-            } else {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("Echec de suppression!");
-                alert.showAndWait();
-            }
-
-            addClientShowListData();
-            addClientReset();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Gérer l'exception
+            alert.setContentText("Vous n'avez pas d'accès à cette opération!");
+            alert.showAndWait();
         }
     }
 
+    
+    
+//    public void addClientDelete() {
+//        
+//        Alert alert;
+//        if(getData.username.equals("kadafi")){
+//            
+//            try {
+//                
+//                String uri = getData.path.replace("\\", "\\\\");
+//
+//                Date DateInscrp = new Date();
+//                java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
+//
+//                java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+//                String dateN = sdf.format(javaDate);
+//  
+//                if (clientID.getText().isEmpty()
+//                        || clientNom.getText().isEmpty()
+//                        || clientPrenom.getText().isEmpty()
+//                        || clientGenre.getSelectionModel().getSelectedItem() == null
+//                        || dateN == null
+//                        || clientCNI.getText().isEmpty()
+//                        || clientEtablissement.getSelectionModel().getSelectedItem() == null
+//                        || clientMention.getText().isEmpty()
+//                        || clientNiveau.getSelectionModel().getSelectedItem() == null
+//                        || clientCodage.getText().isEmpty()
+//                        || clientPassant.getSelectionModel().getSelectedItem() == null
+//                        || clientTel.getText().isEmpty()
+//                        || clientAdress.getText().isEmpty()
+//                        || clientType.getSelectionModel().getSelectedItem() == null
+//                        || getData.path == null || getData.path.equals("")
+//                        || sqlDate == null) {
+//                    alert = new Alert(AlertType.ERROR);
+//                    alert.setTitle("Message d'erreur");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
+//                    alert.showAndWait();
+//                    return;
+//                }
+//
+//                String sql = "DELETE FROM client WHERE clientID = '" + clientID.getText() + "'";
+//
+//                connect = database.ConnectDb();
+//                if (connect == null) {
+//                    // Gérer l'échec de la connexion à la base de données
+//                    return;
+//                }
+//
+//                alert = new Alert(AlertType.CONFIRMATION);
+//                alert.setTitle("Message de confirmation");
+//                alert.setHeaderText(null);
+//                alert.setContentText("Êtes-vous sûr de vouloir supprimer ce client " + clientID.getText() + " ?");
+//                Optional<ButtonType> option = alert.showAndWait();
+//
+//                if (option.isPresent() && option.get() == ButtonType.OK) {
+//                    statement = connect.createStatement();
+//                    statement.executeUpdate(sql);
+//
+//                    historique("Suppression du client: " + clientID.getText() + " réussi avec succès.", getData.username);
+//
+//                    alert = new Alert(AlertType.INFORMATION);
+//                    alert.setTitle("Message d'information");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Client supprimé avec succès!");
+//                    alert.showAndWait();
+//
+//                } else {
+//
+//                    historique("Echec! suppression du client: " + clientID.getText() + " anuler.", getData.username);
+//
+//                    alert = new Alert(Alert.AlertType.ERROR);
+//                    alert.setTitle("Message d'erreur");
+//                    alert.setHeaderText(null);
+//                    alert.setContentText("Suppression anuler!");
+//                    alert.showAndWait();
+//                }
+//
+//                addClientShowListData();
+//                addClientReset();
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                // Gérer l'exception
+//            }
+//         
+//        }else{
+//            alert = new Alert(Alert.AlertType.ERROR);
+//            alert.setTitle("Message d'erreur");
+//            alert.setHeaderText(null);
+//            alert.setContentText("Vous n'avez pas d'accès à cette opération!");
+//            alert.showAndWait();
+//        }   
+//    }
+    
+    
     //Pour l'actualisation sur affiche client
     public void addClientReset() {
         clientID.setText("");
@@ -920,6 +1295,7 @@ public class DashboardController implements Initializable {
         clientType.getSelectionModel().clearSelection();
         clientImageView.setImage(null);
         getData.path = "";
+        clientRechercheText.setText("");
     }
 
     //Insertion image client
@@ -936,6 +1312,8 @@ public class DashboardController implements Initializable {
             clientImageView.setImage(imageClient);
         }
     }
+    
+    
 
     //Pour combox genre client
     private String[] genreList = {"Feminin", "Masculin", "Autres"};
@@ -1213,40 +1591,27 @@ public class DashboardController implements Initializable {
     //Ajout nouveau service
     public void addServiceAdd() {
 
-        java.util.Date javaDate1 = java.util.Date.from(serviceDateDebut.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-        String dateD = sdf1.format(javaDate1);
-
-        java.util.Date javaDate2 = java.util.Date.from(serviceDateFin.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-        String dateF = sdf2.format(javaDate2);
-
-        String sql = "INSERT INTO service"
-                + "(serviceID, serviceNom, serviceType, servicePrix, serviceDuree, serviceDateDebut, serviceDateFin, serviceImage, NomUtilisateur)"
-                + "VALUES(?,?,?,?,?,?,?,?,?)";
-
-        connect = database.ConnectDb();
-
         try {
             Alert alert;
-
             if (serviceID.getText().isEmpty()
                     || serviceNom.getText().isEmpty()
                     || serviceType.getText().isEmpty()
                     || servicePrix.getText().isEmpty()
                     || serviceDuree.getText().isEmpty()
-                    || dateD == null
-                    || dateF == null
+                    || serviceDateDebut.getValue() == null
+                    || serviceDateFin.getValue() == null
                     || getData.pathService == null || getData.pathService == "") {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez complètez ces formulaires!");
+                alert.setContentText("S'il vous plaît, vous devez complètez tous les champs!");
                 alert.showAndWait();
             } else {
+                     
                 String check = "SELECT serviceID FROM service WHERE serviceID = '"
                         + serviceID.getText() + "'";
-
+                
+                connect = database.ConnectDb();
                 statement = connect.createStatement();
                 result = statement.executeQuery(check);
 
@@ -1256,7 +1621,21 @@ public class DashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Cette serviceID: " + serviceID.getText() + " existe déjà!");
                     alert.showAndWait();
+                    
                 } else {
+                    java.util.Date javaDate1 = java.util.Date.from(serviceDateDebut.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateD = sdf1.format(javaDate1);
+
+                    java.util.Date javaDate2 = java.util.Date.from(serviceDateFin.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
+                    SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+                    String dateF = sdf2.format(javaDate2);
+
+                    String sql = "INSERT INTO service"
+                            + "(serviceID, serviceNom, serviceType, servicePrix, serviceDuree, serviceDateDebut, serviceDateFin, serviceImage, NomUtilisateur)"
+                            + "VALUES(?,?,?,?,?,?,?,?,?)";
+
+                    
                     prepare = connect.prepareStatement(sql);
                     prepare.setString(1, serviceID.getText());
                     prepare.setString(2, serviceNom.getText());
@@ -1279,14 +1658,19 @@ public class DashboardController implements Initializable {
                     Optional<ButtonType> option = alert.showAndWait();
 
                     if (option.get().equals(ButtonType.CANCEL)) {
-                        alert = new Alert(Alert.AlertType.ERROR);
+
+                        historique("Echec! ajout de nouveau service: " + serviceID.getText() + " anulé", getData.username);
+
+                        alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Message d'erreur");
                         alert.setHeaderText(null);
-                        alert.setContentText("Echec d'ajout du service!");
+                        alert.setContentText("Ajout du service anuler!");
                         alert.showAndWait();
 
                     } else {
                         prepare.executeUpdate();
+
+                        historique("Ajout de nouveau service: " + serviceID.getText() + " réussi", getData.username);
 
                         alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Message d'information");
@@ -1307,82 +1691,90 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
         }
     }
-
+    
     //Pour la mise à jour des services (Efa mandeha)
     public void addServiceUpdate() {
-
-        String uri = getData.pathService;
-        uri = uri.replace("\\", "\\\\");
-
-        java.util.Date javaDate1 = java.util.Date.from(serviceDateDebut.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-        String dateD = sdf1.format(javaDate1);
-
-        java.util.Date javaDate2 = java.util.Date.from(serviceDateFin.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
-        String dateF = sdf2.format(javaDate2);
-
-        String sql = "UPDATE service SET serviceNom = '"
-                + serviceNom.getText() + "', serviceType = '"
-                + serviceType.getText() + "', servicePrix = '"
-                + servicePrix.getText() + "', serviceDuree = '"
-                + serviceDuree.getText() + "', serviceDateDebut = '"
-                + dateD + "', serviceDateFin = '"
-                + dateF + "',  serviceImage = '"
-                + uri + "', NomUtilisateur = '"
-                + getData.username + "' WHERE serviceID = '"
-                + serviceID.getText() + "'";
-
-        connect = database.ConnectDb();
-
+        
         try {
             Alert alert;
+            
+            String uri = getData.pathService;
+            uri = uri.replace("\\", "\\\\");
+
             if (serviceID.getText().isEmpty()
-                    || serviceNom.getText().isEmpty()
-                    || serviceType.getText().isEmpty()
-                    || servicePrix.getText().isEmpty()
-                    || serviceDuree.getText().isEmpty()
-                    || dateD == null
-                    || dateF == null
-                    || getData.pathService == null || getData.pathService == "") {
-                alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez complètez ces formulaires!");
-                alert.showAndWait();
+               || serviceNom.getText().isEmpty()
+               || serviceType.getText().isEmpty()
+               || servicePrix.getText().isEmpty()
+               || serviceDuree.getText().isEmpty()
+               || serviceDateDebut.getValue() == null
+               || serviceDateFin.getValue() == null
+               || uri == null || uri.isEmpty()) {
+
+               alert = new Alert(AlertType.ERROR);
+               alert.setTitle("Message d'erreur");
+               alert.setHeaderText(null);
+               alert.setContentText("S'il vous plaît, vous devez sélectionner un client et remplir ces champs!");
+               alert.showAndWait();
+
             } else {
+                
+                LocalDate debut = serviceDateDebut.getValue();
+                LocalDate fin = serviceDateFin.getValue();
+
+                String dateD = debut != null ? debut.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+                String dateF = fin != null ? fin.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+                
+                String sql = "UPDATE service SET serviceNom = ?, serviceType = ?, servicePrix = ?, serviceDuree = ?, serviceDateDebut = ?, serviceDateFin = ?, serviceImage = ?, NomUtilisateur = ? WHERE serviceID = ?";
+                connect = database.ConnectDb();
+                
                 alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Message de confirmation");
                 alert.setHeaderText(null);
-                alert.setContentText("Êtes-vous sur de vouloir modifier cette client " + serviceID.getText() + " ?");
+                alert.setContentText("Êtes-vous sûr de vouloir modifier ce service: " + serviceID.getText() + " ?");
                 Optional<ButtonType> option = alert.showAndWait();
 
-                if (option.get().equals(ButtonType.OK)) {
-                    statement = connect.createStatement();
-                    statement.executeUpdate(sql);
+                    if (option.isPresent() && option.get().equals(ButtonType.OK)) {
+                        
+                        PreparedStatement preparedStatement = connect.prepareStatement(sql);
+                        preparedStatement.setString(1, serviceNom.getText());
+                        preparedStatement.setString(2, serviceType.getText());
+                        preparedStatement.setString(3, servicePrix.getText());
+                        preparedStatement.setString(4, serviceDuree.getText());
+                        preparedStatement.setString(5, dateD);
+                        preparedStatement.setString(6, dateF);
+                        preparedStatement.setString(7, uri);
+                        preparedStatement.setString(8, getData.username);
+                        preparedStatement.setString(9, serviceID.getText());
+                        preparedStatement.executeUpdate();
 
-                    alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Service a été modifier avec succès!");
-                    alert.showAndWait();
+                        historique("Modification du service: " + serviceID.getText() + " réussie avec succès.", getData.username);
 
-                } else {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Message d'erreur");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Echec de modification du service!");
-                    alert.showAndWait();
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Message d'information");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Le service a été modifié avec succès!");
+                        alert.showAndWait();
+                    } else {
+                        historique("Échec de la modification du service: " + serviceID.getText() + " annulée.", getData.username);
+
+                        alert = new Alert(AlertType.WARNING);
+                        alert.setTitle("Message d'erreur");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Modification du service annulée!");
+                        alert.showAndWait();
+                    }
+
+              addServiceShowListData();
+              addServiceReset();
                 }
 
-                addServiceShowListData();
-                addServiceReset();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+             e.printStackTrace();
         }
+    
     }
+
+   
 
     //Supprimer un client (efa mandeha) 
     public void addServiceDelete() {
@@ -1394,7 +1786,7 @@ public class DashboardController implements Initializable {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
-                alert.setContentText("Tous les champs doivent être remplis!");
+                alert.setContentText("Vous devez sélectionner un service!");
                 alert.showAndWait();
                 return;
             }
@@ -1412,12 +1804,14 @@ public class DashboardController implements Initializable {
             Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
             confirmationAlert.setTitle("Message de confirmation");
             confirmationAlert.setHeaderText(null);
-            confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer ce client " + serviceID.getText() + " ?");
+            confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer cette service " + serviceID.getText() + " ?");
             Optional<ButtonType> option = confirmationAlert.showAndWait();
 
             if (option.isPresent() && option.get() == ButtonType.OK) {
                 statement = connect.createStatement();
                 statement.executeUpdate(sql);
+
+                historique("Suppression du service: " + serviceID.getText() + " réussi avec succès", getData.username);
 
                 alert = new Alert(AlertType.INFORMATION);
                 alert.setTitle("Message d'information");
@@ -1426,11 +1820,13 @@ public class DashboardController implements Initializable {
                 alert.showAndWait();
 
             } else {
-                alert = new Alert(Alert.AlertType.ERROR);
+                alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
-                alert.setContentText("Echec de suppression du service!");
+                alert.setContentText("Suppression du service anuler!");
                 alert.showAndWait();
+
+                historique("Echec! suppression du service: " + serviceID.getText() + " anuler", getData.username);
             }
 
             addServiceShowListData();
@@ -1716,8 +2112,8 @@ public class DashboardController implements Initializable {
                 sID = result.getInt("suivieID");
             }
 
-            // Obtenez la valeur maximale de suivieID dans la table facture
             prepare = connect.prepareStatement(checkSIDSql);
+            // Obtenez la valeur maximale de suivieID dans la table facture
             result = prepare.executeQuery();
 
             int checkID = 0;
@@ -1747,44 +2143,43 @@ public class DashboardController implements Initializable {
         }
     }
 
-    public ObservableList<suivieData> suivieOrderData() {
-
-//        suivieID();
-        ObservableList<suivieData> listData = FXCollections.observableArrayList();
-
-//        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + sID;
-        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + (getData.sID);
-
-        connect = database.ConnectDb();
-
-        try {
-            prepare = connect.prepareStatement(sql);
-            result = prepare.executeQuery();
-            suivieData suiData;
-
-            while (result.next()) {
-                suiData = new suivieData(
-                        result.getInt("ID"),
-                        result.getInt("suivieID"),
-                        result.getString("serviceNom"),
-                        result.getInt("factureQte"),
-                        result.getDouble("servicePrix")
-                );
-                listData.add(suiData);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return listData;
-    }
-
+//    public ObservableList<suivieData> suivieOrderData() {
+//
+////        suivieID();
+//        ObservableList<suivieData> listData = FXCollections.observableArrayList();
+//
+////        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + sID;
+//        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + (getData.sID);
+//
+//        connect = database.ConnectDb();
+//
+//        try {
+//            prepare = connect.prepareStatement(sql);
+//            result = prepare.executeQuery();
+//            suivieData suiData;
+//
+//            while (result.next()) {
+//                suiData = new suivieData(
+//                        result.getInt("ID"),
+//                        result.getInt("suivieID"),
+//                        result.getString("serviceNom"),
+//                        result.getInt("factureQte"),
+//                        result.getDouble("servicePrix")
+//                );
+//                listData.add(suiData);
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return listData;
+//    }
     private ObservableList<suivieData> menuOrderListData;
 
     //Afficher les listes des clients sur Tables view
     public void menuShowOrderListData() {
-        menuOrderListData = suivieOrderData();
+        menuOrderListData = suivieListeData("aaa");
 
         menuColServiceNom.setCellValueFactory(new PropertyValueFactory<>("serviceNom"));
         menuColServiceQuantite.setCellValueFactory(new PropertyValueFactory<>("factureQte"));
@@ -1812,13 +2207,13 @@ public class DashboardController implements Initializable {
         getID = suivieD.getID();
     }
 
-    private double totalP;
+    private static double totalP;
 
-    public void menuGetTotale() {
+    public double menuGetTotale(int id) {
 
         suivieID();
 
-        String total = "SELECT SUM(servicePrix) FROM suivieclient WHERE suivieID =" + sID;
+        String total = "SELECT SUM(servicePrix) FROM suivieclient WHERE suivieID =" + id;
 
         connect = database.ConnectDb();
 
@@ -1835,7 +2230,31 @@ public class DashboardController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return totalP;
+    }
 
+    public double getReste(int id) {
+
+        suivieID();
+
+        String total = "SELECT clientSoldeRestePayer FROM client WHERE clientID =" + id;
+
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(total);
+            result = prepare.executeQuery();
+
+            if (result.next()) {
+                totalP = result.getDouble("clientSoldeRestePayer");
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totalP;
     }
 
     private double soldeRestePayer;
@@ -1888,9 +2307,10 @@ public class DashboardController implements Initializable {
         return soldeRestePayer;
 
     }
+
     public double getDernierRestePayerSolde() {
 
-        String checkData = "SELECT suivieServiceRestePayer as reste FROM suivieclient WHERE ID=LAST_INSERT_ID() AND clientID = '" + getData.getMenuClientID + "'" ;
+        String checkData = "SELECT suivieServiceRestePayer as reste FROM suivieclient WHERE ID=(SELECT MAX(ID) FROM suivieclient WHERE 1) AND clientID = '" + getData.getMenuClientID + "'";
 
         connect = database.ConnectDb();
 
@@ -1938,31 +2358,64 @@ public class DashboardController implements Initializable {
 
     public void menuDisplayTotale() {
 
-        menuGetTotale();
+        menuGetTotale(getSid());
         menuTotale.setText(totalP + " Ar");
 
     }
 
     private double mttpayer;
     private double reste;
+//    Test Nombre
 
-    public void menuSeulePayer() {
+    public boolean isDouble(String s) {
+        try {
+            if (s.isEmpty()) {
+                return true;
+            } else {
+                Double.parseDouble(s);
+                return true;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
-        menuGetTotale();
-        if (menuMonttantPayerTxt.getText().isEmpty() || totalP == 0) {
+    public void saisieMontantR() {
+
+        menuGetTotale(getSid());
+        if (!isDouble(clientsoldePayerText.getText())) {
 
             Alert alert;
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Message d'information");
             alert.setHeaderText(null);
-            alert.setContentText("Vous devez complètez le monttant que vous voulez payer!");
+            alert.setContentText("Le type de donnée doit etre numerique!");
             alert.showAndWait();
+        } else {
+            mttpayer = Double.parseDouble(clientsoldePayerText.getText());
 
+            double soldeRestePayer1 = Double.parseDouble(clientSuivieRestePayerTxt.getText()) - Double.parseDouble(clientsoldePayerText.getText());
+            clientsuivieReste.setText(String.valueOf(soldeRestePayer1));
+        }
+
+    }
+
+    public void saisieMontant() {
+
+        menuGetTotale(getSid());
+        if (!isDouble(menuMonttantPayerTxt.getText())) {
+
+            Alert alert;
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'information");
+            alert.setHeaderText(null);
+            alert.setContentText("Le type de donnée doit etre numerique!");
+            alert.showAndWait();
         } else {
             mttpayer = Double.parseDouble(menuMonttantPayerTxt.getText());
 
             reste = totalP - mttpayer;
-            menuReste.setText(reste + " Ar");
+            menuReste.setText(String.valueOf(reste));
         }
 
     }
@@ -1975,6 +2428,7 @@ public class DashboardController implements Initializable {
         Alert alert;
 
         getDejaPayerSolde();
+//        saisieMontant();
         if (totalP == 0) {
 
             alert = new Alert(Alert.AlertType.ERROR);
@@ -1982,14 +2436,19 @@ public class DashboardController implements Initializable {
             alert.setHeaderText(null);
             alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord ajouter un service!");
             alert.showAndWait();
-            System.out.println(" Suivie IDn: " + sID);
+
+        } else if (mttpayer == 0) {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord remplir ce que vous voulez payer sur seule à payer!");
+            alert.showAndWait();
 
         } else {
-            System.out.println(" Suivie IDn: " + sID);
             Date factureDate = new Date();
             java.sql.Date dateFac = new java.sql.Date(factureDate.getTime());
 
-            menuGetTotale();
+            menuGetTotale(getSid());
             String inserPay = "INSERT INTO facture (suivieID, factureDate, factureTotale, NomUtilisateur)"
                     + "VALUES(?,?,?,?)";
 
@@ -2005,15 +2464,21 @@ public class DashboardController implements Initializable {
 
                 if (option.get().equals(ButtonType.OK)) {
 
-                    menuGetTotale();
+                    menuGetTotale(getSid());
                     prepare = connect.prepareStatement(inserPay);
 
+//                    if (getData.clickAdd) {
+//                        prepare.setString(1, String.valueOf(getSid()));
+//                    } else {
+//                        prepare.setString(1, String.valueOf(getSid()+ 1));
+//                        getData.sID = getSid()+1;
+//                    }
                     prepare.setString(1, String.valueOf(getData.sID));
 
                     prepare.setString(2, String.valueOf(dateFac));
 
                     double total = this.totalP - this.reste;
-                    System.out.println(total + "_______" + reste);
+//                    System.out.println(total + "_______" + reste);
                     prepare.setString(3, String.valueOf(total));
                     prepare.setString(4, getData.username);
                     prepare.executeUpdate();
@@ -2026,19 +2491,26 @@ public class DashboardController implements Initializable {
                     String updateSolde = "UPDATE client SET clientSoldeRestePayer ='" + getRestePayerSolde() + "', clientSoldeDejaPayer ='" + getDejaPayerSolde() + "' WHERE clientID = '" + getData.getMenuClientID + "'";
                     statement.executeUpdate(updateSolde);
 
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
+                    historique("Payement du service avec client: " + getData.getMenuClientID + " réussi avec succès", getData.username);
+
+                    alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Message de confirmation");
                     alert.setHeaderText(null);
-                    alert.setContentText("Payement avec succès!");
-                    alert.showAndWait();
+                    alert.setContentText("Payement réussi!\n Voulez-vous faire l'impression?");
+                    Optional<ButtonType> optionC = alert.showAndWait();
 
-                    menuShowOrderListData();
-                    menuRestart();
+                    if (optionC.get().equals(ButtonType.OK)) {
 
-                    menu_tableView.setItems(null);
-                    getData.clickAdd = false;
+                        imprimer2();
+
+                    } else {
+
+                    }
 
                 } else {
+
+                    historique("Payement du service avec client: " + getData.getMenuClientID + " anuler", getData.username);
+
                     alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
@@ -2058,6 +2530,7 @@ public class DashboardController implements Initializable {
         Alert alert;
 
 //        getRestePayerSolde();
+//        saisieMontant();
         suivieID();
         if (totalP == 0) {
 
@@ -2072,7 +2545,7 @@ public class DashboardController implements Initializable {
             Date factureDate = new Date();
             java.sql.Date dateCompte = new java.sql.Date(factureDate.getTime());
 
-            menuGetTotale();
+            menuGetTotale(getSid());
             String inserPay = "INSERT INTO compte (suivieID, compteDate, compteTotale, NomUtilisateur)"
                     + "VALUES(?,?,?,?)";
 
@@ -2089,7 +2562,7 @@ public class DashboardController implements Initializable {
                 if (option.get().equals(ButtonType.OK)) {
 
                     suivieID();
-                    menuGetTotale();
+                    menuGetTotale(getSid());
 
                     prepare = connect.prepareStatement(inserPay);
 
@@ -2107,6 +2580,8 @@ public class DashboardController implements Initializable {
                     String updateSolde = "UPDATE client SET clientSoldeRestePayer = '" + (getRestePayerSolde() + totalP) + "'";
                     statement.executeUpdate(updateSolde);
 
+                    historique("Ajout au compte par un service avec client: " + getData.getMenuClientID + " réussi avec succès", getData.username);
+
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
@@ -2119,10 +2594,13 @@ public class DashboardController implements Initializable {
                     menu_tableView.setItems(null);
                     getData.clickAdd = false;
                 } else {
+
+                    historique("Ajout au compte par un service avec client: " + getData.getMenuClientID + " anuler", getData.username);
+
                     alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
-                    alert.setContentText("Payement annuler!");
+                    alert.setContentText("Ajout au compte annuler!");
                     alert.showAndWait();
                 }
 
@@ -2133,15 +2611,18 @@ public class DashboardController implements Initializable {
 
     }
 
+    //Misy zavatra tokony amboarina
     public void menuRemoveBtn() {
 
         Alert alert;
+        menuSelectOrder();
+        
         if (getID == 0) {
 
             alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Echec! \n Vous devez séléctionner ce que vous voulez supprimer");
+            alert.setContentText(" Vous devez séléctionner ce que vous voulez supprimer");
             alert.showAndWait();
 
         } else {
@@ -2157,15 +2638,26 @@ public class DashboardController implements Initializable {
                 Optional<ButtonType> option = alert.showAndWait();
 
                 if (option.get().equals(ButtonType.CANCEL)) {
+
+                    historique("Suppression de faire un service avec client: " + getData.getMenuClientID + " anuler", getData.username);
+
                     alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
-                    alert.setContentText("Suppression annuler!");
+                    alert.setContentText("Suppression anuler!");
                     alert.showAndWait();
 
                 } else {
                     prepare = connect.prepareStatement(deleteData);
                     prepare.executeUpdate();
+
+                    historique("Supression de faire un service avec client: " + getData.getMenuClientID + " réussi avec succès", getData.username);
+
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Supression réussi avec succès!");
+                    alert.showAndWait();
 
                     menuShowOrderListData();
                 }
@@ -2364,10 +2856,15 @@ public class DashboardController implements Initializable {
      * ********************************************************************************
      */
     //Section suivie
-    public ObservableList<suivieData> suivieListeData() {
+    public ObservableList<suivieData> suivieListeData(String s) {
 
         ObservableList<suivieData> listData = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM suivieclient";
+        String sql = "";
+        if (s.equals("")) {
+            sql = "SELECT * FROM suivieclient";
+        } else {
+            sql = "SELECT * FROM suivieclient WHERE suivieID = '" + getSid() + "'";
+        }
 
         connect = database.ConnectDb();
 
@@ -2380,7 +2877,7 @@ public class DashboardController implements Initializable {
                 suivieD = new suivieData(
                         result.getInt("ID"),
                         result.getInt("suivieID"),
-                        result.getDate("suivieDate"),
+                        result.getTimestamp("suivieDate"),
                         result.getInt("clientID"),
                         result.getString("clientNom"),
                         result.getString("serviceNom"),
@@ -2404,9 +2901,9 @@ public class DashboardController implements Initializable {
     private ObservableList<suivieData> suivieListData;
 
     //Afficher les listes des clients sur Tables view
-    public void suivieClientShowListData() {
+    public ObservableList<suivieData> suivieClientShowListData() {
 
-        suivieListData = suivieListeData();
+        suivieListData = suivieListeData("");
 
         suivieClientDateCol.setCellValueFactory(new PropertyValueFactory<>("suivieDate"));
         suivieClientIDCol.setCellValueFactory(new PropertyValueFactory<>("clientID"));
@@ -2420,6 +2917,7 @@ public class DashboardController implements Initializable {
         suivieServiceNomUtlisateurCol.setCellValueFactory(new PropertyValueFactory<>("NomUtilisateur"));
 
         suivieTableView1.setItems(suivieListData);
+        return suivieListData;
     }
 
     //Selection service via Table View
@@ -2634,6 +3132,8 @@ public class DashboardController implements Initializable {
         clientSuivieDejaPayerTxt.setText("");
         clientSuivieRestePayerTxt.setText("");
         clientSuivieRechercheTxt.setText("");
+        clientsoldePayerText.setText("");
+        clientsuivieReste.setText("");
     }
 
     public void clientsuivieSearch() {
@@ -2701,9 +3201,66 @@ public class DashboardController implements Initializable {
 //        }
 //        return soldeTotale;
 //    }
-//    
+    
+    
+    //Pour le bouton de confirmation sur séléction au suivie client 
+    public void suivieClienttConfirmerBtn() {
+
+        String sqlselectClient = "SELECT * FROM client WHERE clientID = ? AND clientNom = ? AND clientSoldeDejaPayer = ? AND clientSoldeRestePayer = ?";
+        connect = database.ConnectDb();
+
+        try {
+            Alert alert;
+
+            if (clientSuivieIDTxt.getText().isEmpty()
+                    || clientSuivieNomTxt.getText().isEmpty()
+                    || clientSuivieDejaPayerTxt.getText().isEmpty()
+                    || clientSuivieRestePayerTxt.getText().isEmpty()) {
+
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez sélectionner un client!");
+                alert.showAndWait();
+
+            } else {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sûr " + clientSuivieNomTxt.getText() + " ?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.isPresent() && option.get().equals(ButtonType.CANCEL)) {
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Annuler!");
+                    alert.showAndWait();
+
+                } else {
+                    prepare = connect.prepareStatement(sqlselectClient);
+                    prepare.setString(1, clientSuivieIDTxt.getText());
+                    prepare.setString(2, clientSuivieNomTxt.getText());
+                    prepare.setString(3, clientSuivieDejaPayerTxt.getText());
+                    prepare.setString(4, clientSuivieRestePayerTxt.getText());
+                    result = prepare.executeQuery();
+
+                    getData.getMenuClientID = Integer.parseInt(clientSuivieIDTxt.getText());
+                    getData.getMenuClientNom = clientSuivieNomTxt.getText();
+
+                    menuServiceClientShowListData();
+                    menuServiceClientSelect();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    //Pour le bouton de validation du client    
     public void validerCompte() {
-//                   CardServiceController cardS = new CardServiceController();
+//        CardServiceController cardS = new CardServiceController();
         DashboardController dashForm = new DashboardController(); // Utiliser la même instance de DashboardController
 //        dashForm.suivieID();
 
@@ -2711,6 +3268,8 @@ public class DashboardController implements Initializable {
         double soldeTotaleTotale = (totaleP + getTolaleSolde());
         double soldedejaPayer = Double.parseDouble(clientsoldePayerText.getText());
         double soldeRestePayer1 = Double.parseDouble(clientSuivieRestePayerTxt.getText()) - Double.parseDouble(clientsoldePayerText.getText());
+
+//        clientsuivieReste.setText(String.valueOf(soldeRestePayer1));
         double totalSolde = getTolaleSolde();
         Alert alert;
         try {
@@ -2744,7 +3303,7 @@ public class DashboardController implements Initializable {
                 prepare.setDate(2, currentDate);
                 prepare.setString(3, String.valueOf(getData.getMenuClientID));
                 prepare.setString(4, getData.getMenuClientNom);
-                prepare.setString(5, "Reglement");
+                prepare.setString(5, "Reglement de compte");
                 prepare.setInt(6, 0);
 
                 prepare.setDouble(7, totaleP);
@@ -2773,6 +3332,25 @@ public class DashboardController implements Initializable {
 
                 } else {
                     prepare.executeUpdate();
+
+                    alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Message de confirmation");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Règlement réussi!\n Voulez-vous faire l'impression?");
+                    Optional<ButtonType> optionC = alert.showAndWait();
+
+                    if (optionC.get().equals(ButtonType.OK)) {
+
+                        try {
+                            imprimer3();
+                        } catch (JRException ex) {
+                            Logger.getLogger(DashboardController.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+
+                    } else {
+
+                    }
+
                     statement = connect.createStatement();
                     String updateSolde = "UPDATE client SET clientSoldeRestePayer ='" + getDernierRestePayerSolde() + "', clientSoldeDejaPayer ='" + getDejaPayerSolde() + "' WHERE clientID = '" + getData.getMenuClientID + "'";
                     statement.executeUpdate(updateSolde);
@@ -2782,11 +3360,8 @@ public class DashboardController implements Initializable {
 //                    dashForm.menuShowOrderListData();
 
                     getData.soldeTotaleTotale = soldeTotaleTotale;
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Ajout réussi !\nVous devez cliquer sur Actualiser avant d'ajouter un autre client sur un service");
-                    alert.showAndWait();
+
+                    clientsuivieReset();
 
                 }
             }
@@ -2795,6 +3370,7 @@ public class DashboardController implements Initializable {
         }
 
     }
+    
 
     public double getTolaleSolde() {
 
@@ -2820,6 +3396,376 @@ public class DashboardController implements Initializable {
         return soldeTotale;
     }
 
+    public void suivieSeulePayer() {
+
+        menuGetTotale(getSid());
+        if (menuMonttantPayerTxt.getText().isEmpty() || totalP == 0) {
+
+            Alert alert;
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'information");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous devez complètez le monttant que vous voulez payer!");
+            alert.showAndWait();
+
+        } else {
+            mttpayer = Double.parseDouble(menuMonttantPayerTxt.getText());
+
+            reste = totalP - mttpayer;
+            menuReste.setText(reste + " Ar");
+        }
+
+    }
+    
+
+    public void imprimer2() throws JRException {
+
+        int idSuivie = getSid();
+        JasperDesign jasdi = JRXmlLoader.load("C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Interface\\jire.jrxml");
+        String sql = "SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE clientID = '" + getData.getMenuClientID + "' AND suivieID = '" + idSuivie + "'";
+        JRDesignQuery newQuery = new JRDesignQuery();
+        newQuery.setText(sql);
+
+        jasdi.setQuery(newQuery);
+
+        HashMap<String, Object> para = new HashMap<>();
+
+        para.put("idClient", getData.getMenuClientID);
+        para.put("idSuivie", idSuivie);
+        para.put("mttTotal", menuGetTotale(idSuivie));
+        para.put("dejaPayer", Double.parseDouble(menuMonttantPayerTxt.getText()));
+        para.put("reste", Double.parseDouble(menuReste.getText()));
+        para.put("nomResponsable", getData.username);
+
+        JasperReport js = JasperCompileManager.compileReport(jasdi);
+        JasperPrint jp = JasperFillManager.fillReport(js, para, connect);
+
+        JasperViewer.viewReport(jp, false);
+
+        menuShowOrderListData();
+        menuRestart();
+
+        menu_tableView.setItems(null);
+        getData.clickAdd = false;
+    }
+    
+    
+    public void imprimer3() throws JRException {
+
+        int idSuivie = getSid();
+        int idClient = getData.getMenuClientID;
+        JasperDesign jasdi = JRXmlLoader.load("C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Interface\\jire.jrxml");
+        String sql = "SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE clientID = '" + idClient + "' AND suivieID = '" + idSuivie + "'";
+        JRDesignQuery newQuery = new JRDesignQuery();
+        newQuery.setText(sql);
+
+        jasdi.setQuery(newQuery);
+
+        HashMap<String, Object> para = new HashMap<>();
+
+        para.put("idClient", idClient);
+        para.put("idSuivie", idSuivie);
+        para.put("mttTotal", getReste(idClient));
+        para.put("dejaPayer", Double.parseDouble(clientsoldePayerText.getText()));
+        para.put("reste", Double.parseDouble(clientsuivieReste.getText()));
+        para.put("nomResponsable", getData.username);
+
+        JasperReport js = JasperCompileManager.compileReport(jasdi);
+        JasperPrint jp = JasperFillManager.fillReport(js, para, connect);
+
+        JasperViewer.viewReport(jp, false);
+
+        menuShowOrderListData();
+        menuRestart();
+
+        menu_tableView.setItems(null);
+        getData.clickAdd = false;
+    }
+
+    
+    public void imprimer() {
+
+        Alert alert;
+        getDejaPayerSolde();
+//        saisieMontant();
+        try {
+            if (totalP == 0) {
+
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord ajouter un service!");
+                alert.showAndWait();
+
+            } else if (reste == 0) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord remplir ce que vous voulez payer sur seule à payer!");
+                alert.showAndWait();
+
+                JasperDesign jasdi = JRXmlLoader.load("C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Interface\\jire.jrxml");
+                String sql = "SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE clientID = '" + getData.getMenuClientID + "' AND suivieID = '" + getSid() + "'";
+                JRDesignQuery newQuery = new JRDesignQuery();
+                newQuery.setText(sql);
+
+                jasdi.setQuery(newQuery);
+
+                HashMap<String, Object> para = new HashMap<>();
+                para.put("idClient", getData.getMenuClientID);
+                para.put("idSuivie", getSid());
+                para.put("mttTotal", menuGetTotale(getSid()));
+                para.put("reste", Double.parseDouble(menuReste.getText()));
+                JasperReport js = JasperCompileManager.compileReport(jasdi);
+                JasperPrint jp = JasperFillManager.fillReport(js, para, connect);
+
+                JasperViewer.viewReport(jp, false);
+
+                menuRestart();
+                menu_tableView.setItems(null);
+            }
+
+        } catch (JRException ex) {
+            System.out.println("Error");
+            ex.printStackTrace();
+        }
+    }
+
+    /**
+     * ********************************************************************************
+     * ********************************************************************************
+     * *********************************SEPARATION*************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     */
+    
+    //Section historique
+    public void historique(String nomHistirique, String nomUtilisateur) throws SQLException {
+
+        String sql = "INSERT INTO historique (dateHeur, nomHistirique, NomUtilisateur) VALUES (?, ?, ?)";
+
+        // Obtenez la connexion à la base de données
+        Connection connect = database.ConnectDb();
+
+        // Utilisez try-with-resources pour garantir la fermeture des ressources
+        try (PreparedStatement statement = connect.prepareStatement(sql)) {
+
+            // Définissez les paramètres
+            statement.setTimestamp(1, new java.sql.Timestamp(System.currentTimeMillis())); // Date et heure actuelles
+            statement.setString(2, nomHistirique);
+            statement.setString(3, nomUtilisateur);
+
+            // Exécutez la mise à jour
+            int rowsInserted = statement.executeUpdate(); // Utilisez executeUpdate sans paramètre
+            if (rowsInserted > 0) {
+                System.out.println("Un nouveau record a été inséré avec succès !");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw e; // Relance l'exception pour que l'appelant puisse la gérer
+        } finally {
+            // Fermez la connexion si elle n'est pas fermée par try-with-resources
+            if (connect != null) {
+                try {
+                    connect.close();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public ObservableList<historiqueData> historiqueSuivieListeData() {
+
+        ObservableList<historiqueData> listData = FXCollections.observableArrayList();
+        String sql = "SELECT * FROM historique";
+
+        connect = database.ConnectDb();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+            historiqueData hiD;
+
+            while (result.next()) {
+                hiD = new historiqueData(
+                        result.getInt("idH"),
+                        result.getTimestamp("dateHeur"),
+                        result.getString("nomHistirique"),
+                        result.getString("NomUtilisateur")
+                );
+                listData.add(hiD);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return listData;
+    }
+
+    private ObservableList<historiqueData> historiquesuivieListData;
+
+    //Afficher les listes de l'historique sur Tables view
+    public void historiqueShowListData() {
+
+        historiquesuivieListData = historiqueSuivieListeData();
+
+        historiqueDateCol.setCellValueFactory(new PropertyValueFactory<>("dateHeur"));
+        historiqueActiviteCol.setCellValueFactory(new PropertyValueFactory<>("nomHistirique"));
+        historiqueNomUtilisateurCol.setCellValueFactory(new PropertyValueFactory<>("NomUtilisateur"));
+
+        historiqueTableview.setItems(historiquesuivieListData);
+    }
+    
+    public void historiqueSearch() {
+
+        FilteredList<historiqueData> filter = new FilteredList<>(historiquesuivieListData, e -> true);
+
+        historiqueTextFieldRecherche.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            filter.setPredicate(predicateSuivieData -> {
+
+                if (newValue == null || newValue.isEmpty()) {
+
+                    return true;
+                }
+
+                String searchKey = newValue.toLowerCase();
+
+                if (predicateSuivieData.getDateHeur().toString().contains(searchKey)) {
+
+                    return true;
+
+                } else if (predicateSuivieData.getNomHistirique().toLowerCase().contains(searchKey)) {
+
+                    return true;
+                
+                } else if (predicateSuivieData.getNomUtilisateur().toLowerCase().contains(searchKey)) {
+
+                    return true;    
+
+                } else {
+                    return false;
+                }
+            });
+
+        });
+
+        SortedList<historiqueData> sortList = new SortedList<>(filter);
+
+        sortList.comparatorProperty().bind(historiqueTableview.comparatorProperty());
+        historiqueTableview.setItems(sortList);
+    }
+    
+    private Integer getIDH;
+    
+    private String getNomH;
+    
+
+    public void menuSelectOrderHistorique() {
+
+        historiqueData historiqueD = historiqueTableview.getSelectionModel().getSelectedItem();
+        int num = historiqueTableview.getSelectionModel().getSelectedIndex();
+
+        if ((num - 1) < -1) {
+            return;
+        }
+        
+        getIDH = historiqueD.getIdH(); // Assurez-vous que clientID est un TextField ou un contrôle similaire
+        getNomH = historiqueD.getNomHistirique();
+ 
+    }
+    
+    public void effacerHistorique() {
+        
+        Alert alert;
+        menuSelectOrderHistorique();
+
+        if (getIDH == 0) {
+            alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous devez sélectionner ce que vous voulez supprimer");
+            alert.showAndWait();
+        } else {
+
+            String deleteData = "DELETE FROM historique WHERE idH = ?";
+            connect = database.ConnectDb();
+
+            try {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sur de vouloir le supprimer?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.CANCEL)) {
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Suppression annulée!");
+                    alert.showAndWait();
+                } else {
+                    prepare = connect.prepareStatement(deleteData);
+                    prepare.setInt(1, getIDH);
+                    prepare.executeUpdate();
+
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Suppression réussie avec succès!");
+                    alert.showAndWait();
+
+                    historiqueShowListData();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    
+    public void effacerHistoriqueTout() {
+        Alert alert;
+        
+            String deleteData = "DELETE FROM historique";
+            connect = database.ConnectDb();
+
+            try {
+                alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sur de vouloir tout suprimer?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.CANCEL)) {
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Suppression annulée!");
+                    alert.showAndWait();
+                } else {
+                    prepare = connect.prepareStatement(deleteData);
+                    prepare.executeUpdate();
+
+                    alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Suppression réussie avec succès!");
+                    alert.showAndWait();
+
+                    historiqueShowListData();
+                }
+         } catch (Exception e) {
+            e.printStackTrace();
+         }
+    }
+ 
+
+    
+
     //Relier les fenêtres
     public void SwitchForm(ActionEvent event) {
 
@@ -2830,9 +3776,7 @@ public class DashboardController implements Initializable {
             suivieForm.setVisible(false);
             factureForm.setVisible(false);
             historiqueForm.setVisible(false);
-            
-            
-            
+
             acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
@@ -2855,7 +3799,7 @@ public class DashboardController implements Initializable {
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
 
-            //Pour les combox dans clients
+            //Pour initializez les combox dans clients
             addClientgenreList();
             addClientetablissementList();
             addClientniveauList();
@@ -2907,7 +3851,7 @@ public class DashboardController implements Initializable {
             menuShowOrderListData();
             menuRestart();
 
-            suivieListeData();
+            suivieListeData("");
             menuDisplayTotale();
             menuSelectOrder();
 
@@ -2938,19 +3882,31 @@ public class DashboardController implements Initializable {
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
 
         } else if (event.getSource() == historiqueBtn) {
-            acceuilForm.setVisible(false);
-            clientForm.setVisible(false);
-            serviceForm.setVisible(false);
-            suivieForm.setVisible(false);
-            factureForm.setVisible(false);
-            historiqueForm.setVisible(true);
+            if (getData.username.equals("kadafi")) {
+                acceuilForm.setVisible(false);
+                clientForm.setVisible(false);
+                serviceForm.setVisible(false);
+                suivieForm.setVisible(false);
+                factureForm.setVisible(false);
+                historiqueForm.setVisible(true);
 
-            historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
-            clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
-            acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+                historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
+                clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+                serviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+                makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+                suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+                acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+
+                historiqueShowListData();
+            }else{
+                Alert alert;
+                
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Vous n'avez pas l'accès à cette opération!");
+                alert.showAndWait();
+            }
         }
     }
 
@@ -3030,7 +3986,7 @@ public class DashboardController implements Initializable {
         //Pour la suivie des clients
         menuShowOrderListData();
         suivieClientShowListData();
-        suivieListeData();
+        suivieListeData("");
         menuDisplayTotale();
         menuSelectOrder();
         menuRestart();
@@ -3053,7 +4009,7 @@ public class DashboardController implements Initializable {
         //Pour menu affiche service
         menuDisplayCard();
 
-        //Pour les combox dans clients
+        //Pour les combox dans clients  
         addClientgenreList();
         addClientetablissementList();
         addClientniveauList();
@@ -3062,11 +4018,8 @@ public class DashboardController implements Initializable {
 
         clientSuivieShowListData();
 
+        historiqueShowListData();
+
     }
-    public void historique(int a, int b){
-        String sql = "";
-        
-        int s = a+b;
-        System.out.println(s);
-    }
+
 }

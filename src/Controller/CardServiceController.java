@@ -164,7 +164,7 @@ public class CardServiceController implements Initializable {
 
             } else {
                 // Récupérer la date actuelle
-                java.sql.Date currentDate = new java.sql.Date(System.currentTimeMillis());
+                java.sql.Timestamp currentDate = new java.sql.Timestamp(System.currentTimeMillis());
 
                 // Insérer les données dans la table suivieclient
                 String insertDataQuery = "INSERT INTO suivieclient (suivieID, suivieDate, clientID, clientNom, serviceNom, factureQte, "
@@ -182,7 +182,7 @@ public class CardServiceController implements Initializable {
                     getData.sID = dashForm.getSid()+1;
                 }
 
-                prepare.setDate(2, currentDate);
+                prepare.setTimestamp(2, currentDate);
                 prepare.setString(3, String.valueOf(getData.getMenuClientID));
                 prepare.setString(4, getData.getMenuClientNom);
                 prepare.setString(5, menuServiceNom.getText());
@@ -218,7 +218,9 @@ public class CardServiceController implements Initializable {
                 } else {
                     prepare.executeUpdate();
                     getData.clickAdd = true;
-//                    dashForm.menuShowOrderListData();
+//                  dashForm.menuShowOrderListData();
+
+                    dashForm.historique("Faire un nouveau service avec client: " + getData.getMenuClientID + " confirmé", getData.username);
                     
                     getData.soldeTotaleTotale = soldeTotaleTotale;
                     alert = new Alert(Alert.AlertType.INFORMATION);
@@ -238,7 +240,6 @@ public class CardServiceController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        //Comment faire pour charger deux fichier fxml dans un même controller et traitrer aficher leurs données sans provoque l'erreur "NullPointException"
         //Pour la quantité des services.
         SetQuantity();
 

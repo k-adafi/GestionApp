@@ -14,6 +14,8 @@ package jirehstudentsapp;
 public class getData {
     public static Integer sID;
     
+    public static Integer sIDH;
+    
     public static String username;
     public static String path;
     
@@ -22,6 +24,8 @@ public class getData {
     public static Integer getMenuClientID;
     
     public static String getMenuClientNom;
+    
+    
     public static boolean clickAdd = false;
     
     //public static Double soldePayer;

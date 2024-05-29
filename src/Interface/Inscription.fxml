@@ -34,7 +34,10 @@
                         <Font name="System Bold" size="12.0" />
                      </font>
                   </Label>
-                  <Button fx:id="OpenConnect" layoutX="70.0" layoutY="345.0" mnemonicParsing="false" onAction="#OpenConnect" prefHeight="30.0" prefWidth="150.0" styleClass="inscBtn" stylesheets="@../Design/loginDesign.css" text="Se connecter" />
+                  <Button fx:id="OpenConnect" layoutX="70.0" layoutY="345.0" mnemonicParsing="false" onAction="#OpenConnect" prefHeight="30.0" prefWidth="150.0" styleClass="inscBtn" stylesheets="@../Design/loginDesign.css" text="Se connecter">
+                     <graphic>
+                        <FontAwesomeIconView glyphName="SIGN_IN" size="1.5em" />
+                     </graphic></Button>
                </children>
             </AnchorPane>
             <AnchorPane layoutX="300.0" layoutY="1.0" prefHeight="400.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -51,7 +54,10 @@
                   </Label>
                   <TextField fx:id="email" layoutX="42.0" layoutY="193.0" prefHeight="30.0" prefWidth="220.0" promptText="Email" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
                   <PasswordField fx:id="password" layoutX="41.0" layoutY="240.0" prefHeight="30.0" prefWidth="220.0" promptText="Mot de passe" styleClass="text-field" stylesheets="@../Design/loginDesign.css" />
-                  <Button fx:id="addAdminBtn" layoutX="42.0" layoutY="294.0" mnemonicParsing="false" onAction="#addAdminAdd" prefHeight="40.0" prefWidth="220.0" styleClass="login-btn" stylesheets="@../Design/loginDesign.css" text="Inscription" textFill="WHITE" />
+                  <Button fx:id="addAdminBtn" layoutX="42.0" layoutY="294.0" mnemonicParsing="false" onAction="#addAdminAdd" prefHeight="40.0" prefWidth="220.0" styleClass="login-btn" stylesheets="@../Design/loginDesign.css" text="Inscription" textFill="WHITE">
+                     <graphic>
+                        <FontAwesomeIconView fill="WHITE" glyphName="USER_PLUS" size="2em" />
+                     </graphic></Button>
                   <Button fx:id="close" layoutX="256.0" mnemonicParsing="false" onAction="#close" prefHeight="24.0" prefWidth="48.0" styleClass="close" stylesheets="@../Design/loginDesign.css" textFill="#329302" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <graphic>
                         <FontAwesomeIconView glyphName="CLOSE" size="1.2em" />
