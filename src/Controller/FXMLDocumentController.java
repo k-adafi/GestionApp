@@ -27,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -103,80 +104,7 @@ public class FXMLDocumentController implements Initializable {
     
     DashboardController dashForm = new DashboardController();
     
-    /*public void ModifPassord() {
-
-        String sql = "UPDATE admin SET MotDePasse = '"
-                + password11.getText() + "' WHERE NomUtilisateur = '"
-                + username1.getText() + "' AND Email = '"
-                + username11.getText() + "'";
-
-        connect = database.ConnectDb();
-
-        try {
-            Alert alert;
-            if (username1.getText().isEmpty()
-                    || username11.getText().isEmpty()
-                    || password11.getText().isEmpty())
-                     {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez complètez ces formulaires!");
-                alert.showAndWait();
-                
-            } else {
- 
-                String check = "SELECT NomUtilisateur FROM admin WHERE NomUtilisateur = '"
-                        +username1.getText()+"'";
-                
-                statement = connect.createStatement();
-                result = statement.executeQuery(check);
-                
-                if(!result.next()){
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Message d'erreur");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Cette administrateur: " + username1.getText() + " n'existe pas!");
-                    alert.showAndWait();
-                           
-                }else {
-                
-                    alert = new Alert(Alert.AlertType.CONFIRMATION);
-                    alert.setTitle("Message de confirmation");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Êtes-vous sur de vouloir modifier votre mot de passe?");
-                    Optional<ButtonType> option = alert.showAndWait();
-
-                    if (option.get().equals(ButtonType.OK)) {
-                        statement = connect.createStatement();
-                        statement.executeUpdate(sql);
-
-                        alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Message d'information");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Mot de passe a été modifier avec succès!");
-                        alert.showAndWait();
-
-                    }else{
-                        alert = new Alert(Alert.AlertType.ERROR);
-                        alert.setTitle("Message d'erreur");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Echec de modification du mot de passe!");
-                        alert.showAndWait();
-                    }
-
-                    username1.setText("");
-                    username11.setText("");
-                    password11.setText("");
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    } */
-    
-    
+    //Pour modification de mot de passe
     public void ModifPassord() {
         
         String updateSql = "UPDATE admin SET MotDePasse = ? WHERE NomUtilisateur = ? AND Email = ?";
@@ -189,75 +117,85 @@ public class FXMLDocumentController implements Initializable {
 
             Alert alert;
 
+            // Vérifiez si l'utilisateur existe
+            checkStatement.setString(1, username1.getText());
+            ResultSet result = checkStatement.executeQuery();
+            
             if (username1.getText().isEmpty() || username11.getText().isEmpty() || password11.getText().isEmpty()) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
                 alert.setContentText("S'il vous plaît, vous devez compléter ces formulaires!");
                 alert.showAndWait();
-                return;
-            }
-
-            // Vérifiez si l'utilisateur existe
-            checkStatement.setString(1, username1.getText());
-            ResultSet result = checkStatement.executeQuery();
-            if (!result.next()) {
+                return; 
+                
+             }else if (!result.next()) {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
                 alert.setContentText("Cet administrateur: " + username1.getText() + " n'existe pas!");
                 alert.showAndWait();
                 return;
-            }
-
-            // Demandez la confirmation avant de mettre à jour le mot de passe
-            alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Message de confirmation");
-            alert.setHeaderText(null);
-            alert.setContentText("Êtes-vous sûr de vouloir modifier votre mot de passe?");
-            Optional<ButtonType> option = alert.showAndWait();
-
-            if (option.isPresent() && option.get() == ButtonType.OK) {
-                // Mettez à jour le mot de passe
-                updateStatement.setString(1, password11.getText());
-                updateStatement.setString(2, username1.getText());
-                updateStatement.setString(3, username11.getText());
-                int rowsUpdated = updateStatement.executeUpdate();
-
-                if (rowsUpdated > 0) {
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Le mot de passe a été modifié avec succès!");
-                    alert.showAndWait();
-                } else {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Message d'erreur");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Échec de la modification du mot de passe!");
-                    alert.showAndWait();
-                }
-            } else {
+          
+            }else if(password11.getText().length() < 8){
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
-                alert.setContentText("Échec de la modification du mot de passe!");
+                alert.setContentText("S'il vous plaît, le mot de passe doit être minimum à 8 caractères!");
                 alert.showAndWait();
+                
+            }else{
+              // Demandez la confirmation avant de mettre à jour le mot de passe
+             alert = new Alert(Alert.AlertType.CONFIRMATION);
+             alert.setTitle("Message de confirmation");
+             alert.setHeaderText(null);
+             alert.setContentText("Êtes-vous sûr de vouloir modifier votre mot de passe?");
+             Optional<ButtonType> option = alert.showAndWait();
+
+             if (option.isPresent() && option.get() == ButtonType.OK) {
+                 // Mettez à jour le mot de passe
+                 updateStatement.setString(1, password11.getText());
+                 updateStatement.setString(2, username1.getText());
+                 updateStatement.setString(3, username11.getText());
+                 int rowsUpdated = updateStatement.executeUpdate();
+
+                 if (rowsUpdated > 0) {
+
+                     dashForm.historique("Modification de mot de passe de l'utilisateur réussi.", username1.getText());
+
+                     alert = new Alert(Alert.AlertType.INFORMATION);
+                     alert.setTitle("Message d'information");
+                     alert.setHeaderText(null);
+                     alert.setContentText("Le mot de passe a été modifié avec succès!");
+                     alert.showAndWait();
+                 }    
+                 
+            } else {
+                    
+               dashForm.historique("Echec de la modification de mot de passe de l'utilisateur", username1.getText());
+                    
+               alert = new Alert(Alert.AlertType.ERROR);
+               alert.setTitle("Message d'erreur");
+               alert.setHeaderText(null);
+               alert.setContentText("Échec de la modification du mot de passe!");
+               alert.showAndWait();
             }
-            
-            dashForm.historique("Modification de mot de passe de l'utilisateur", username1.getText());
+           
 
             // Réinitialisez les champs de saisie
             username1.setText("");
             username11.setText("");
             password11.setText("");
 
-        } catch (SQLException e) {
+        }
+            
+        }catch (SQLException e) {
             e.printStackTrace();
         }
     }
     
     
+    //Pour switch forme dans le menu demmarer
     public void switchFormConnect(ActionEvent event){
         
         if (event.getSource() == MotdePasseBtn) {
@@ -271,7 +209,7 @@ public class FXMLDocumentController implements Initializable {
         
     }
     
-    
+    //Pour le boutton se connecter
     public void loginAdmin(){
         
         String sql = "SELECT * FROM Admin WHERE NomUtilisateur = ? and MotDePasse = ? ";
@@ -325,6 +263,10 @@ public class FXMLDocumentController implements Initializable {
                     });
 
                     stage.initStyle(StageStyle.TRANSPARENT);
+                    
+                    Image image = new Image("/Image/1704805960156.jpg");
+        
+                    stage.getIcons().add(image);
 
                     stage.setScene(scene);
                     stage.show(); 
@@ -392,6 +334,10 @@ public class FXMLDocumentController implements Initializable {
           });
 
           stage.initStyle(StageStyle.TRANSPARENT);
+          
+          Image image = new Image("/Image/1704805960156.jpg");
+        
+          stage.getIcons().add(image);
 
           stage.setScene(scene);
           stage.show();

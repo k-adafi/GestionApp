@@ -122,13 +122,13 @@ public class DashboardController implements Initializable {
     private Label acceuilTotaleClient;
 
     @FXML
+    private Label acceuilTotaleFaireService;
+
+    @FXML
     private Label acceuilTotaleService;
 
     @FXML
-    private Button acceuilListeClientBtn;
-
-    @FXML
-    private Button acceuilListeServiceBtn;
+    private Label acceuilTotaleSolde;
 
     //Client
     @FXML
@@ -630,10 +630,9 @@ public class DashboardController implements Initializable {
 
     @FXML
     private Button historiqueEffacerBtn;
-    
+
     @FXML
     private Button historiqueEffacerToutBtn;
-
 
     private PreparedStatement prepare;
     private Statement statement;
@@ -645,145 +644,121 @@ public class DashboardController implements Initializable {
 
     private Image imageService;
 
-//    //Ajout nouveau client (efa mandeha)    
-//    public void addClientAdd() {
-//        
-//        if (clientID != null 
-//                && clientNom != null 
-//                && clientPrenom != null 
-//                && clientGenre != null 
-//                && clientDateN != null 
-//                && clientCNI != null 
-//                && clientEtablissement != null 
-//                && clientMention != null 
-//                && clientNiveau != null 
-//                && clientCodage != null 
-//                && clientPassant != null
-//                && clientTel != null
-//                && clientAdress != null
-//                && clientType !=null) {
-//            
-//            Date DateInscrp = new Date();
-//            java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
-//
-//            java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-//            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//            String dateN = sdf.format(javaDate);
-//
-//            String sql = "INSERT INTO client"
-//                    + "(clientID, clientNom, clientPrenom, clientGenre, clientDateN, clientCNI, clientEtablissement,"
-//                    + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientType, clientPhoto, DateInscrp, NomUtilisateur, clientSoldeDejaPayer, clientSoldeRestePayer)"
-//                    + "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-//
-//            connect = database.ConnectDb();
-//
-//            try {
-//                Alert alert;
-//
-//                if (clientID.getText().isEmpty()
-//                        || clientNom.getText().isEmpty()
-//                        || clientPrenom.getText().isEmpty()
-//                        || clientGenre.getSelectionModel().getSelectedItem() == null
-//                        || dateN == null
-//                        || clientCNI.getText().isEmpty()
-//                        || clientEtablissement.getSelectionModel().getSelectedItem() == null
-//                        || clientMention.getText().isEmpty()
-//                        || clientNiveau.getSelectionModel().getSelectedItem() == null
-//                        || clientCodage.getText().isEmpty()
-//                        || clientPassant.getSelectionModel().getSelectedItem() == null
-//                        || clientTel.getText().isEmpty()
-//                        || clientAdress.getText().isEmpty()
-//                        || clientType.getSelectionModel().getSelectedItem() == null
-//                        || sqlDate == null
-//                        || getData.path == null || getData.path == "") {
-//                    alert = new Alert(AlertType.ERROR);
-//                    alert.setTitle("Message d'erreur");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("S'il vous plaît, vous devez complètez ces formulaires!");
-//                    alert.showAndWait();
-//                } else {
-//                    String check = "SELECT clientID FROM client WHERE clientID = '"
-//                            + clientID.getText() + "'";
-//
-//                    statement = connect.createStatement();
-//                    result = statement.executeQuery(check);
-//
-//                    if (result.next()) {
-//                        alert = new Alert(AlertType.ERROR);
-//                        alert.setTitle("Message d'erreur");
-//                        alert.setHeaderText(null);
-//                        alert.setContentText("Cette ClientID:" + clientID.getText() + "existe déjà!");
-//                        alert.showAndWait();
-//                    } else {
-//                        prepare = connect.prepareStatement(sql);
-//                        prepare.setString(1, clientID.getText());
-//                        prepare.setString(2, clientNom.getText());
-//                        prepare.setString(3, clientPrenom.getText());
-//                        prepare.setString(4, (String) clientGenre.getSelectionModel().getSelectedItem());
-//                        prepare.setString(5, String.valueOf(dateN));
-//                        prepare.setString(6, clientCNI.getText());
-//                        prepare.setString(7, (String) clientEtablissement.getSelectionModel().getSelectedItem());
-//                        prepare.setString(8, clientMention.getText());
-//                        prepare.setString(9, (String) clientNiveau.getSelectionModel().getSelectedItem());
-//                        prepare.setString(10, clientCodage.getText());
-//                        prepare.setString(11, (String) clientPassant.getSelectionModel().getSelectedItem());
-//                        prepare.setString(12, clientTel.getText());
-//                        prepare.setString(13, clientAdress.getText());
-//                        prepare.setString(14, (String) clientType.getSelectionModel().getSelectedItem());
-//
-//                        //Pour la photo du client
-//                        String uri = getData.path;
-//                        uri = uri.replace("\\", "\\\\");
-//                        prepare.setString(15, uri);
-//                        prepare.setString(16, String.valueOf(sqlDate));
-//                        prepare.setString(17, getData.username);
-//                        prepare.setDouble(18, 0.0);
-//                        prepare.setDouble(19, 0.0);
-//
-//                        alert = new Alert(Alert.AlertType.CONFIRMATION);
-//                        alert.setTitle("Message de confirmation");
-//                        alert.setHeaderText(null);
-//                        alert.setContentText("Êtes-vous sur de vouloir ajouter cette client?");
-//                        Optional<ButtonType> option = alert.showAndWait();
-//
-//                        if (option.get().equals(ButtonType.CANCEL)) {
-//
-//                            historique("Echec! Ajout d'un nouveau client: " + clientID.getText() + " anuler.", getData.username);
-//
-//                            alert = new Alert(Alert.AlertType.ERROR);
-//                            alert.setTitle("Message d'erreur");
-//                            alert.setHeaderText(null);
-//                            alert.setContentText("Echec d'ajout client!");
-//                            alert.showAndWait();
-//
-//                        } else {
-//                            prepare.executeUpdate();
-//
-//                            historique("Ajout d'un nouveau client: " + clientID.getText() + " réussi avec succès.", getData.username);
-//
-//                            alert = new Alert(AlertType.INFORMATION);
-//                            alert.setTitle("Message d'information");
-//                            alert.setHeaderText(null);
-//                            alert.setContentText("Ajout de client réussi avec succès!");
-//                            alert.showAndWait();
-//
-//                            addClientShowListData();
-//                            addClientReset();
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//         
-//        }    
-//    }
     
     
+    //Bloc Acceuil
+    private int totaleClient;
+    
+    private static boolean clickFservice = false;
+
+    public int totaleClient() {
+
+        String selectTotaleCli = "SELECT COUNT(id) as totalecli FROM client";
+
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(selectTotaleCli);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+
+                totaleClient = result.getInt("totalecli");
+                acceuilTotaleClient.setText(String.valueOf(totaleClient));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totaleClient;
+    }
+
+    private int totaleService;
+
+    public int totaleService() {
+
+        String selectTotaleCli = "SELECT COUNT(ID) as totaleserv FROM service";
+
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(selectTotaleCli);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+
+                totaleService = result.getInt("totaleserv");
+                acceuilTotaleService.setText(String.valueOf(totaleService));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totaleService;
+    }
+
+    private int totaleFaireService;
+
+    public int totaleFaireService() {
+
+        java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+        String selectTotaleCli = "SELECT COUNT(ID) as totalesuivie FROM suivieclient WHERE DATE(suivieDate) = '" + sqlDate + "'";
+
+        connect = database.ConnectDb();
+
+        try {
+
+            prepare = connect.prepareStatement(selectTotaleCli);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+
+                totaleFaireService = result.getInt("totalesuivie");
+                acceuilTotaleFaireService.setText(String.valueOf(totaleFaireService));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totaleFaireService;
+    }
+
+    public double totaleSoldeAujour() {
+
+        java.sql.Date sqlDate = new java.sql.Date(System.currentTimeMillis());
+        String selectTotaleCli = "SELECT SUM(suivieServiceDejaPayer) as totaleSolde FROM suivieclient WHERE DATE(suivieDate) = '" + sqlDate + "'";
+
+        connect = database.ConnectDb();
+        double totaleSolde = 0;
+        try {
+
+            prepare = connect.prepareStatement(selectTotaleCli);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+
+                totaleSolde = result.getDouble("totaleSolde");
+                acceuilTotaleSolde.setText(String.valueOf(totaleSolde));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return totaleSolde;
+    }
+
+     /**
+     * ********************************************************************************
+     * ********************************************************************************
+     * *********************************SEPARATION*************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     * ********************************************************************************
+     */
+    
+    //Bloc client
     public void addClientAdd() throws SQLException {
         Alert alert;
         try {
@@ -824,14 +799,14 @@ public class DashboardController implements Initializable {
                 alert.setContentText("Ce clientID existe déjà!");
                 alert.showAndWait();
                 return; // Sortir de la méthode si le clientID existe déjà
-                
-            }else{
-                    // Insertion des données dans la base de données
+
+            } else {
+                // Insertion des données dans la base de données
                 String sql = "INSERT INTO client (clientID, clientNom, clientPrenom, clientGenre, clientDateN, clientCNI, clientEtablissement, "
                         + "clientMention, clientNiveau, clientCodage, clientPassant, clientTel, clientAdresse, clientType, clientPhoto, DateInscrp, NomUtilisateur, "
                         + "clientSoldeDejaPayer, clientSoldeRestePayer) "
                         + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                
+
                 prepare = connect.prepareStatement(sql);
                 prepare.setString(1, clientID.getText());
                 prepare.setString(2, clientNom.getText());
@@ -861,8 +836,8 @@ public class DashboardController implements Initializable {
 
                 if (option.get().equals(ButtonType.OK)) {
                     int rowsAffected = prepare.executeUpdate();
-                    if (rowsAffected > 0){ 
-                        
+                    if (rowsAffected > 0) {
+
                         alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Message d'information");
                         alert.setHeaderText(null);
@@ -876,7 +851,7 @@ public class DashboardController implements Initializable {
                         alert.setContentText("Ajout du client anuler!");
                         alert.showAndWait();
                     }
-                }else{
+                } else {
                     alert = new Alert(AlertType.WARNING);
                     alert.setTitle("Message d'erreur");
                     alert.setHeaderText(null);
@@ -885,12 +860,12 @@ public class DashboardController implements Initializable {
                 }
 
             }
-            
+
             // Effacer les champs après l'ajout
             addClientReset();
             // Rafraîchir la liste des clients
             addClientShowListData();
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
             alert = new Alert(AlertType.ERROR);
@@ -900,206 +875,110 @@ public class DashboardController implements Initializable {
             alert.showAndWait();
         }
 
-  }
-        
+    }
+
     //Mise à jour de client (EFA MANDEHA)
     public void addClientUpdate() {
-        
-            String uri = getData.path;
-            uri = uri.replace("\\", "\\\\");
 
-            Date DateInscrp = new Date();
-            java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
+        String uri = getData.path;
+        uri = uri.replace("\\", "\\\\");
 
+        Date DateInscrp = new Date();
+        java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
 
-            try {
-                Alert alert;
-                if (clientID.getText().isEmpty()
-                        || clientNom.getText().isEmpty()
-                        || clientPrenom.getText().isEmpty()
-                        || clientGenre.getSelectionModel().getSelectedItem() == null
-                        || clientDateN.getValue() == null
-                        || clientCNI.getText().isEmpty()
-                        || clientEtablissement.getSelectionModel().getSelectedItem() == null
-                        || clientMention.getText().isEmpty()
-                        || clientNiveau.getSelectionModel().getSelectedItem() == null
-                        || clientCodage.getText().isEmpty()
-                        || clientPassant.getSelectionModel().getSelectedItem() == null
-                        || clientTel.getText().isEmpty()
-                        || clientAdress.getText().isEmpty()
-                        || clientType.getSelectionModel().getSelectedItem() == null
-                        || getData.path == null || getData.path.isEmpty()
-                        || sqlDate == null) {
+        try {
+            Alert alert;
+            if (clientID.getText().isEmpty()
+                    || clientNom.getText().isEmpty()
+                    || clientPrenom.getText().isEmpty()
+                    || clientGenre.getSelectionModel().getSelectedItem() == null
+                    || clientDateN.getValue() == null
+                    || clientCNI.getText().isEmpty()
+                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
+                    || clientMention.getText().isEmpty()
+                    || clientNiveau.getSelectionModel().getSelectedItem() == null
+                    || clientCodage.getText().isEmpty()
+                    || clientPassant.getSelectionModel().getSelectedItem() == null
+                    || clientTel.getText().isEmpty()
+                    || clientAdress.getText().isEmpty()
+                    || clientType.getSelectionModel().getSelectedItem() == null
+                    || getData.path == null || getData.path.isEmpty()
+                    || sqlDate == null) {
+
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez sélectionner un client et compléter ces formulaires!");
+                alert.showAndWait();
+
+            } else {
+
+                LocalDate dateNaissance = clientDateN.getValue();
+                String dateN = dateNaissance != null ? dateNaissance.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
+
+                String sql = "UPDATE client SET clientNom = ?, clientPrenom = ?, clientGenre = ?, clientDateN = ?, clientCNI = ?, clientEtablissement = ?, clientMention = ?, clientNiveau = ?, clientCodage = ?, clientPassant = ?, clientTel = ?, clientAdresse = ?, clientPhoto = ?, DateInscrp = ?, NomUtilisateur = ? WHERE clientID = ?";
+                connect = database.ConnectDb();
+
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
+                alert.setHeaderText(null);
+                alert.setContentText("Êtes-vous sûr de vouloir modifier ce client " + clientID.getText() + " ?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.isPresent() && option.get().equals(ButtonType.OK)) {
+                    PreparedStatement preparedStatement = connect.prepareStatement(sql);
+                    preparedStatement.setString(1, clientNom.getText());
+                    preparedStatement.setString(2, clientPrenom.getText());
+                    preparedStatement.setString(3, clientGenre.getSelectionModel().getSelectedItem());
+                    preparedStatement.setString(4, dateN);
+                    preparedStatement.setString(5, clientCNI.getText());
+                    preparedStatement.setString(6, clientEtablissement.getSelectionModel().getSelectedItem());
+                    preparedStatement.setString(7, clientMention.getText());
+                    preparedStatement.setString(8, clientNiveau.getSelectionModel().getSelectedItem());
+                    preparedStatement.setString(9, clientCodage.getText());
+                    preparedStatement.setString(10, clientPassant.getSelectionModel().getSelectedItem());
+                    preparedStatement.setString(11, clientTel.getText());
+                    preparedStatement.setString(12, clientAdress.getText());
+                    preparedStatement.setString(13, uri);
+                    preparedStatement.setDate(14, sqlDate);
+                    preparedStatement.setString(15, getData.username);
+                    preparedStatement.setString(16, clientID.getText());
+                    preparedStatement.executeUpdate();
+
+                    historique("Mise à jour du client: " + clientID.getText() + " réussie avec succès.", getData.username);
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Le client a été modifié avec succès!");
+                    alert.showAndWait();
+                } else {
+                    historique("Échec! Mise à jour du client: " + clientID.getText() + " annulée.", getData.username);
 
                     alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Message d'erreur");
                     alert.setHeaderText(null);
-                    alert.setContentText("S'il vous plaît, vous devez sélectionner un client et compléter ces formulaires!");
+                    alert.setContentText("Modification du client annulée!");
                     alert.showAndWait();
-                    
-                } else {
-                    
-                    LocalDate dateNaissance = clientDateN.getValue();
-                    String dateN = dateNaissance != null ? dateNaissance.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
-                    
-                    String sql = "UPDATE client SET clientNom = ?, clientPrenom = ?, clientGenre = ?, clientDateN = ?, clientCNI = ?, clientEtablissement = ?, clientMention = ?, clientNiveau = ?, clientCodage = ?, clientPassant = ?, clientTel = ?, clientAdresse = ?, clientPhoto = ?, DateInscrp = ?, NomUtilisateur = ? WHERE clientID = ?";
-                    connect = database.ConnectDb();
-                    
-                    alert = new Alert(AlertType.CONFIRMATION);
-                    alert.setTitle("Message de confirmation");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Êtes-vous sûr de vouloir modifier ce client " + clientID.getText() + " ?");
-                    Optional<ButtonType> option = alert.showAndWait();
-
-                    if (option.isPresent() && option.get().equals(ButtonType.OK)) {
-                        PreparedStatement preparedStatement = connect.prepareStatement(sql);
-                        preparedStatement.setString(1, clientNom.getText());
-                        preparedStatement.setString(2, clientPrenom.getText());
-                        preparedStatement.setString(3, clientGenre.getSelectionModel().getSelectedItem());
-                        preparedStatement.setString(4, dateN);
-                        preparedStatement.setString(5, clientCNI.getText());
-                        preparedStatement.setString(6, clientEtablissement.getSelectionModel().getSelectedItem());
-                        preparedStatement.setString(7, clientMention.getText());
-                        preparedStatement.setString(8, clientNiveau.getSelectionModel().getSelectedItem());
-                        preparedStatement.setString(9, clientCodage.getText());
-                        preparedStatement.setString(10, clientPassant.getSelectionModel().getSelectedItem());
-                        preparedStatement.setString(11, clientTel.getText());
-                        preparedStatement.setString(12, clientAdress.getText());
-                        preparedStatement.setString(13, uri);
-                        preparedStatement.setDate(14, sqlDate);
-                        preparedStatement.setString(15, getData.username);
-                        preparedStatement.setString(16, clientID.getText());
-                        preparedStatement.executeUpdate();
-
-                        historique("Mise à jour du client: " + clientID.getText() + " réussie avec succès.", getData.username);
-
-                        alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle("Message d'information");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Le client a été modifié avec succès!");
-                        alert.showAndWait();
-                    } else {
-                        historique("Échec! Mise à jour du client: " + clientID.getText() + " annulée.", getData.username);
-
-                        alert = new Alert(AlertType.ERROR);
-                        alert.setTitle("Message d'erreur");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Modification du client annulée!");
-                        alert.showAndWait();
-                    }
-
-                    addClientShowListData();
-                    addClientReset();
                 }
 
-            } catch (SQLException e) {
-                e.printStackTrace();
+                addClientShowListData();
+                addClientReset();
             }
-        
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
-    
-    
-//    public void addClientUpdate() {
-//
-//        String uri = getData.path;
-//        uri = uri.replace("\\", "\\\\");
-//
-//        Date DateInscrp = new Date();
-//        java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
-//
-//        java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        String dateN = sdf.format(javaDate);
-//
-//        String sql = "UPDATE client SET clientNom = '"
-//                + clientNom.getText() + "', clientPrenom = '"
-//                + clientPrenom.getText() + "', clientGenre = '"
-//                + clientGenre.getSelectionModel().getSelectedItem() + "', clientDateN = '"
-//                + dateN + "', clientCNI = '"
-//                + clientCNI.getText() + "',  clientEtablissement = '"
-//                + clientEtablissement.getSelectionModel().getSelectedItem() + "', clientMention = '"
-//                + clientMention.getText() + "', clientNiveau ='"
-//                + clientNiveau.getSelectionModel().getSelectedItem() + "', clientCodage = '"
-//                + clientCodage.getText() + "', clientPassant = '"
-//                + clientPassant.getSelectionModel().getSelectedItem() + "', clientTel = '"
-//                + clientTel.getText() + "', clientAdresse = '"
-//                + clientAdress.getText() + "', clientPhoto = '"
-//                + uri + "', DateInscrp = '"
-//                + sqlDate + "', NomUtilisateur = '"
-//                + getData.username + "' WHERE clientID = '"
-//                + clientID.getText() + "'";
-//
-//        connect = database.ConnectDb();
-//
-//        try {
-//            Alert alert;
-//            if (clientID.getText().isEmpty()
-//                    || clientNom.getText().isEmpty()
-//                    || clientPrenom.getText().isEmpty()
-//                    || clientGenre.getSelectionModel().getSelectedItem() == null
-//                    || dateN == null
-//                    || clientCNI.getText().isEmpty()
-//                    || clientEtablissement.getSelectionModel().getSelectedItem() == null
-//                    || clientMention.getText().isEmpty()
-//                    || clientNiveau.getSelectionModel().getSelectedItem() == null
-//                    || clientCodage.getText().isEmpty()
-//                    || clientPassant.getSelectionModel().getSelectedItem() == null
-//                    || clientTel.getText().isEmpty()
-//                    || clientAdress.getText().isEmpty()
-//                    || clientType.getSelectionModel().getSelectedItem() == null
-//                    || getData.path == null || getData.path == ""
-//                    || sqlDate == null) {
-//                alert = new Alert(AlertType.ERROR);
-//                alert.setTitle("Message d'erreur");
-//                alert.setHeaderText(null);
-//                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
-//                alert.showAndWait();
-//            } else {
-//                alert = new Alert(AlertType.CONFIRMATION);
-//                alert.setTitle("Message de confirmation");
-//                alert.setHeaderText(null);
-//                alert.setContentText("Êtes-vous sur de vouloir modifier cette client " + clientID.getText() + " ?");
-//                Optional<ButtonType> option = alert.showAndWait();
-//
-//                if (option.get().equals(ButtonType.OK)) {
-//                    statement = connect.createStatement();
-//                    statement.executeUpdate(sql);
-//
-//                    historique("Mise à jour du client: " + clientID.getText() + " réussi avec succès.", getData.username);
-//
-//                    alert = new Alert(AlertType.INFORMATION);
-//                    alert.setTitle("Message d'information");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("Client a été modifier avec succès!");
-//                    alert.showAndWait();
-//
-//                } else {
-//
-//                    historique("Echech! mise à jour du client: " + clientID.getText() + " anuler.", getData.username);
-//
-//                    alert = new Alert(Alert.AlertType.ERROR);
-//                    alert.setTitle("Message d'erreur");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("Modification du client anuler!");
-//                    alert.showAndWait();
-//                }
-//
-//                addClientShowListData();
-//                addClientReset();
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-    
 
+    
     //Supprimer un client (efa mandeha) 
     public void addClientDelete() {
         Alert alert;
         if (getData.username != null && getData.username.equals("kadafi")) {
-            
+
             try {
                 String uri = getData.path != null ? getData.path.replace("\\", "\\\\") : null;
 
@@ -1180,103 +1059,7 @@ public class DashboardController implements Initializable {
         }
     }
 
-    
-    
-//    public void addClientDelete() {
-//        
-//        Alert alert;
-//        if(getData.username.equals("kadafi")){
-//            
-//            try {
-//                
-//                String uri = getData.path.replace("\\", "\\\\");
-//
-//                Date DateInscrp = new Date();
-//                java.sql.Date sqlDate = new java.sql.Date(DateInscrp.getTime());
-//
-//                java.util.Date javaDate = java.util.Date.from(clientDateN.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//                String dateN = sdf.format(javaDate);
-//  
-//                if (clientID.getText().isEmpty()
-//                        || clientNom.getText().isEmpty()
-//                        || clientPrenom.getText().isEmpty()
-//                        || clientGenre.getSelectionModel().getSelectedItem() == null
-//                        || dateN == null
-//                        || clientCNI.getText().isEmpty()
-//                        || clientEtablissement.getSelectionModel().getSelectedItem() == null
-//                        || clientMention.getText().isEmpty()
-//                        || clientNiveau.getSelectionModel().getSelectedItem() == null
-//                        || clientCodage.getText().isEmpty()
-//                        || clientPassant.getSelectionModel().getSelectedItem() == null
-//                        || clientTel.getText().isEmpty()
-//                        || clientAdress.getText().isEmpty()
-//                        || clientType.getSelectionModel().getSelectedItem() == null
-//                        || getData.path == null || getData.path.equals("")
-//                        || sqlDate == null) {
-//                    alert = new Alert(AlertType.ERROR);
-//                    alert.setTitle("Message d'erreur");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
-//                    alert.showAndWait();
-//                    return;
-//                }
-//
-//                String sql = "DELETE FROM client WHERE clientID = '" + clientID.getText() + "'";
-//
-//                connect = database.ConnectDb();
-//                if (connect == null) {
-//                    // Gérer l'échec de la connexion à la base de données
-//                    return;
-//                }
-//
-//                alert = new Alert(AlertType.CONFIRMATION);
-//                alert.setTitle("Message de confirmation");
-//                alert.setHeaderText(null);
-//                alert.setContentText("Êtes-vous sûr de vouloir supprimer ce client " + clientID.getText() + " ?");
-//                Optional<ButtonType> option = alert.showAndWait();
-//
-//                if (option.isPresent() && option.get() == ButtonType.OK) {
-//                    statement = connect.createStatement();
-//                    statement.executeUpdate(sql);
-//
-//                    historique("Suppression du client: " + clientID.getText() + " réussi avec succès.", getData.username);
-//
-//                    alert = new Alert(AlertType.INFORMATION);
-//                    alert.setTitle("Message d'information");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("Client supprimé avec succès!");
-//                    alert.showAndWait();
-//
-//                } else {
-//
-//                    historique("Echec! suppression du client: " + clientID.getText() + " anuler.", getData.username);
-//
-//                    alert = new Alert(Alert.AlertType.ERROR);
-//                    alert.setTitle("Message d'erreur");
-//                    alert.setHeaderText(null);
-//                    alert.setContentText("Suppression anuler!");
-//                    alert.showAndWait();
-//                }
-//
-//                addClientShowListData();
-//                addClientReset();
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                // Gérer l'exception
-//            }
-//         
-//        }else{
-//            alert = new Alert(Alert.AlertType.ERROR);
-//            alert.setTitle("Message d'erreur");
-//            alert.setHeaderText(null);
-//            alert.setContentText("Vous n'avez pas d'accès à cette opération!");
-//            alert.showAndWait();
-//        }   
-//    }
-    
-    
+
     //Pour l'actualisation sur affiche client
     public void addClientReset() {
         clientID.setText("");
@@ -1312,8 +1095,6 @@ public class DashboardController implements Initializable {
             clientImageView.setImage(imageClient);
         }
     }
-    
-    
 
     //Pour combox genre client
     private String[] genreList = {"Feminin", "Masculin", "Autres"};
@@ -1572,6 +1353,7 @@ public class DashboardController implements Initializable {
      * ********************************************************************************
      * ********************************************************************************
      */
+    
     //Section pour le service  
     //Insertion image service
     public void addServiceInsertImage() {
@@ -1607,10 +1389,10 @@ public class DashboardController implements Initializable {
                 alert.setContentText("S'il vous plaît, vous devez complètez tous les champs!");
                 alert.showAndWait();
             } else {
-                     
+
                 String check = "SELECT serviceID FROM service WHERE serviceID = '"
                         + serviceID.getText() + "'";
-                
+
                 connect = database.ConnectDb();
                 statement = connect.createStatement();
                 result = statement.executeQuery(check);
@@ -1621,7 +1403,7 @@ public class DashboardController implements Initializable {
                     alert.setHeaderText(null);
                     alert.setContentText("Cette serviceID: " + serviceID.getText() + " existe déjà!");
                     alert.showAndWait();
-                    
+
                 } else {
                     java.util.Date javaDate1 = java.util.Date.from(serviceDateDebut.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
                     SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -1635,7 +1417,6 @@ public class DashboardController implements Initializable {
                             + "(serviceID, serviceNom, serviceType, servicePrix, serviceDuree, serviceDateDebut, serviceDateFin, serviceImage, NomUtilisateur)"
                             + "VALUES(?,?,?,?,?,?,?,?,?)";
 
-                    
                     prepare = connect.prepareStatement(sql);
                     prepare.setString(1, serviceID.getText());
                     prepare.setString(2, serviceNom.getText());
@@ -1691,90 +1472,88 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
         }
     }
-    
+
     //Pour la mise à jour des services (Efa mandeha)
     public void addServiceUpdate() {
-        
+
         try {
             Alert alert;
-            
+
             String uri = getData.pathService;
             uri = uri.replace("\\", "\\\\");
 
             if (serviceID.getText().isEmpty()
-               || serviceNom.getText().isEmpty()
-               || serviceType.getText().isEmpty()
-               || servicePrix.getText().isEmpty()
-               || serviceDuree.getText().isEmpty()
-               || serviceDateDebut.getValue() == null
-               || serviceDateFin.getValue() == null
-               || uri == null || uri.isEmpty()) {
+                    || serviceNom.getText().isEmpty()
+                    || serviceType.getText().isEmpty()
+                    || servicePrix.getText().isEmpty()
+                    || serviceDuree.getText().isEmpty()
+                    || serviceDateDebut.getValue() == null
+                    || serviceDateFin.getValue() == null
+                    || uri == null || uri.isEmpty()) {
 
-               alert = new Alert(AlertType.ERROR);
-               alert.setTitle("Message d'erreur");
-               alert.setHeaderText(null);
-               alert.setContentText("S'il vous plaît, vous devez sélectionner un client et remplir ces champs!");
-               alert.showAndWait();
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("S'il vous plaît, vous devez sélectionner un client et remplir ces champs!");
+                alert.showAndWait();
 
             } else {
-                
+
                 LocalDate debut = serviceDateDebut.getValue();
                 LocalDate fin = serviceDateFin.getValue();
 
                 String dateD = debut != null ? debut.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
                 String dateF = fin != null ? fin.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : null;
-                
+
                 String sql = "UPDATE service SET serviceNom = ?, serviceType = ?, servicePrix = ?, serviceDuree = ?, serviceDateDebut = ?, serviceDateFin = ?, serviceImage = ?, NomUtilisateur = ? WHERE serviceID = ?";
                 connect = database.ConnectDb();
-                
+
                 alert = new Alert(AlertType.CONFIRMATION);
                 alert.setTitle("Message de confirmation");
                 alert.setHeaderText(null);
                 alert.setContentText("Êtes-vous sûr de vouloir modifier ce service: " + serviceID.getText() + " ?");
                 Optional<ButtonType> option = alert.showAndWait();
 
-                    if (option.isPresent() && option.get().equals(ButtonType.OK)) {
-                        
-                        PreparedStatement preparedStatement = connect.prepareStatement(sql);
-                        preparedStatement.setString(1, serviceNom.getText());
-                        preparedStatement.setString(2, serviceType.getText());
-                        preparedStatement.setString(3, servicePrix.getText());
-                        preparedStatement.setString(4, serviceDuree.getText());
-                        preparedStatement.setString(5, dateD);
-                        preparedStatement.setString(6, dateF);
-                        preparedStatement.setString(7, uri);
-                        preparedStatement.setString(8, getData.username);
-                        preparedStatement.setString(9, serviceID.getText());
-                        preparedStatement.executeUpdate();
+                if (option.isPresent() && option.get().equals(ButtonType.OK)) {
 
-                        historique("Modification du service: " + serviceID.getText() + " réussie avec succès.", getData.username);
+                    PreparedStatement preparedStatement = connect.prepareStatement(sql);
+                    preparedStatement.setString(1, serviceNom.getText());
+                    preparedStatement.setString(2, serviceType.getText());
+                    preparedStatement.setString(3, servicePrix.getText());
+                    preparedStatement.setString(4, serviceDuree.getText());
+                    preparedStatement.setString(5, dateD);
+                    preparedStatement.setString(6, dateF);
+                    preparedStatement.setString(7, uri);
+                    preparedStatement.setString(8, getData.username);
+                    preparedStatement.setString(9, serviceID.getText());
+                    preparedStatement.executeUpdate();
 
-                        alert = new Alert(AlertType.INFORMATION);
-                        alert.setTitle("Message d'information");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Le service a été modifié avec succès!");
-                        alert.showAndWait();
-                    } else {
-                        historique("Échec de la modification du service: " + serviceID.getText() + " annulée.", getData.username);
+                    historique("Modification du service: " + serviceID.getText() + " réussie avec succès.", getData.username);
 
-                        alert = new Alert(AlertType.WARNING);
-                        alert.setTitle("Message d'erreur");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Modification du service annulée!");
-                        alert.showAndWait();
-                    }
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Le service a été modifié avec succès!");
+                    alert.showAndWait();
+                } else {
+                    historique("Échec de la modification du service: " + serviceID.getText() + " annulée.", getData.username);
 
-              addServiceShowListData();
-              addServiceReset();
+                    alert = new Alert(AlertType.WARNING);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Modification du service annulée!");
+                    alert.showAndWait();
                 }
 
-        } catch (SQLException e) {
-             e.printStackTrace();
-        }
-    
-    }
+                addServiceShowListData();
+                addServiceReset();
+            }
 
-   
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     //Supprimer un client (efa mandeha) 
     public void addServiceDelete() {
@@ -1988,6 +1767,7 @@ public class DashboardController implements Initializable {
      * ********************************************************************************
      * ********************************************************************************
      */
+    
     //section Menu Service
     //Liste service sur la menu card
     private ObservableList<serviceData> cardListData = FXCollections.observableArrayList();
@@ -2060,22 +1840,6 @@ public class DashboardController implements Initializable {
 
     private Integer sID;
 
-//   public int countIdSuivie(){
-//       String sql = "SELECT COUNT(suivieID) as countSuivie FROM `suivieclient` WHERE 1";
-//       int nb = 0;
-//       connect = database.ConnectDb();
-//       try {
-//            prepare = connect.prepareStatement(sql);
-//            result = prepare.executeQuery();
-//            while (result.next()) {
-//                   nb = result.getInt("countSuivie");
-//            }
-//            System.err.println("SUIVIE ID : "+nb);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//       return nb-1;
-//   }
     public int getSid() {
         String sql = "SELECT Max(suivieID) as idS FROM `suivieclient` WHERE 1";
         int nb = 0;
@@ -2143,38 +1907,7 @@ public class DashboardController implements Initializable {
         }
     }
 
-//    public ObservableList<suivieData> suivieOrderData() {
-//
-////        suivieID();
-//        ObservableList<suivieData> listData = FXCollections.observableArrayList();
-//
-////        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + sID;
-//        String sql = "SELECT * FROM  suivieclient WHERE suivieID = " + (getData.sID);
-//
-//        connect = database.ConnectDb();
-//
-//        try {
-//            prepare = connect.prepareStatement(sql);
-//            result = prepare.executeQuery();
-//            suivieData suiData;
-//
-//            while (result.next()) {
-//                suiData = new suivieData(
-//                        result.getInt("ID"),
-//                        result.getInt("suivieID"),
-//                        result.getString("serviceNom"),
-//                        result.getInt("factureQte"),
-//                        result.getDouble("servicePrix")
-//                );
-//                listData.add(suiData);
-//            }
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
-//        return listData;
-//    }
+
     private ObservableList<suivieData> menuOrderListData;
 
     //Afficher les listes des clients sur Tables view
@@ -2357,8 +2090,13 @@ public class DashboardController implements Initializable {
     }
 
     public void menuDisplayTotale() {
-
-        menuGetTotale(getSid());
+        if (clickFservice) {
+            menuGetTotale(getSid());
+            clickFservice = true;
+        } else {
+            totalP = 0;
+            clickFservice = true;
+        }
         menuTotale.setText(totalP + " Ar");
 
     }
@@ -2382,7 +2120,7 @@ public class DashboardController implements Initializable {
 
     public void saisieMontantR() {
 
-        menuGetTotale(getSid());
+//        menuGetTotale(getSid());
         if (!isDouble(clientsoldePayerText.getText())) {
 
             Alert alert;
@@ -2402,7 +2140,7 @@ public class DashboardController implements Initializable {
 
     public void saisieMontant() {
 
-        menuGetTotale(getSid());
+//        menuGetTotale(getSid());
         if (!isDouble(menuMonttantPayerTxt.getText())) {
 
             Alert alert;
@@ -2428,7 +2166,7 @@ public class DashboardController implements Initializable {
         Alert alert;
 
         getDejaPayerSolde();
-//        saisieMontant();
+
         if (totalP == 0) {
 
             alert = new Alert(Alert.AlertType.ERROR);
@@ -2448,7 +2186,7 @@ public class DashboardController implements Initializable {
             Date factureDate = new Date();
             java.sql.Date dateFac = new java.sql.Date(factureDate.getTime());
 
-            menuGetTotale(getSid());
+
             String inserPay = "INSERT INTO facture (suivieID, factureDate, factureTotale, NomUtilisateur)"
                     + "VALUES(?,?,?,?)";
 
@@ -2464,21 +2202,15 @@ public class DashboardController implements Initializable {
 
                 if (option.get().equals(ButtonType.OK)) {
 
-                    menuGetTotale(getSid());
+
                     prepare = connect.prepareStatement(inserPay);
 
-//                    if (getData.clickAdd) {
-//                        prepare.setString(1, String.valueOf(getSid()));
-//                    } else {
-//                        prepare.setString(1, String.valueOf(getSid()+ 1));
-//                        getData.sID = getSid()+1;
-//                    }
+
                     prepare.setString(1, String.valueOf(getData.sID));
 
                     prepare.setString(2, String.valueOf(dateFac));
 
                     double total = this.totalP - this.reste;
-//                    System.out.println(total + "_______" + reste);
                     prepare.setString(3, String.valueOf(total));
                     prepare.setString(4, getData.username);
                     prepare.executeUpdate();
@@ -2504,7 +2236,10 @@ public class DashboardController implements Initializable {
                         imprimer2();
 
                     } else {
-
+                       
+                        menu_tableView.setItems(null);
+                        getData.clickAdd = false;
+                        clickFservice = false;
                     }
 
                 } else {
@@ -2529,8 +2264,6 @@ public class DashboardController implements Initializable {
 
         Alert alert;
 
-//        getRestePayerSolde();
-//        saisieMontant();
         suivieID();
         if (totalP == 0) {
 
@@ -2545,7 +2278,7 @@ public class DashboardController implements Initializable {
             Date factureDate = new Date();
             java.sql.Date dateCompte = new java.sql.Date(factureDate.getTime());
 
-            menuGetTotale(getSid());
+
             String inserPay = "INSERT INTO compte (suivieID, compteDate, compteTotale, NomUtilisateur)"
                     + "VALUES(?,?,?,?)";
 
@@ -2562,7 +2295,6 @@ public class DashboardController implements Initializable {
                 if (option.get().equals(ButtonType.OK)) {
 
                     suivieID();
-                    menuGetTotale(getSid());
 
                     prepare = connect.prepareStatement(inserPay);
 
@@ -2616,7 +2348,7 @@ public class DashboardController implements Initializable {
 
         Alert alert;
         menuSelectOrder();
-        
+
         if (getID == 0) {
 
             alert = new Alert(Alert.AlertType.ERROR);
@@ -2855,15 +2587,16 @@ public class DashboardController implements Initializable {
      * ********************************************************************************
      * ********************************************************************************
      */
+    
     //Section suivie
     public ObservableList<suivieData> suivieListeData(String s) {
 
         ObservableList<suivieData> listData = FXCollections.observableArrayList();
         String sql = "";
         if (s.equals("")) {
-            sql = "SELECT * FROM suivieclient";
+            sql = "SELECT * FROM suivieclient ORDER BY suivieDate DESC";
         } else {
-            sql = "SELECT * FROM suivieclient WHERE suivieID = '" + getSid() + "'";
+            sql = "SELECT * FROM suivieclient WHERE suivieID = '" + getSid() + "' ORDER BY suivieDate DESC";
         }
 
         connect = database.ConnectDb();
@@ -3178,30 +2911,6 @@ public class DashboardController implements Initializable {
         clientSuivieTableView.setItems(sortList);
     }
 
-//    public double getSoldeApayer() {
-//
-//        String totalSolde = "SELECT suivieServiceToaleSolde FROM suivieclient WHERE clientID =" + getData.getMenuClientID;
-//
-//        connect = database.ConnectDb();
-//
-//        try {
-//
-//            prepare = connect.prepareStatement(totalSolde);
-//            result = prepare.executeQuery();
-//
-//            if (result.next()) {
-//                soldeTotale = result.getDouble("MAX(suivieServiceToaleSolde)");
-//
-//            }
-//
-//            getData.soldeTotaleTotale = soldeTotale;
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return soldeTotale;
-//    }
-    
     
     //Pour le bouton de confirmation sur séléction au suivie client 
     public void suivieClienttConfirmerBtn() {
@@ -3257,19 +2966,20 @@ public class DashboardController implements Initializable {
             e.printStackTrace();
         }
     }
+    
 
     //Pour le bouton de validation du client    
     public void validerCompte() {
-//        CardServiceController cardS = new CardServiceController();
+
         DashboardController dashForm = new DashboardController(); // Utiliser la même instance de DashboardController
-//        dashForm.suivieID();
+
 
         double totaleP = (0 * 0);
         double soldeTotaleTotale = (totaleP + getTolaleSolde());
         double soldedejaPayer = Double.parseDouble(clientsoldePayerText.getText());
         double soldeRestePayer1 = Double.parseDouble(clientSuivieRestePayerTxt.getText()) - Double.parseDouble(clientsoldePayerText.getText());
 
-//        clientsuivieReste.setText(String.valueOf(soldeRestePayer1));
+
         double totalSolde = getTolaleSolde();
         Alert alert;
         try {
@@ -3292,7 +3002,7 @@ public class DashboardController implements Initializable {
                 connect = database.ConnectDb();
 
                 prepare = connect.prepareStatement(insertDataQuery);
-//                prepare.setString(1, String.valueOf(getData.sID));
+
                 if (getData.clickAdd) {
                     prepare.setString(1, String.valueOf(dashForm.getSid()));
                 } else {
@@ -3312,7 +3022,6 @@ public class DashboardController implements Initializable {
 
                 prepare.setDouble(9, soldedejaPayer);
 
-                // soldeRestePayer = ( soldeTotaleTotale - soldedejaPayer);
                 prepare.setDouble(10, soldeRestePayer1);
 
                 prepare.setString(11, getData.username);
@@ -3354,10 +3063,8 @@ public class DashboardController implements Initializable {
                     statement = connect.createStatement();
                     String updateSolde = "UPDATE client SET clientSoldeRestePayer ='" + getDernierRestePayerSolde() + "', clientSoldeDejaPayer ='" + getDejaPayerSolde() + "' WHERE clientID = '" + getData.getMenuClientID + "'";
                     statement.executeUpdate(updateSolde);
-//                    String updateSolde = "UPDATE client SET clientSoldeRestePayer ='" + getRestePayerSolde() + "', clientSoldeDejaPayer ='" + getDejaPayerSolde() + "' WHERE clientID = '" + getData.getMenuClientID + "'";
-//                    statement.executeUpdate(updateSolde);
+
                     getData.clickAdd = true;
-//                    dashForm.menuShowOrderListData();
 
                     getData.soldeTotaleTotale = soldeTotaleTotale;
 
@@ -3370,6 +3077,7 @@ public class DashboardController implements Initializable {
         }
 
     }
+    
     
 
     public double getTolaleSolde() {
@@ -3398,7 +3106,6 @@ public class DashboardController implements Initializable {
 
     public void suivieSeulePayer() {
 
-        menuGetTotale(getSid());
         if (menuMonttantPayerTxt.getText().isEmpty() || totalP == 0) {
 
             Alert alert;
@@ -3416,7 +3123,6 @@ public class DashboardController implements Initializable {
         }
 
     }
-    
 
     public void imprimer2() throws JRException {
 
@@ -3434,6 +3140,7 @@ public class DashboardController implements Initializable {
         para.put("idSuivie", idSuivie);
         para.put("mttTotal", menuGetTotale(idSuivie));
         para.put("dejaPayer", Double.parseDouble(menuMonttantPayerTxt.getText()));
+        System.err.println("=====" + Double.parseDouble(menuMonttantPayerTxt.getText()));
         para.put("reste", Double.parseDouble(menuReste.getText()));
         para.put("nomResponsable", getData.username);
 
@@ -3448,8 +3155,7 @@ public class DashboardController implements Initializable {
         menu_tableView.setItems(null);
         getData.clickAdd = false;
     }
-    
-    
+
     public void imprimer3() throws JRException {
 
         int idSuivie = getSid();
@@ -3482,7 +3188,6 @@ public class DashboardController implements Initializable {
         getData.clickAdd = false;
     }
 
-    
     public void imprimer() {
 
         Alert alert;
@@ -3580,7 +3285,7 @@ public class DashboardController implements Initializable {
     public ObservableList<historiqueData> historiqueSuivieListeData() {
 
         ObservableList<historiqueData> listData = FXCollections.observableArrayList();
-        String sql = "SELECT * FROM historique";
+        String sql = "SELECT * FROM historique ORDER BY dateHeur DESC";
 
         connect = database.ConnectDb();
 
@@ -3619,7 +3324,7 @@ public class DashboardController implements Initializable {
 
         historiqueTableview.setItems(historiquesuivieListData);
     }
-    
+
     public void historiqueSearch() {
 
         FilteredList<historiqueData> filter = new FilteredList<>(historiquesuivieListData, e -> true);
@@ -3642,10 +3347,10 @@ public class DashboardController implements Initializable {
                 } else if (predicateSuivieData.getNomHistirique().toLowerCase().contains(searchKey)) {
 
                     return true;
-                
+
                 } else if (predicateSuivieData.getNomUtilisateur().toLowerCase().contains(searchKey)) {
 
-                    return true;    
+                    return true;
 
                 } else {
                     return false;
@@ -3659,11 +3364,10 @@ public class DashboardController implements Initializable {
         sortList.comparatorProperty().bind(historiqueTableview.comparatorProperty());
         historiqueTableview.setItems(sortList);
     }
-    
+
     private Integer getIDH;
-    
+
     private String getNomH;
-    
 
     public void menuSelectOrderHistorique() {
 
@@ -3673,14 +3377,14 @@ public class DashboardController implements Initializable {
         if ((num - 1) < -1) {
             return;
         }
-        
+
         getIDH = historiqueD.getIdH(); // Assurez-vous que clientID est un TextField ou un contrôle similaire
         getNomH = historiqueD.getNomHistirique();
- 
+
     }
-    
+
     public void effacerHistorique() {
-        
+
         Alert alert;
         menuSelectOrderHistorique();
 
@@ -3727,45 +3431,44 @@ public class DashboardController implements Initializable {
         }
     }
     
+
     public void effacerHistoriqueTout() {
         Alert alert;
-        
-            String deleteData = "DELETE FROM historique";
-            connect = database.ConnectDb();
 
-            try {
-                alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Message de confirmation");
+        String deleteData = "DELETE FROM historique";
+        connect = database.ConnectDb();
+
+        try {
+            alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Message de confirmation");
+            alert.setHeaderText(null);
+            alert.setContentText("Êtes-vous sur de vouloir tout suprimer?");
+            Optional<ButtonType> option = alert.showAndWait();
+
+            if (option.get().equals(ButtonType.CANCEL)) {
+                alert = new Alert(Alert.AlertType.WARNING);
+                alert.setTitle("Message d'information");
                 alert.setHeaderText(null);
-                alert.setContentText("Êtes-vous sur de vouloir tout suprimer?");
-                Optional<ButtonType> option = alert.showAndWait();
+                alert.setContentText("Suppression annulée!");
+                alert.showAndWait();
+            } else {
+                prepare = connect.prepareStatement(deleteData);
+                prepare.executeUpdate();
 
-                if (option.get().equals(ButtonType.CANCEL)) {
-                    alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Message d'information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Suppression annulée!");
-                    alert.showAndWait();
-                } else {
-                    prepare = connect.prepareStatement(deleteData);
-                    prepare.executeUpdate();
+                alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Message d'information");
+                alert.setHeaderText(null);
+                alert.setContentText("Suppression réussie avec succès!");
+                alert.showAndWait();
 
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Suppression réussie avec succès!");
-                    alert.showAndWait();
-
-                    historiqueShowListData();
-                }
-         } catch (Exception e) {
+                historiqueShowListData();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
-         }
+        }
     }
- 
 
     
-
     //Relier les fenêtres
     public void SwitchForm(ActionEvent event) {
 
@@ -3783,6 +3486,12 @@ public class DashboardController implements Initializable {
             makeserviceBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
+
+            totaleClient();
+            totaleService();
+            totaleFaireService();
+            totaleSoldeAujour();
+            clickFservice = false;
 
         } else if (event.getSource() == clientBtn) {
             acceuilForm.setVisible(false);
@@ -3808,6 +3517,7 @@ public class DashboardController implements Initializable {
 
             //Barre de recherche des clients
             addClientSearch();
+            clickFservice = false;
 
         } else if (event.getSource() == serviceBtn) {
             acceuilForm.setVisible(false);
@@ -3829,6 +3539,7 @@ public class DashboardController implements Initializable {
 
             //Pour la barre de recherche des services
             addServiceSearch();
+            clickFservice = false;
 
         } else if (event.getSource() == makeserviceBtn) {
             acceuilForm.setVisible(false);
@@ -3853,6 +3564,7 @@ public class DashboardController implements Initializable {
 
             suivieListeData("");
             menuDisplayTotale();
+            clickFservice = true;
             menuSelectOrder();
 
             menuServiceClientShowListData();
@@ -3873,6 +3585,7 @@ public class DashboardController implements Initializable {
             suivieClientSearch();
 
             clientSuivieShowListData();
+            clickFservice = false;
 
             suivieBtn.setStyle("-fx-background-color: linear-gradient(to bottom right, #f1f1f1, #f1f1f1);");
             clientBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
@@ -3898,9 +3611,10 @@ public class DashboardController implements Initializable {
                 acceuilBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
 
                 historiqueShowListData();
-            }else{
+                clickFservice = false;
+            } else {
                 Alert alert;
-                
+
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
@@ -3915,6 +3629,7 @@ public class DashboardController implements Initializable {
 
     //Pour la boutton de déconnexion
     public void logout() {
+        clickFservice = false;
         Alert alert = new Alert(AlertType.CONFIRMATION);
         alert.setTitle("Message de confirmation");
         alert.setHeaderText(null);
@@ -3946,6 +3661,10 @@ public class DashboardController implements Initializable {
                 });
 
                 stage.initStyle(StageStyle.TRANSPARENT);
+                
+                Image image = new Image("/Image/1704805960156.jpg");
+        
+                stage.getIcons().add(image);
 
                 stage.setScene(scene);
                 stage.show();
@@ -3987,7 +3706,7 @@ public class DashboardController implements Initializable {
         menuShowOrderListData();
         suivieClientShowListData();
         suivieListeData("");
-        menuDisplayTotale();
+//        menuDisplayTotale();
         menuSelectOrder();
         menuRestart();
 
@@ -4019,6 +3738,11 @@ public class DashboardController implements Initializable {
         clientSuivieShowListData();
 
         historiqueShowListData();
+
+        totaleClient();
+        totaleService();
+        totaleFaireService();
+        totaleSoldeAujour();
 
     }
 

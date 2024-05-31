@@ -140,7 +140,6 @@ public class CardServiceController implements Initializable {
 
     public void ajoutMenuServiceBtn() {
         DashboardController dashForm = new DashboardController(); // Utiliser la même instance de DashboardController
-//        dashForm.suivieID();
 
         getTolaleSolde();
 
@@ -174,7 +173,7 @@ public class CardServiceController implements Initializable {
                 connect = database.ConnectDb();
 
                 prepare = connect.prepareStatement(insertDataQuery);
-//                prepare.setString(1, String.valueOf(getData.sID));
+                
                 if (getData.clickAdd) {
                     prepare.setString(1, String.valueOf(dashForm.getSid()));
                 } else {
@@ -194,10 +193,8 @@ public class CardServiceController implements Initializable {
                 soldeTotaleTotale = (totaleP + soldeTotale);
                 prepare.setDouble(8, soldeTotaleTotale);
 
-                //soldedejaPayer = ( soldeTotaleTotale - soldeRestePayer);
                 prepare.setDouble(9, 0.0);
 
-                // soldeRestePayer = ( soldeTotaleTotale - soldedejaPayer);
                 prepare.setDouble(10, 0.0);
 
                 prepare.setString(11, getData.username);
@@ -209,18 +206,20 @@ public class CardServiceController implements Initializable {
                 Optional<ButtonType> option = alert.showAndWait();
 
                 if (option.get().equals(ButtonType.CANCEL)) {
-                    alert = new Alert(Alert.AlertType.ERROR);
+                    
+                    dashForm.historique("Le faire service avec le client: " + getData.getMenuClientID + " est anulé!", getData.username);
+                    
+                    alert = new Alert(Alert.AlertType.WARNING);
                     alert.setTitle("Message d'erreur");
                     alert.setHeaderText(null);
-                    alert.setContentText("Échec de l'ajout !");
+                    alert.setContentText("Ajout anuler!");
                     alert.showAndWait();
 
                 } else {
                     prepare.executeUpdate();
                     getData.clickAdd = true;
-//                  dashForm.menuShowOrderListData();
 
-                    dashForm.historique("Faire un nouveau service avec client: " + getData.getMenuClientID + " confirmé", getData.username);
+                    dashForm.historique("Un nouveau service est fait avec le client: " + getData.getMenuClientID, getData.username);
                     
                     getData.soldeTotaleTotale = soldeTotaleTotale;
                     alert = new Alert(Alert.AlertType.INFORMATION);

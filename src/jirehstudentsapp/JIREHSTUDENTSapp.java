@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -47,6 +48,10 @@ public class JIREHSTUDENTSapp extends Application {
         });
         
         stage.initStyle(StageStyle.TRANSPARENT);
+        
+        Image image = new Image("/Image/1704805960156.jpg");
+        
+        stage.getIcons().add(image);
         
         stage.setScene(scene);
         stage.show();   

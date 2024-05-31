@@ -12,7 +12,7 @@
 	<parameter name="mttTotal" class="java.lang.Double"/>
 	<parameter name="reste" class="java.lang.Double"/>
 	<parameter name="nomResponsable" class="java.lang.String"/>
-	<parameter name="dejaPayer" class="java.lang.String"/>
+	<parameter name="dejaPayer" class="java.lang.Double"/>
 	<queryString>
 		<![CDATA[SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE 1;]]>
 	</queryString>
@@ -103,7 +103,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font fontName="Berlin Sans FB" size="7" isBold="false" isItalic="true"/>
 					</textElement>
-					<text><![CDATA["Veuille à l'épanouissement de tous les étudiants"]]></text>
+					<text><![CDATA["Veille à l'épanouissement de tous les étudiants"]]></text>
 				</staticText>
 				<textField>
 					<reportElement x="118" y="54" width="51" height="10"/>
@@ -170,7 +170,7 @@
 				<text><![CDATA[Tél : ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="51" y="28" width="106" height="11"/>
+				<reportElement x="51" y="29" width="106" height="11"/>
 				<textElement verticalAlignment="Middle" lineSpacing="Single">
 					<font fontName="Berlin Sans FB" size="7"/>
 				</textElement>

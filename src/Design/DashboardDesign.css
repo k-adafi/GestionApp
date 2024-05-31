@@ -88,6 +88,11 @@ and open the template in the editor.
 
 
 .total {
+    -fx-background-color:#329302;
+}
+
+
+.total:hover {
     -fx-background-color:#abe749;
 }
 

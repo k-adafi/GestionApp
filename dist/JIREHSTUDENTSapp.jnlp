@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="JIREHSTUDENTSapp.jar" size="473434" download="eager" />
+    <jar href="JIREHSTUDENTSapp.jar" size="475143" download="eager" />
     <jar href="lib\ant-1.5.1.jar" size="717666" download="eager" />
     <jar href="lib\antlr-2.7.5.jar" size="435563" download="eager" />
     <jar href="lib\commons-beanutils-1.5.jar" size="110681" download="eager" />

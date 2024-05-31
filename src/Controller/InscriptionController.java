@@ -27,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -76,6 +77,7 @@ public class InscriptionController implements Initializable {
     
     private Connection connect;
 
+    DashboardController dashForm = new DashboardController();
     
     //Ajout nouveau administrateur (mbola tsy mandeha)
     public void addAdminAdd(){  
@@ -127,11 +129,13 @@ public class InscriptionController implements Initializable {
                     prepare.setString(2, email.getText());
                     prepare.setString(3, password.getText());
                     prepare.executeUpdate();
+                    
+                    dashForm.historique("Ajout de nouvel utilisateur réussi.", username.getText());
                        
                     alert = new Alert(Alert.AlertType.INFORMATION);
                     alert.setTitle("Message d'information");
                     alert.setHeaderText(null);
-                    alert.setContentText("Administrateur a été ajouté avec succès!");
+                    alert.setContentText("Utilisateur a été ajouté avec succès!");
                     alert.showAndWait();
                     
                     username.setText("");
@@ -185,6 +189,10 @@ public class InscriptionController implements Initializable {
                 });
 
                 stage.initStyle(StageStyle.TRANSPARENT);
+                
+                Image image = new Image("/Image/1704805960156.jpg");
+        
+                stage.getIcons().add(image);
 
                 stage.setScene(scene);
                 stage.show();
