@@ -6,6 +6,8 @@
 package Controller;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -977,7 +979,7 @@ public class DashboardController implements Initializable {
     //Supprimer un client (efa mandeha) 
     public void addClientDelete() {
         Alert alert;
-        if (getData.username != null && getData.username.equals("kadafi")) {
+        if (getData.username != null && getData.username.equals("Administrateur")) {
 
             try {
                 String uri = getData.path != null ? getData.path.replace("\\", "\\\\") : null;
@@ -1058,8 +1060,9 @@ public class DashboardController implements Initializable {
             alert.showAndWait();
         }
     }
-
-
+    
+    
+ 
     //Pour l'actualisation sur affiche client
     public void addClientReset() {
         clientID.setText("");
@@ -1557,64 +1560,77 @@ public class DashboardController implements Initializable {
 
     //Supprimer un client (efa mandeha) 
     public void addServiceDelete() {
+        
+        Alert alert;
+        if (getData.username != null && getData.username.equals("Administrateur")) {
 
-        try {
-            Alert alert;
+            try {
 
-            if (serviceID.getText().isEmpty() || serviceNom.getText().isEmpty()) {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("Vous devez sélectionner un service!");
-                alert.showAndWait();
-                return;
+                if (serviceID.getText().isEmpty() || serviceNom.getText().isEmpty()) {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Vous devez sélectionner un service!");
+                    alert.showAndWait();
+                    return;
+                }
+
+                String uri = getData.pathService.replace("\\", "\\\\");
+
+                String sql = "DELETE FROM service WHERE serviceID = '" + serviceID.getText() + "'";
+
+                connect = database.ConnectDb();
+                if (connect == null) {
+                    // Gérer l'échec de la connexion à la base de données
+                    return;
+                }
+
+                Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
+                confirmationAlert.setTitle("Message de confirmation");
+                confirmationAlert.setHeaderText(null);
+                confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer cette service " + serviceID.getText() + " ?");
+                Optional<ButtonType> option = confirmationAlert.showAndWait();
+
+                if (option.isPresent() && option.get() == ButtonType.OK) {
+                    statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+
+                    historique("Suppression du service: " + serviceID.getText() + " réussi avec succès", getData.username);
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Service a été supprimé avec succès!");
+                    alert.showAndWait();
+
+                } else {
+                    alert = new Alert(Alert.AlertType.WARNING);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Suppression du service anuler!");
+                    alert.showAndWait();
+
+                    historique("Echec! suppression du service: " + serviceID.getText() + " anuler", getData.username);
+                }
+
+                addServiceShowListData();
+                addServiceReset();
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            String uri = getData.pathService.replace("\\", "\\\\");
-
-            String sql = "DELETE FROM service WHERE serviceID = '" + serviceID.getText() + "'";
-
-            connect = database.ConnectDb();
-            if (connect == null) {
-                // Gérer l'échec de la connexion à la base de données
-                return;
-            }
-
-            Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
-            confirmationAlert.setTitle("Message de confirmation");
-            confirmationAlert.setHeaderText(null);
-            confirmationAlert.setContentText("Êtes-vous sûr de vouloir supprimer cette service " + serviceID.getText() + " ?");
-            Optional<ButtonType> option = confirmationAlert.showAndWait();
-
-            if (option.isPresent() && option.get() == ButtonType.OK) {
-                statement = connect.createStatement();
-                statement.executeUpdate(sql);
-
-                historique("Suppression du service: " + serviceID.getText() + " réussi avec succès", getData.username);
-
-                alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Message d'information");
-                alert.setHeaderText(null);
-                alert.setContentText("Service a été supprimé avec succès!");
-                alert.showAndWait();
-
-            } else {
-                alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("Suppression du service anuler!");
-                alert.showAndWait();
-
-                historique("Echec! suppression du service: " + serviceID.getText() + " anuler", getData.username);
-            }
-
-            addServiceShowListData();
-            addServiceReset();
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        } else {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
+            alert.setHeaderText(null);
+            alert.setContentText("Vous n'avez pas d'accès à cette opération!");
+            alert.showAndWait();
         }
+
     }
+    
+    
 
     //Pour la barre de recherche d'un service (efa mandeha)
     public void addServiceSearch() {
@@ -2653,6 +2669,7 @@ public class DashboardController implements Initializable {
         return suivieListData;
     }
 
+    
     //Selection service via Table View
     public void suivieClientSelect() {
         suivieData suivieD = suivieTableView1.getSelectionModel().getSelectedItem();
@@ -2743,60 +2760,73 @@ public class DashboardController implements Initializable {
         suivieTableView1.setItems(sortList);
     }
 
-    public void suivieClientRemove() {
+    
+    public void suivieClientRemove() {  
+        
+        Alert alert;
+        if (getData.username != null && getData.username.equals("Administrateur")) {
+            
+            try {
+                
+                if (suivieClientID.getText().isEmpty() || suivieClientNom.getText().isEmpty()) {
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
+                    alert.showAndWait();
+                    return;
+                }
 
-        try {
-            Alert alert;
-            if (suivieClientID.getText().isEmpty() || suivieClientNom.getText().isEmpty()) {
-                alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
+                String sql = "DELETE FROM suivieclient WHERE ID = " + getID;;
+
+                connect = database.ConnectDb();
+                if (connect == null) {
+                    // Gérer l'échec de la connexion à la base de données
+                    return;
+                }
+
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Message de confirmation");
                 alert.setHeaderText(null);
-                alert.setContentText("S'il vous plaît, vous devez complètez ces cases!");
-                alert.showAndWait();
-                return;
+                alert.setContentText("Êtes-vous sûr de vouloir supprimer la serviice de ce client " + suivieClientNom.getText() + " ?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.isPresent() && option.get() == ButtonType.OK) {
+                    statement = connect.createStatement();
+                    statement.executeUpdate(sql);
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Message d'information");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Service supprimé avec succès!");
+                    alert.showAndWait();
+
+                } else {
+                    alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Message d'erreur");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Echec de suppression!");
+                    alert.showAndWait();
+                }
+
+                suivieClientShowListData();
+                SuivieClientReset();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Gérer l'exception
             }
-
-            String sql = "DELETE FROM suivieclient WHERE ID = " + getID;;
-
-            connect = database.ConnectDb();
-            if (connect == null) {
-                // Gérer l'échec de la connexion à la base de données
-                return;
-            }
-
-            alert = new Alert(AlertType.CONFIRMATION);
-            alert.setTitle("Message de confirmation");
+           
+        } else {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Êtes-vous sûr de vouloir supprimer la serviice de ce client " + suivieClientNom.getText() + " ?");
-            Optional<ButtonType> option = alert.showAndWait();
-
-            if (option.isPresent() && option.get() == ButtonType.OK) {
-                statement = connect.createStatement();
-                statement.executeUpdate(sql);
-
-                alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Message d'information");
-                alert.setHeaderText(null);
-                alert.setContentText("Service supprimé avec succès!");
-                alert.showAndWait();
-
-            } else {
-                alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Message d'erreur");
-                alert.setHeaderText(null);
-                alert.setContentText("Echec de suppression!");
-                alert.showAndWait();
-            }
-
-            suivieClientShowListData();
-            SuivieClientReset();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            // Gérer l'exception
+            alert.setContentText("Vous n'avez pas d'accès à cette opération!");
+            alert.showAndWait();
         }
 
     }
+    
 
     public ObservableList<clientData> clientSuivieListeData() {
 
@@ -2826,6 +2856,7 @@ public class DashboardController implements Initializable {
 
         return listData;
     }
+    
 
     private ObservableList<clientData> clientsuivieListData;
 
@@ -2841,6 +2872,7 @@ public class DashboardController implements Initializable {
 
         clientSuivieTableView.setItems(clientsuivieListData);
     }
+    
 
     public void clientsuivieSelect() {
         clientData clientD = clientSuivieTableView.getSelectionModel().getSelectedItem();
@@ -2857,6 +2889,7 @@ public class DashboardController implements Initializable {
         getData.getMenuClientID = clientD.getClientID();
         System.out.println(getData.getMenuClientID);
     }
+    
 
     public void clientsuivieReset() {
 
@@ -2868,6 +2901,7 @@ public class DashboardController implements Initializable {
         clientsoldePayerText.setText("");
         clientsuivieReste.setText("");
     }
+    
 
     public void clientsuivieSearch() {
 
@@ -2969,7 +3003,7 @@ public class DashboardController implements Initializable {
     
 
     //Pour le bouton de validation du client    
-    public void validerCompte() {
+    public void validerCompte() throws FileNotFoundException {
 
         DashboardController dashForm = new DashboardController(); // Utiliser la même instance de DashboardController
 
@@ -3013,7 +3047,7 @@ public class DashboardController implements Initializable {
                 prepare.setDate(2, currentDate);
                 prepare.setString(3, String.valueOf(getData.getMenuClientID));
                 prepare.setString(4, getData.getMenuClientNom);
-                prepare.setString(5, "Reglement de compte");
+                prepare.setString(5, "Reglement ");
                 prepare.setInt(6, 0);
 
                 prepare.setDouble(7, totaleP);
@@ -3069,6 +3103,12 @@ public class DashboardController implements Initializable {
                     getData.soldeTotaleTotale = soldeTotaleTotale;
 
                     clientsuivieReset();
+                    menuShowOrderListData();
+                    menuRestart();
+
+                    menu_tableView.setItems(null);
+                    getData.clickAdd = false;
+                    
 
                 }
             }
@@ -3124,10 +3164,20 @@ public class DashboardController implements Initializable {
 
     }
 
-    public void imprimer2() throws JRException {
+    public void imprimer2() throws JRException, FileNotFoundException {
 
         int idSuivie = getSid();
-        JasperDesign jasdi = JRXmlLoader.load("C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Interface\\jire.jrxml");
+        
+        // Chargement du fichier jrxml avec un chemin relatif
+        // Assurez-vous que le fichier jire.jrxml est dans le répertoire resources/Interface
+        InputStream jrxmlStream = getClass().getResourceAsStream("/Interface/jire.jrxml");
+        if (jrxmlStream == null) {
+            throw new FileNotFoundException("Fichier jire.jrxml introuvable dans le répertoire resources/Interface");
+        }
+
+        JasperDesign jasdi = JRXmlLoader.load(jrxmlStream);
+        
+        
         String sql = "SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE clientID = '" + getData.getMenuClientID + "' AND suivieID = '" + idSuivie + "'";
         JRDesignQuery newQuery = new JRDesignQuery();
         newQuery.setText(sql);
@@ -3143,6 +3193,9 @@ public class DashboardController implements Initializable {
         System.err.println("=====" + Double.parseDouble(menuMonttantPayerTxt.getText()));
         para.put("reste", Double.parseDouble(menuReste.getText()));
         para.put("nomResponsable", getData.username);
+        
+        // Ajouter le chemin de l'image en tant que paramètre si nécessaire
+        para.put("imagePath", getClass().getResource("/Image/1704805960156.jpg").toString());
 
         JasperReport js = JasperCompileManager.compileReport(jasdi);
         JasperPrint jp = JasperFillManager.fillReport(js, para, connect);
@@ -3155,13 +3208,24 @@ public class DashboardController implements Initializable {
         menu_tableView.setItems(null);
         getData.clickAdd = false;
     }
-
-    public void imprimer3() throws JRException {
+    
+    
+    
+    public void imprimer3() throws JRException, FileNotFoundException {
 
         int idSuivie = getSid();
         int idClient = getData.getMenuClientID;
-        JasperDesign jasdi = JRXmlLoader.load("C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Interface\\jire.jrxml");
-        String sql = "SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE clientID = '" + idClient + "' AND suivieID = '" + idSuivie + "'";
+
+        // Chargement du fichier jrxml avec un chemin relatif
+        // Assurez-vous que le fichier jire.jrxml est dans le répertoire resources/Interface
+        InputStream jrxmlStream = getClass().getResourceAsStream("/Interface/jire.jrxml");
+        if (jrxmlStream == null) {
+            throw new FileNotFoundException("Fichier jire.jrxml introuvable dans le répertoire resources/Interface");
+        }
+
+        JasperDesign jasdi = JRXmlLoader.load(jrxmlStream);
+
+        String sql = "SELECT serviceNom, factureQte, servicePrix, clientNom FROM suivieclient WHERE clientID = '" + idClient + "' AND suivieID = '" + idSuivie + "'";
         JRDesignQuery newQuery = new JRDesignQuery();
         newQuery.setText(sql);
 
@@ -3175,6 +3239,9 @@ public class DashboardController implements Initializable {
         para.put("dejaPayer", Double.parseDouble(clientsoldePayerText.getText()));
         para.put("reste", Double.parseDouble(clientsuivieReste.getText()));
         para.put("nomResponsable", getData.username);
+        
+         // Ajouter le chemin de l'image en tant que paramètre si nécessaire
+        para.put("imagePath", getClass().getResource("/Image/1704805960156.jpg").toString());
 
         JasperReport js = JasperCompileManager.compileReport(jasdi);
         JasperPrint jp = JasperFillManager.fillReport(js, para, connect);
@@ -3187,8 +3254,47 @@ public class DashboardController implements Initializable {
         menu_tableView.setItems(null);
         getData.clickAdd = false;
     }
+    
+    
 
-    public void imprimer() {
+//    public void imprimer3() throws JRException {
+//
+//        int idSuivie = getSid();
+//        int idClient = getData.getMenuClientID;
+//
+//        
+//        JasperDesign jasdi = JRXmlLoader.load("C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Interface\\jire.jrxml");
+//        
+//        String sql = "SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE clientID = '" + idClient + "' AND suivieID = '" + idSuivie + "'";
+//        JRDesignQuery newQuery = new JRDesignQuery();
+//        newQuery.setText(sql);
+//
+//        jasdi.setQuery(newQuery);
+//
+//        HashMap<String, Object> para = new HashMap<>();
+//
+//        para.put("idClient", idClient);
+//        para.put("idSuivie", idSuivie);
+//        para.put("mttTotal", getReste(idClient));
+//        para.put("dejaPayer", Double.parseDouble(clientsoldePayerText.getText()));
+//        para.put("reste", Double.parseDouble(clientsuivieReste.getText()));
+//        para.put("nomResponsable", getData.username);
+//
+//        JasperReport js = JasperCompileManager.compileReport(jasdi);
+//        JasperPrint jp = JasperFillManager.fillReport(js, para, connect);
+//
+//        JasperViewer.viewReport(jp, false);
+//
+//        menuShowOrderListData();
+//        menuRestart();
+//
+//        menu_tableView.setItems(null);
+//        getData.clickAdd = false;
+//    }
+    
+    
+
+    public void imprimer() throws FileNotFoundException {
 
         Alert alert;
         getDejaPayerSolde();
@@ -3209,7 +3315,18 @@ public class DashboardController implements Initializable {
                 alert.setContentText("Echec! \n S'il vous plaît, vous devez d'abord remplir ce que vous voulez payer sur seule à payer!");
                 alert.showAndWait();
 
-                JasperDesign jasdi = JRXmlLoader.load("C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Interface\\jire.jrxml");
+//                JasperDesign jasdi = JRXmlLoader.load("C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Interface\\jire.jrxml");
+                
+                 // Chargement du fichier jrxml avec un chemin relatif
+                // Assurez-vous que le fichier jire.jrxml est dans le répertoire resources/Interface
+                InputStream jrxmlStream = getClass().getResourceAsStream("/Interface/jire.jrxml");
+                if (jrxmlStream == null) {
+                    
+                    throw new FileNotFoundException("Fichier jire.jrxml introuvable dans le répertoire resources/Interface");
+                }
+
+                JasperDesign jasdi = JRXmlLoader.load(jrxmlStream);
+        
                 String sql = "SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE clientID = '" + getData.getMenuClientID + "' AND suivieID = '" + getSid() + "'";
                 JRDesignQuery newQuery = new JRDesignQuery();
                 newQuery.setText(sql);
@@ -3221,6 +3338,9 @@ public class DashboardController implements Initializable {
                 para.put("idSuivie", getSid());
                 para.put("mttTotal", menuGetTotale(getSid()));
                 para.put("reste", Double.parseDouble(menuReste.getText()));
+                
+                 // Ajouter le chemin de l'image en tant que paramètre si nécessaire
+                para.put("imagePath", getClass().getResource("/Image/1704805960156.jpg").toString());
                 JasperReport js = JasperCompileManager.compileReport(jasdi);
                 JasperPrint jp = JasperFillManager.fillReport(js, para, connect);
 
@@ -3382,90 +3502,116 @@ public class DashboardController implements Initializable {
         getNomH = historiqueD.getNomHistirique();
 
     }
-
+    
+ 
     public void effacerHistorique() {
 
         Alert alert;
-        menuSelectOrderHistorique();
+        
+        if (getData.username != null && getData.username.equals("Administrateur")) {
+            
+                menuSelectOrderHistorique();
 
-        if (getIDH == 0) {
-            alert = new Alert(Alert.AlertType.ERROR);
+            if (getIDH == 0) {
+                alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Message d'erreur");
+                alert.setHeaderText(null);
+                alert.setContentText("Vous devez sélectionner ce que vous voulez supprimer");
+                alert.showAndWait();
+            } else {
+
+                String deleteData = "DELETE FROM historique WHERE idH = ?";
+                connect = database.ConnectDb();
+
+                try {
+                    alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Message de confirmation");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Êtes-vous sur de vouloir le supprimer?");
+                    Optional<ButtonType> option = alert.showAndWait();
+
+                    if (option.get().equals(ButtonType.CANCEL)) {
+                        alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Message d'information");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Suppression annulée!");
+                        alert.showAndWait();
+                    } else {
+                        prepare = connect.prepareStatement(deleteData);
+                        prepare.setInt(1, getIDH);
+                        prepare.executeUpdate();
+
+                        alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Message d'information");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Suppression réussie avec succès!");
+                        alert.showAndWait();
+
+                        historiqueShowListData();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            
+        } else {
+            alert = new Alert(AlertType.ERROR);
             alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Vous devez sélectionner ce que vous voulez supprimer");
+            alert.setContentText("Vous n'avez pas d'accès à cette opération!");
             alert.showAndWait();
-        } else {
-
-            String deleteData = "DELETE FROM historique WHERE idH = ?";
-            connect = database.ConnectDb();
-
-            try {
-                alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Message de confirmation");
-                alert.setHeaderText(null);
-                alert.setContentText("Êtes-vous sur de vouloir le supprimer?");
-                Optional<ButtonType> option = alert.showAndWait();
-
-                if (option.get().equals(ButtonType.CANCEL)) {
-                    alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Message d'information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Suppression annulée!");
-                    alert.showAndWait();
-                } else {
-                    prepare = connect.prepareStatement(deleteData);
-                    prepare.setInt(1, getIDH);
-                    prepare.executeUpdate();
-
-                    alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Message d'information");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Suppression réussie avec succès!");
-                    alert.showAndWait();
-
-                    historiqueShowListData();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
+        
+        
     }
     
 
     public void effacerHistoriqueTout() {
-        Alert alert;
+        
+         Alert alert;
+        
+         if (getData.username != null && getData.username.equals("Administrateur")) {
+            
+           String deleteData = "DELETE FROM historique";
+           connect = database.ConnectDb();
 
-        String deleteData = "DELETE FROM historique";
-        connect = database.ConnectDb();
+           try {
+               alert = new Alert(Alert.AlertType.CONFIRMATION);
+               alert.setTitle("Message de confirmation");
+               alert.setHeaderText(null);
+               alert.setContentText("Êtes-vous sur de vouloir tout suprimer?");
+               Optional<ButtonType> option = alert.showAndWait();
 
-        try {
-            alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Message de confirmation");
+               if (option.get().equals(ButtonType.CANCEL)) {
+                   alert = new Alert(Alert.AlertType.WARNING);
+                   alert.setTitle("Message d'information");
+                   alert.setHeaderText(null);
+                   alert.setContentText("Suppression annulée!");
+                   alert.showAndWait();
+               } else {
+                   prepare = connect.prepareStatement(deleteData);
+                   prepare.executeUpdate();
+
+                   alert = new Alert(Alert.AlertType.INFORMATION);
+                   alert.setTitle("Message d'information");
+                   alert.setHeaderText(null);
+                   alert.setContentText("Suppression réussie avec succès!");
+                   alert.showAndWait();
+
+                   historiqueShowListData();
+               }
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+            
+        } else {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Message d'erreur");
             alert.setHeaderText(null);
-            alert.setContentText("Êtes-vous sur de vouloir tout suprimer?");
-            Optional<ButtonType> option = alert.showAndWait();
-
-            if (option.get().equals(ButtonType.CANCEL)) {
-                alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("Message d'information");
-                alert.setHeaderText(null);
-                alert.setContentText("Suppression annulée!");
-                alert.showAndWait();
-            } else {
-                prepare = connect.prepareStatement(deleteData);
-                prepare.executeUpdate();
-
-                alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Message d'information");
-                alert.setHeaderText(null);
-                alert.setContentText("Suppression réussie avec succès!");
-                alert.showAndWait();
-
-                historiqueShowListData();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+            alert.setContentText("Vous n'avez pas d'accès à cette opération!");
+            alert.showAndWait();
         }
+        
     }
 
     
@@ -3595,7 +3741,7 @@ public class DashboardController implements Initializable {
             historiqueBtn.setStyle("-fx-background-color: linear-gradient(to bottom, #d0d0d0, #d0d0d0);");
 
         } else if (event.getSource() == historiqueBtn) {
-            if (getData.username.equals("kadafi")) {
+            if (getData.username.equals("Administrateur")) {
                 acceuilForm.setVisible(false);
                 clientForm.setVisible(false);
                 serviceForm.setVisible(false);

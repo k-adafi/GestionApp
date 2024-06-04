@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="226" pageHeight="425" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="2.143588810000002"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="19"/>
+	<property name="ireport.y" value="0"/>
 	<style name="Title" lineSpacing="Single" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
 	<style name="SubTitle" forecolor="#666666" lineSpacing="Single" fontName="Arial" fontSize="18"/>
 	<style name="Column header" forecolor="#666666" lineSpacing="Single" fontName="Arial" fontSize="12" isBold="true"/>
@@ -13,6 +13,7 @@
 	<parameter name="reste" class="java.lang.Double"/>
 	<parameter name="nomResponsable" class="java.lang.String"/>
 	<parameter name="dejaPayer" class="java.lang.Double"/>
+	<parameter name="imagePath" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT serviceNom,factureQte,servicePrix,clientNom FROM suivieclient WHERE 1;]]>
 	</queryString>
@@ -103,7 +104,7 @@
 					<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
 						<font fontName="Berlin Sans FB" size="7" isBold="false" isItalic="true"/>
 					</textElement>
-					<text><![CDATA["Veille à l'épanouissement de tous les étudiants"]]></text>
+					<text><![CDATA["Veille à l'épanouissement des étudiants"]]></text>
 				</staticText>
 				<textField>
 					<reportElement x="118" y="54" width="51" height="10"/>
@@ -183,10 +184,6 @@
 				</textElement>
 				<text><![CDATA[Date:]]></text>
 			</staticText>
-			<image>
-				<reportElement x="7" y="2" width="30" height="30"/>
-				<imageExpression class="java.lang.String"><![CDATA["C:\\Users\\KADAFI Ben\\Documents\\NetBeansProjects\\JIREHSTUDENTSapp\\src\\Image\\1704805960156.jpg"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="5" y="57" width="34" height="10"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
@@ -204,6 +201,10 @@
 				</textElement>
 				<textFieldExpression class="java.lang.Integer"><![CDATA[$P{idSuivie}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="7" y="1" width="30" height="28"/>
+				<imageExpression class="java.lang.String"><![CDATA[$P{imagePath}]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

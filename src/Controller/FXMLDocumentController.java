@@ -5,6 +5,8 @@
  */
 package Controller;
 
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -109,16 +111,17 @@ public class FXMLDocumentController implements Initializable {
         
         String updateSql = "UPDATE admin SET MotDePasse = ? WHERE NomUtilisateur = ? AND Email = ?";
         
-        String checkSql = "SELECT NomUtilisateur FROM admin WHERE NomUtilisateur = ?";
+        String checkSql = "SELECT NomUtilisateur, Email FROM admin WHERE NomUtilisateur = ? AND Email= ?";
 
         try (Connection connect = database.ConnectDb();
-             PreparedStatement updateStatement = connect.prepareStatement(updateSql);
+//             PreparedStatement updateStatement = connect.prepareStatement(updateSql);
              PreparedStatement checkStatement = connect.prepareStatement(checkSql)) {
 
             Alert alert;
 
             // Vérifiez si l'utilisateur existe
             checkStatement.setString(1, username1.getText());
+            checkStatement.setString(2, username11.getText());
             ResultSet result = checkStatement.executeQuery();
             
             if (username1.getText().isEmpty() || username11.getText().isEmpty() || password11.getText().isEmpty()) {
@@ -133,7 +136,7 @@ public class FXMLDocumentController implements Initializable {
                 alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Message d'erreur");
                 alert.setHeaderText(null);
-                alert.setContentText("Cet administrateur: " + username1.getText() + " n'existe pas!");
+                alert.setContentText("Cet administrateur: '" + username1.getText() + "'ou '"+username11.getText()+"' n'existe pas!");
                 alert.showAndWait();
                 return;
           
@@ -153,14 +156,20 @@ public class FXMLDocumentController implements Initializable {
              Optional<ButtonType> option = alert.showAndWait();
 
              if (option.isPresent() && option.get() == ButtonType.OK) {
+                           
                  // Mettez à jour le mot de passe
-                 updateStatement.setString(1, password11.getText());
-                 updateStatement.setString(2, username1.getText());
-                 updateStatement.setString(3, username11.getText());
-                 int rowsUpdated = updateStatement.executeUpdate();
+                 PreparedStatement preparedStatement = connect.prepareStatement(updateSql);
+                 preparedStatement.setString(1, password11.getText());
+                 preparedStatement.setString(2, username1.getText());
+                 preparedStatement.setString(3, username11.getText());
+                 preparedStatement.executeUpdate();
+                 System.err.println("++++++++"+password11.getText());
 
-                 if (rowsUpdated > 0) {
-
+//                 updateStatement.setString(1, password11.getText());
+//                 updateStatement.setString(2, username1.getText());
+//                 updateStatement.setString(3, username11.getText());
+//                 updateStatement.executeUpdate();
+                
                      dashForm.historique("Modification de mot de passe de l'utilisateur réussi.", username1.getText());
 
                      alert = new Alert(Alert.AlertType.INFORMATION);
@@ -168,7 +177,6 @@ public class FXMLDocumentController implements Initializable {
                      alert.setHeaderText(null);
                      alert.setContentText("Le mot de passe a été modifié avec succès!");
                      alert.showAndWait();
-                 }    
                  
             } else {
                     
@@ -244,7 +252,12 @@ public class FXMLDocumentController implements Initializable {
                    loginBtn.getScene().getWindow().hide();
                    Parent root = FXMLLoader.load(getClass().getResource("/Interface/Dashboard.fxml"));
                    Stage stage = new Stage();
-                   Scene scene = new Scene(root);
+                   
+                   Toolkit tk = Toolkit.getDefaultToolkit();
+                   Dimension dim = tk.getScreenSize();
+                   int width = dim.width;
+                   int height = dim.height;
+                   Scene scene = new Scene(root,width,height);
         
                     root.setOnMousePressed((MouseEvent event) ->{
                         x = event.getSceneX();
